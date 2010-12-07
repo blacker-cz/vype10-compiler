@@ -1,0 +1,33 @@
+/* Program 2: Vypocet faktorialu (rekurzivne) */
+
+int factorial (short);
+
+int factorial (short n)
+{
+	short decremented_n;
+	int temp_result;
+
+	if (n < 2) {
+		return 1;
+	} else {
+		decremented_n = n - 1;
+		temp_result = factorial(decremented_n);
+	}
+
+	return (int)n * temp_result;
+} // end of factorial
+
+int main(void)
+{
+	short a; int vysl;
+
+	print("Zadejte cislo pro vypocet faktorialu");
+	
+	a = read_short();
+	
+	if (a < 0 && a > (-10)) {
+		print("\nFaktorial nelze spocitat\n");
+	} else {
+		print("\nVysledek je:", factorial(a), "\n");
+	}
+}
