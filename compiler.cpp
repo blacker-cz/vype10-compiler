@@ -21,6 +21,9 @@ namespace vype10 {
 Compiler::Compiler(string input) {
 	this->input = input;
 	this->output = "out.asm";
+
+	this->trace_scanning = false;
+	this->trace_parsing = 0;
 }
 
 /**
@@ -32,6 +35,9 @@ Compiler::Compiler(string input) {
 Compiler::Compiler(string input, string output) {
 	this->input = input;
 	this->output = output;
+
+	this->trace_scanning = false;
+	this->trace_parsing = 0;
 }
 
 /**
@@ -51,12 +57,18 @@ int Compiler::run(void) {
     streamname = input;
 
     Scanner scanner(&in);
-    scanner.set_debug(false);
+    scanner.parent = this;
+    scanner.set_debug(this->trace_scanning);
     this->lexer = &scanner;
 
     Parser parser(*this);
-    parser.set_debug_level(true);
-    return (parser.parse() == 0);
+    parser.set_debug_level(this->trace_parsing);
+    int retval = parser.parse();
+    /**
+     * @todo: implement getting error information from lexical analyzer
+     */
+
+    cerr << "Parser return value: " << retval << endl;
 
     return RET_ERR_OK;
 }

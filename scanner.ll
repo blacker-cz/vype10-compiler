@@ -11,6 +11,8 @@
 typedef vype10::Parser::token token;
 typedef vype10::Parser::token_type token_type;
 
+std::string *stringBuilder; 
+
 /* By default yylex returns int, we use token_type. Unfortunately yyterminate
  * by default returns 0, which is not of token_type. */
 #define yyterminate() return token::END
@@ -18,6 +20,8 @@ typedef vype10::Parser::token_type token_type;
 /* This disables inclusion of unistd.h, which is not available under Visual C++
  * on Win32. The C++ scanner uses STL streams instead. */
 #define YY_NO_UNISTD_H
+
+#define YY_EXIT_FAILURE 1
 
 %}
 
@@ -48,6 +52,8 @@ typedef vype10::Parser::token_type token_type;
 #define YY_USER_ACTION  yylloc->columns(yyleng);
 %}
 
+%x str
+
 letter		[_a-zA-Z]
 letnum		[_a-zA-Z0-9]
 identifier	{letter}{letnum}*
@@ -72,7 +78,7 @@ whitespace	[ \t]+
                   bool done = false;
                   do {
                     while ((c = yyinput()) != '*')
-                      if (c == EOF) return token::END;
+                      if (c == EOF) return token::ERROR_COMMENT;
                     while ((c = yyinput()) == '*');
                     if (c == '/') done = true;
                   } while (!done);
@@ -133,10 +139,72 @@ whitespace	[ \t]+
 	yylloc->lines(yyleng); yylloc->step();
 }
 
-\"(\\.|[^\\"])*\" {
-    yylval->stringVal = new std::string(yytext, yyleng);
-    return token::STRING_LITERAL;
+ /*
+	Character literal definition
+ */
+
+\'\\n\'	{
+		yylval->charVal = '\n';
+		return token::CHAR_LITERAL;
+	} 
+\'\\t\'	{
+		yylval->charVal = '\t';
+		return token::CHAR_LITERAL;
+	} 
+\'\\\\\'	{
+		yylval->charVal = '\\';
+		return token::CHAR_LITERAL;
+	} 
+\'\\\"\'	{
+		yylval->charVal = '"';
+		return token::CHAR_LITERAL;
+	} 
+
+\'\\\'\'	{
+		yylval->charVal = '\'';
+		return token::CHAR_LITERAL;
+	} 
+
+\'[^\\]\' {
+		yylval->charVal = *(yytext+1);
+		return token::CHAR_LITERAL;
 }
+
+ /*
+	Invalid character literal
+ */
+
+\' {
+	return token::ERROR_CHAR;
+}
+
+ /*
+	String literal definition
+ */
+   
+\"      stringBuilder = new std::string(); BEGIN(str);
+     
+<str>\"        { /* saw closing quote - all done */
+        BEGIN(INITIAL);
+        yylval->stringVal = stringBuilder;
+        stringBuilder = NULL;
+        return token::STRING_LITERAL;
+        }
+     
+<str>\n        {
+        /* error - unterminated string constant */
+        LexerError("unterminated string constant");
+        }
+     
+<str>\\n  	stringBuilder->append("\n");
+<str>\\t  	stringBuilder->append("\t");
+<str>\\\\  	stringBuilder->append("\\");
+<str>\\\"  	stringBuilder->append("\"");
+<str>\\\'  	stringBuilder->append("'");
+     
+<str>[^\\\n\"]+        {
+		stringBuilder->append(yytext);
+      }
 
  /* gobble up white-spaces */
 [ \t\r]+ {

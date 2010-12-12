@@ -32,7 +32,7 @@ namespace vype10 {
 		    bool trace_scanning;
 
 		    /// enable debug output in the bison parser
-		    bool trace_parsing;
+		    int trace_parsing;
 
 		    void error(const class location& l, const std::string& m);
 

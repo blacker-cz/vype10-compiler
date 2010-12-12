@@ -6,6 +6,9 @@ int factorial (short n)
 {
 	short decremented_n;
 	int temp_result;
+	char c;
+	
+	c = 'a';
 
 	if (n < 2) {
 		return 1;
@@ -25,9 +28,9 @@ int main(void)
 	
 	a = read_short();
 	
-	if (a < 0 && a > (-10)) {
+	if (a < 0 && a > (10)) {
 		print("\nFaktorial nelze spocitat\n");
 	} else {
-		print("\nVysledek je:", factorial(a), "\n");
+		print("\nVysledek je:", factorial(a), "\n);
 	}
 }

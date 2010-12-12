@@ -123,13 +123,14 @@ namespace vype10 {
 #line 54 "parser.yy"
 
     int  			integerVal;
+    char			charVal;
     std::string*	stringVal;
     std::string*	idName;
 
 
 
 /* Line 35 of lalr1.cc  */
-#line 133 "parser.tab.hh"
+#line 134 "parser.tab.hh"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -143,27 +144,32 @@ namespace vype10 {
    enum yytokentype {
      END = 0,
      EOL = 258,
-     STRING_LITERAL = 259,
-     ID = 260,
-     CONSTANT = 261,
-     LE_OP = 262,
-     GE_OP = 263,
-     EQ_OP = 264,
-     NE_OP = 265,
-     AND_OP = 266,
-     OR_OP = 267,
-     TYPE_NAME = 268,
-     CHAR = 269,
-     SHORT = 270,
-     INT = 271,
-     VOID = 272,
-     STRING = 273,
-     IF = 274,
-     ELSE = 275,
-     WHILE = 276,
-     CONTINUE = 277,
-     BREAK = 278,
-     RETURN = 279
+     CHAR_LITERAL = 259,
+     STRING_LITERAL = 260,
+     ID = 261,
+     CONSTANT = 262,
+     ERROR_STRING = 263,
+     ERROR_COMMENT = 264,
+     ERROR_CHAR = 265,
+     CHAR = 266,
+     SHORT = 267,
+     INT = 268,
+     VOID = 269,
+     STRING = 270,
+     IF = 271,
+     ELSE = 272,
+     WHILE = 273,
+     CONTINUE = 274,
+     BREAK = 275,
+     RETURN = 276,
+     LOW_PRIORITY = 277,
+     OR_OP = 278,
+     AND_OP = 279,
+     NE_OP = 280,
+     EQ_OP = 281,
+     GE_OP = 282,
+     LE_OP = 283,
+     UNARY_OP = 284
    };
 
     };
@@ -286,9 +292,9 @@ namespace vype10 {
     /// A `-1'-separated list of the rules' RHS.
     static const rhs_number_type yyrhs_[];
     /// For each rule, the index of the first RHS symbol in \a yyrhs_.
-    static const unsigned short int yyprhs_[];
+    static const unsigned char yyprhs_[];
     /// For each rule, its source line number.
-    static const unsigned short int yyrline_[];
+    static const unsigned char yyrline_[];
     /// For each scanner token number, its symbol number.
     static const unsigned short int yytoken_number_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
@@ -340,7 +346,7 @@ namespace vype10 {
 } // vype10
 
 /* Line 35 of lalr1.cc  */
-#line 344 "parser.tab.hh"
+#line 350 "parser.tab.hh"
 
 
 

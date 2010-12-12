@@ -3,7 +3,7 @@
 
 %{ /*** C/C++ Declarations ***/
 
-#include <stdio.h>
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -53,24 +53,37 @@
 
 %union {
     int  			integerVal;
+    char			charVal;
     std::string*	stringVal;
     std::string*	idName;
 }
 
 %token			END	     0		"end of file"
 %token			EOL				"end of line"
-%token			STRING_LITERAL  "string"
 
-%token <idName>		ID			"identificator"
-%token <integerVal>	CONSTANT	"number constant"
+%token <charVal>	CHAR_LITERAL	"character"
+%token <stringVal>	STRING_LITERAL  "string"
+%token <idName>		ID				"identificator"
+%token <integerVal>	CONSTANT		"number constant"
 
-%token LE_OP GE_OP EQ_OP NE_OP
-%token AND_OP OR_OP
-%token TYPE_NAME
+%token ERROR_STRING 	"unterminated string constant"
+%token ERROR_COMMENT 	"unterminated comment block"
+%token ERROR_CHAR	 	"invalid character literal"
 
 %token CHAR SHORT INT VOID STRING
 
 %token IF ELSE WHILE CONTINUE BREAK RETURN
+
+%left LOW_PRIORITY
+%left OR_OP
+%left AND_OP
+%left '|'
+%left '&'
+%left EQ_OP NE_OP
+%left '<' '>' LE_OP GE_OP
+%left '+' '-'
+%left '*' '/' '%'
+%left UNARY_OP	/* unary operators */
 
 /*%type <calcnode>	constant variable
 %type <calcnode>	atomexpr powexpr unaryexpr mulexpr addexpr expr*/
@@ -96,96 +109,43 @@
 
 %% /*** Grammar Rules ***/
 
-primary_expression
-	: ID
-	| CONSTANT
-	| STRING_LITERAL
-	| '(' expression ')'
-	;
-
-postfix_expression
-	: primary_expression
-	| ID '[' expression ']'
-	| ID '(' ')'
-	| ID '(' argument_expression_list ')'
+assignment_expression
+	: ID '=' expression
+	| expression
 	;
 
 argument_expression_list
-	: assignment_expression
-	| argument_expression_list ',' assignment_expression
-	;
-
-unary_expression
-	: postfix_expression
-	| unary_operator cast_expression
-	;
-
-unary_operator
-	: '~'
-	| '!'
-	| '-'
-	| '+'
-	;
-
-cast_expression
-	: unary_expression
-	| '(' type_specifier ')' cast_expression
-	;
-
-multiplicative_expression
-	: cast_expression
-	| multiplicative_expression '*' cast_expression
-	| multiplicative_expression '/' cast_expression
-	| multiplicative_expression '%' cast_expression
-	;
-
-additive_expression
-	: multiplicative_expression
-	| additive_expression '+' multiplicative_expression
-	| additive_expression '-' multiplicative_expression
-	;
-
-relational_expression
-	: additive_expression
-	| relational_expression '<' additive_expression
-	| relational_expression '>' additive_expression
-	| relational_expression LE_OP additive_expression
-	| relational_expression GE_OP additive_expression
-	;
-
-equality_expression
-	: relational_expression
-	| equality_expression EQ_OP relational_expression
-	| equality_expression NE_OP relational_expression
-	;
-
-and_expression
-	: equality_expression
-	| and_expression '&' equality_expression
-	;
-
-inclusive_or_expression
-	: and_expression
-	| inclusive_or_expression '|' and_expression
-	;
-
-logical_and_expression
-	: inclusive_or_expression
-	| logical_and_expression AND_OP inclusive_or_expression
-	;
-
-logical_or_expression
-	: logical_and_expression
-	| logical_or_expression OR_OP logical_and_expression
-	;
-
-assignment_expression
-	: logical_or_expression
-	| unary_expression '=' assignment_expression
+	: expression
+	| argument_expression_list ',' expression
 	;
 
 expression
-	: assignment_expression
+	: ID											{ std::cerr << "Identifier: " << *$1 << std::endl; }
+	| CONSTANT										{ std::cerr << "Int constant: " << $1 << std::endl; }
+	| CHAR_LITERAL									{ std::cerr << "Character literal: " << $1 << std::endl; }
+	| STRING_LITERAL								{ std::cerr << "String literal: " << *$1 << std::endl; }
+	| ID '(' ')'
+	| ID '(' argument_expression_list ')'			{ std::cerr << "Function call: " << *$1 << std::endl; }
+	| ID '[' expression ']'
+	| expression '+' expression
+	| expression '-' expression
+	| expression '*' expression
+	| expression '/' expression
+	| expression '|' expression
+	| expression '&' expression
+	| expression '<' expression
+	| expression '>' expression
+	| expression '%' expression
+	| expression AND_OP expression
+	| expression OR_OP expression
+	| expression EQ_OP expression
+	| expression NE_OP expression
+	| expression LE_OP expression
+	| expression GE_OP expression
+	| '!' expression %prec UNARY_OP
+	| '~' expression %prec UNARY_OP
+	| '(' expression ')'
+	| '(' type_specifier ')' expression %prec UNARY_OP
 	;
 
 declaration
@@ -249,12 +209,12 @@ declaration_list
 
 expression_statement
 	: ';'
-	| expression ';'
+	| assignment_expression ';'
 	;
 
 selection_statement
-	: IF '(' expression ')' statement
-	| IF '(' expression ')' statement ELSE statement
+	: /*IF '(' expression ')' statement
+	|*/ IF '(' expression ')' statement ELSE statement
 	;
 
 iteration_statement
@@ -290,8 +250,7 @@ function_declaration
 
 %% /*** Additional Code ***/
 
-void vype10::Parser::error(const Parser::location_type& l,
-			    const std::string& m)
+void vype10::Parser::error(const Parser::location_type& l, const std::string& m)
 {
     compiler.error(l, m);
 }
