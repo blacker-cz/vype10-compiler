@@ -21,9 +21,9 @@ VYPE_CXXFLAGS =  -I. $(CPPFLAGS) $(CXXFLAGS)
 VYPE_OBJECTS =  \
   vype10.o compiler.o lex.yy.o parser.tab.o
 VYPE_SRCS = \
-  vype10.cpp compiler.cpp lex.yy.cc parser.tab.cc
+  vype10.cpp compiler.cpp lex.yy.cc parser.tab.cc symbolTable.cpp
 VYPE_HEADERS = \
-  misc.h compiler.h FlexLexer.h scanner.h stack.hh position.hh parser.tab.hh location.hh
+  misc.h compiler.h FlexLexer.h scanner.h stack.hh position.hh parser.tab.hh location.hh symbolTable.h
   
 
 ### Targets: ###
