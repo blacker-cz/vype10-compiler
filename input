@@ -31,6 +31,6 @@ int main(void)
 	if (a < 0 && a > (10)) {
 		print("\nFaktorial nelze spocitat\n");
 	} else {
-		print("\nVysledek je:", factorial(a), "\n);
+		print("\nVysledek je:", factorial(a), "\n");
 	}
 }

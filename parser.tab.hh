@@ -148,28 +148,25 @@ namespace vype10 {
      STRING_LITERAL = 260,
      ID = 261,
      CONSTANT = 262,
-     ERROR_STRING = 263,
-     ERROR_COMMENT = 264,
-     ERROR_CHAR = 265,
-     CHAR = 266,
-     SHORT = 267,
-     INT = 268,
-     VOID = 269,
-     STRING = 270,
-     IF = 271,
-     ELSE = 272,
-     WHILE = 273,
-     CONTINUE = 274,
-     BREAK = 275,
-     RETURN = 276,
-     LOW_PRIORITY = 277,
-     OR_OP = 278,
-     AND_OP = 279,
-     NE_OP = 280,
-     EQ_OP = 281,
-     GE_OP = 282,
-     LE_OP = 283,
-     UNARY_OP = 284
+     CHAR = 263,
+     SHORT = 264,
+     INT = 265,
+     VOID = 266,
+     STRING = 267,
+     IF = 268,
+     ELSE = 269,
+     WHILE = 270,
+     CONTINUE = 271,
+     BREAK = 272,
+     RETURN = 273,
+     LOW_PRIORITY = 274,
+     OR_OP = 275,
+     AND_OP = 276,
+     NE_OP = 277,
+     EQ_OP = 278,
+     GE_OP = 279,
+     LE_OP = 280,
+     UNARY_OP = 281
    };
 
     };
@@ -346,7 +343,7 @@ namespace vype10 {
 } // vype10
 
 /* Line 35 of lalr1.cc  */
-#line 350 "parser.tab.hh"
+#line 347 "parser.tab.hh"
 
 
 

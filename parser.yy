@@ -66,10 +66,6 @@
 %token <idName>		ID				"identificator"
 %token <integerVal>	CONSTANT		"number constant"
 
-%token ERROR_STRING 	"unterminated string constant"
-%token ERROR_COMMENT 	"unterminated comment block"
-%token ERROR_CHAR	 	"invalid character literal"
-
 %token CHAR SHORT INT VOID STRING
 
 %token IF ELSE WHILE CONTINUE BREAK RETURN
@@ -252,5 +248,5 @@ function_declaration
 
 void vype10::Parser::error(const Parser::location_type& l, const std::string& m)
 {
-    compiler.error(l, m);
+    compiler.error(l, m, RET_ERR_SYNTACTICAL);
 }

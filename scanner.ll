@@ -78,7 +78,7 @@ whitespace	[ \t]+
                   bool done = false;
                   do {
                     while ((c = yyinput()) != '*')
-                      if (c == EOF) return token::ERROR_COMMENT;
+                      if (c == EOF) lexicalError("unterminated comment block", yylloc);
                     while ((c = yyinput()) == '*');
                     if (c == '/') done = true;
                   } while (!done);
@@ -175,7 +175,7 @@ whitespace	[ \t]+
  */
 
 \' {
-	return token::ERROR_CHAR;
+	 lexicalError("invalid character literal", yylloc);
 }
 
  /*
@@ -193,7 +193,7 @@ whitespace	[ \t]+
      
 <str>\n        {
         /* error - unterminated string constant */
-        LexerError("unterminated string constant");
+        lexicalError("unterminated string constant", yylloc);
         }
      
 <str>\\n  	stringBuilder->append("\n");
@@ -229,6 +229,13 @@ Scanner::~Scanner()
 void Scanner::set_debug(bool b)
 {
     yy_flex_debug = b;
+}
+
+void Scanner::lexicalError(const std::string &msg, const Parser::location_type* yylocationp)
+{
+	parent->error(*yylocationp, msg, RET_ERR_LEXICAL);
+	parent->cleanup();	// calling cleanup of symbol table etc.
+	exit(RET_ERR_LEXICAL);
 }
 
 }

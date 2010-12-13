@@ -909,7 +909,7 @@ YY_RULE_SETUP
                   bool done = false;
                   do {
                     while ((c = yyinput()) != '*')
-                      if (c == EOF) return token::ERROR_COMMENT;
+                      if (c == EOF) lexicalError("unterminated comment block", yylloc);
                     while ((c = yyinput()) == '*');
                     if (c == '/') done = true;
                   } while (!done);
@@ -1198,7 +1198,7 @@ case 52:
 YY_RULE_SETUP
 #line 177 "scanner.ll"
 {
-	return token::ERROR_CHAR;
+	 lexicalError("invalid character literal", yylloc);
 }
 	YY_BREAK
 /*
@@ -1225,7 +1225,7 @@ YY_RULE_SETUP
 #line 194 "scanner.ll"
 {
         /* error - unterminated string constant */
-        LexerError("unterminated string constant");
+        lexicalError("unterminated string constant", yylloc);
         }
 	YY_BREAK
 case 56:
@@ -2343,6 +2343,13 @@ Scanner::~Scanner()
 void Scanner::set_debug(bool b)
 {
     yy_flex_debug = b;
+}
+
+void Scanner::lexicalError(const std::string &msg, const Parser::location_type* yylocationp)
+{
+	parent->error(*yylocationp, msg, RET_ERR_LEXICAL);
+	parent->cleanup();	// calling cleanup of symbol table etc.
+	exit(RET_ERR_LEXICAL);
 }
 
 }

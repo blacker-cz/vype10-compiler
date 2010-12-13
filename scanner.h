@@ -7,6 +7,7 @@
 // the C++ parser expects it to be declared. We can factor both as follows.
 
 #include "parser.tab.hh"
+#include "misc.h"
 
 #ifndef YY_DECL
 
@@ -40,6 +41,7 @@ public:
     Scanner(std::istream* arg_yyin = 0,
 	    std::ostream* arg_yyout = 0);
 
+    /** Parent - used for freeing resources during lexical error. */
     Compiler *parent;
 
     /** Required for virtual functions */
@@ -55,6 +57,9 @@ public:
 
     /** Enable debug output (via arg_yyout) if compiled into the scanner. */
     void set_debug(bool b);
+
+    /** Prints error message, calls parent->cleanup() and then exit. */
+    void lexicalError(const std::string &msg, const Parser::location_type* yylocationp);
 
 };
 

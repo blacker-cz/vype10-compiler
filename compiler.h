@@ -9,6 +9,7 @@
 
 #include <string>
 #include "location.hh"
+#include "misc.h"
 
 namespace vype10 {
 
@@ -28,15 +29,18 @@ namespace vype10 {
 			/** Stream name used for error messages */
 			std::string streamname;
 
-		    /// enable debug output in the flex scanner
+		    /** enable debug output in the flex scanner */
 		    bool trace_scanning;
 
-		    /// enable debug output in the bison parser
+		    /** enable debug output in the bison parser */
 		    int trace_parsing;
 
-		    void error(const class location& l, const std::string& m);
+		    void cleanup(void);
 
-		    void error(const std::string& m);
+		    void error(const class location& l, const std::string& m, int errorType);
+
+		    void error(const std::string& m, int errorType);
+
 	};
 
 }

@@ -64,9 +64,6 @@ int Compiler::run(void) {
     Parser parser(*this);
     parser.set_debug_level(this->trace_parsing);
     int retval = parser.parse();
-    /**
-     * @todo: implement getting error information from lexical analyzer
-     */
 
     cerr << "Parser return value: " << retval << endl;
 
@@ -78,18 +75,61 @@ int Compiler::run(void) {
  *
  * @param &location		location
  * @param &string		message
+ * @param int			errorType
  */
-void Compiler::error(const class location& l, const std::string& m) {
-	cerr << l << ": " << m << endl;
+void Compiler::error(const class location& l, const std::string& m, int errorType) {
+	string err;
+
+	switch(errorType) {
+	case RET_ERR_LEXICAL: err = "Lexical error:";
+		break;
+	case RET_ERR_SYNTACTICAL: err = "Syntactical error:";
+		break;
+	case RET_ERR_SEMANTICAL: err = "Semantical error:";
+		break;
+	case RET_ERR_GENERATION: err = "Generation error:";
+		break;
+	case RET_ERR_INTERNAL: err = "Internal error:";
+		break;
+	default:
+		break;
+	}
+
+	cerr << err << l << ": " << m << endl;
 }
 
 /**
  * General error handling.
  *
  * @param &string		message
+ * @param int			errorType
  */
-void Compiler::error(const std::string& m) {
-	cerr << m << endl;
+void Compiler::error(const std::string& m, int errorType) {
+	string err;
+
+	switch(errorType) {
+	case RET_ERR_LEXICAL: err = "Lexical error:";
+		break;
+	case RET_ERR_SYNTACTICAL: err = "Syntactical error:";
+		break;
+	case RET_ERR_SEMANTICAL: err = "Semantical error:";
+		break;
+	case RET_ERR_GENERATION: err = "Generation error:";
+		break;
+	case RET_ERR_INTERNAL: err = "Internal error:";
+		break;
+	default:
+		break;
+	}
+
+	cerr << err << ": " << m << endl;
+}
+
+/**
+ * Cleanup method invoked by lexical analyzer in case of lexical error.
+ */
+void Compiler::cleanup(void) {
+	/**  @todo: do cleanup here */
 }
 
 }
