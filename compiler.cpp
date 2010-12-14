@@ -1,6 +1,6 @@
 /*
  * VYPe 2010 Compiler project
- *//***************************************************************************
+ *//**
  * Compiler a.k.a. main application class.
  */
 #include <iostream>
@@ -24,6 +24,10 @@ Compiler::Compiler(string input) {
 
 	this->trace_scanning = false;
 	this->trace_parsing = 0;
+
+	this->errorLevel = RET_ERR_OK;
+
+	this->symbolTable = new SymbolTable();
 }
 
 /**
@@ -38,6 +42,10 @@ Compiler::Compiler(string input, string output) {
 
 	this->trace_scanning = false;
 	this->trace_parsing = 0;
+
+	this->errorLevel = RET_ERR_OK;
+
+	this->symbolTable = new SymbolTable();
 }
 
 /**
@@ -63,11 +71,13 @@ int Compiler::run(void) {
 
     Parser parser(*this);
     parser.set_debug_level(this->trace_parsing);
-    int retval = parser.parse();
+    parser.parse();
 
-    cerr << "Parser return value: " << retval << endl;
+    /**
+     * @todo: check here semantic action (e.g. all declared functions are defined, main is defined, ...)
+     */
 
-    return RET_ERR_OK;
+    return this->errorLevel;
 }
 
 /**
@@ -79,6 +89,8 @@ int Compiler::run(void) {
  */
 void Compiler::error(const class location& l, const std::string& m, int errorType) {
 	string err;
+
+	this->errorLevel = errorType;
 
 	switch(errorType) {
 	case RET_ERR_LEXICAL: err = "Lexical error:";
@@ -92,6 +104,7 @@ void Compiler::error(const class location& l, const std::string& m, int errorTyp
 	case RET_ERR_INTERNAL: err = "Internal error:";
 		break;
 	default:
+		this->errorLevel = RET_ERR_INTERNAL;
 		break;
 	}
 
@@ -107,6 +120,8 @@ void Compiler::error(const class location& l, const std::string& m, int errorTyp
 void Compiler::error(const std::string& m, int errorType) {
 	string err;
 
+	this->errorLevel = errorType;
+
 	switch(errorType) {
 	case RET_ERR_LEXICAL: err = "Lexical error:";
 		break;
@@ -119,6 +134,7 @@ void Compiler::error(const std::string& m, int errorType) {
 	case RET_ERR_INTERNAL: err = "Internal error:";
 		break;
 	default:
+		this->errorLevel = RET_ERR_INTERNAL;
 		break;
 	}
 

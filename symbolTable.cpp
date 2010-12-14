@@ -5,6 +5,7 @@
  */
 
 #include <sstream>
+#include <iostream>
 #include "symbolTable.h"
 
 namespace vype10 {
@@ -16,8 +17,7 @@ SymbolTable::SymbolTable() {
 	unnamedCounter = 0;
 	nextScope = 1;
 	currentScope = 0;
-
-	scopeStack.push_back(currentScope);
+	previousScope = 0;
 }
 
 SymbolTable::~SymbolTable() {
@@ -27,26 +27,45 @@ SymbolTable::~SymbolTable() {
 /**
  * Installs function into symbol table
  *
- * @param std::string*		function name
- * @param FunctionType		function type
- * @param ...				function params (SymbolType)
+ * @param std::string*				function name
+ * @param FunctionType				function type
+ * @param std::vector<SymbolType>	list of symbol types
+ * @param bool						flag if function is defined or declared
  * @return std::string*		key to the symbol table
  */
-std::string *SymbolTable::installFunction(std::string *name, FunctionType type, ...) {
-	/** @todo implement this */
-	return (std::string*) NULL;
-}
+std::string *SymbolTable::installFunction(std::string *name, FunctionType type, std::vector<SymbolType> *types, bool defined) {
+	// try to find function in table
+	FunctionRecord *funRec = getFunction(name);
 
-/**
- * Add parameter to specified function after installation.
- * Works with stack so later added parameters are appended to the end or parameter list.
- *
- * @param std::string*		function name or key to the symbol table
- * @param SymbolType		type of symbol
- */
-bool SymbolTable::addFunctionParam(std::string *name, SymbolType type) {
-	/** @todo implement this */
-	return false;
+	/**
+	 * @todo: need to output info about error type (message)
+	 */
+
+	if(funRec != (FunctionRecord*) NULL) {	// found
+		if(funRec->defined == true or funRec->defined == defined)
+			return (std::string*) NULL;		// already defined or trying another declaration -> return NULL pointer
+
+		if(funRec->paramsType != *types)	// mismatch parameter types
+			return (std::string*) NULL;
+
+		if(funRec->type != type)			// mismatch function type
+			return (std::string*) NULL;
+
+		funRec->defined = true;	// set defined to true
+
+	} else {	// not found
+		funRec = new FunctionRecord;
+
+		funRec->name = name;
+		funRec->type = type;
+		if(types != (std::vector<SymbolType>*) NULL)
+			funRec->paramsType = *types;
+		funRec->defined = defined;
+
+		funTable.insert(std::pair<std::string, FunctionRecord*>(*name, funRec));
+	}
+
+	return name;	// name of the function is key to the table :)
 }
 
 /**
@@ -80,25 +99,59 @@ std::string* SymbolTable::installSymbol(SymbolType type) {
  *
  * @param std::string*		symbol name
  * @param SymbolType		symbol type
+ * @param bool				flag if identifier will be installed to this or next scope
  * @return std::string*		key to the symbol table
  */
-std::string* SymbolTable::installSymbol(std::string *name, SymbolType type) {
+std::string* SymbolTable::installSymbol(std::string *name, SymbolType type, bool thisScope) {
 	SymbolRecord *symRec = new SymbolRecord;
 
 	std::stringstream stream;
 	std::string key, *pkey;
 
-	stream << ":" << *name << "_" << currentScope;
+	stream << ":" << *name << "_" << (thisScope ? currentScope : nextScope);
 	key = stream.str();
 	pkey = new std::string(key);
 
 	symRec->name = name;
 	symRec->constant = false;
-	symRec->scopeID = currentScope;
+	symRec->scopeID = (thisScope ? currentScope : nextScope);
 	symRec->type = type;
 
 	symTable.insert(std::pair<std::string, SymbolRecord*>(key, symRec));
 	return pkey;
+}
+
+/**
+ * Installs list of named symbols into symbol table.
+ *
+ * @param std::vector<std::string*>		symbol name
+ * @param SymbolType					symbol type
+ */
+void SymbolTable::installSymbol(std::vector<std::string*> *names, SymbolType type) {
+	std::vector<std::string*>::iterator it;
+
+	for (it = names->begin(); it != names->end(); it++) {
+
+		SymbolRecord *symRec = new SymbolRecord;
+
+		std::stringstream stream;
+		std::string key, *pkey, *name;
+
+		stream << ":" << **it << "_" << currentScope;
+		key = stream.str();
+		name = new std::string(**it);
+		pkey = new std::string(key);
+
+		symRec->name = name;
+		symRec->constant = false;
+		symRec->scopeID = currentScope;
+		symRec->type = type;
+
+		symTable.insert(std::pair<std::string, SymbolRecord*>(key, symRec));
+	}
+
+	// free allocated resources (vector and its content)
+	delete names;
 }
 
 /**
@@ -132,16 +185,55 @@ std::string *SymbolTable::installConstant(SymbolType type, Value *value) {
 /**
  * Gets symbol record structure from symbol table.
  *
- * @param std::string*		key in symbol table
+ * @param std::string*		key in symbol table (or identifier name)
+ * @param bool				flag for recursive search in scopes if name was given
+ * @return SymbolRecord*	pointer to symbol record or NULL (if not found)
+ */
+SymbolTable::SymbolRecord *SymbolTable::getSymbol(std::string *key, bool recursive) {
+	// check if key or name of identifier was passed
+
+	if(key->compare(0, 1, ":") == 0) {
+		symTableIter = symTable.find(*key);
+
+		if(symTableIter == symTable.end())
+			return (SymbolRecord*) NULL;
+	} else {
+		std::stringstream stream;
+
+		if(!recursive) {
+			stream << ":" << *key << "_" << currentScope;
+			symTableIter = symTable.find(stream.str());
+
+			if(symTableIter == symTable.end())
+				return (SymbolRecord*) NULL;
+
+		} else {	// recursive search for identifier
+
+			for(scopeStackRIter = scopeStack.rbegin(); scopeStackRIter < scopeStack.rend(); ++scopeStackRIter) {
+				stream.clear();
+				stream << ":" << *key << "_" << *scopeStackRIter;
+
+				symTableIter = symTable.find(stream.str());
+
+				if(symTableIter != symTable.end())
+					return symTableIter->second;
+			}
+			return (SymbolRecord*) NULL;
+
+		}
+	}
+
+	return symTableIter->second;
+}
+
+/**
+ * Gets symbol record structure from symbol table (in current scope only).
+ *
+ * @param std::string*		key in symbol table (or identifier name)
  * @return SymbolRecord*	pointer to symbol record or NULL (if not found)
  */
 SymbolTable::SymbolRecord *SymbolTable::getSymbol(std::string *key) {
-	symTableIter = symTable.find(*key);
-
-	if(symTableIter == symTable.end())
-		return (SymbolRecord*) NULL;
-
-	return symTableIter->second;
+	return getSymbol(key, false);
 }
 
 /**
@@ -163,17 +255,24 @@ SymbolTable::FunctionRecord *SymbolTable::getFunction(std::string *key) {
  * Gets symbol type for specified symbol
  *
  * @param std::string*		symbol name or key
+ * @param bool				flag for recursive search in scopes
  * @return SymbolType*		pointer to symbol type or NULL (if not found)
  */
-SymbolTable::SymbolType *SymbolTable::getSymbolType(std::string *name) {
-	/** @todo implement this need to resolve if key or name!! */
-	return (SymbolType*) NULL;
+SymbolType *SymbolTable::getSymbolType(std::string *name, bool recursive) {
+	// search for symbol
+	SymbolRecord *symRec = getSymbol(name, recursive);
+
+	if(symRec == (SymbolRecord*) NULL)
+		return (SymbolType*) NULL;
+
+	return &symRec->type;
 }
 
 /**
  * Go up in scope structure.
  */
 void SymbolTable::scopeUp(void) {
+	previousScope = scopeStack.back();
 	scopeStack.pop_back();
 	currentScope = scopeStack.back();
 }
@@ -184,6 +283,13 @@ void SymbolTable::scopeUp(void) {
 void SymbolTable::scopeDown(void) {
 	currentScope = nextScope++;
 	scopeStack.push_back(currentScope);
+}
+
+/**
+ * Returns current scope ID
+ */
+int SymbolTable::getScope(void) {
+	return currentScope;
 }
 
 }

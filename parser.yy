@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "symbolTable.h"
 
 %}
 
@@ -49,13 +50,22 @@
 /* verbose error messages */
 %error-verbose
 
- /*** BEGIN EXAMPLE - Change the example grammar's tokens below ***/
+%code requires {
+	#include "symbolTable.h"
+}
 
+ /*** BEGIN EXAMPLE - Change the example grammar's tokens below ***/
 %union {
     int  			integerVal;
     char			charVal;
     std::string*	stringVal;
     std::string*	idName;
+    std::string*	keyString;
+    SymbolType symbolType;
+	FunctionType functionType;
+	std::vector<SymbolType>		*typesVector;
+	
+	stringpVector	*namesVector;
 }
 
 %token			END	     0		"end of file"
@@ -65,6 +75,8 @@
 %token <stringVal>	STRING_LITERAL  "string"
 %token <idName>		ID				"identificator"
 %token <integerVal>	CONSTANT		"number constant"
+
+%token PRINT READ_CHAR READ_SHORT READ_INT READ_STRING STRCAT
 
 %token CHAR SHORT INT VOID STRING
 
@@ -81,8 +93,11 @@
 %left '*' '/' '%'
 %left UNARY_OP	/* unary operators */
 
-/*%type <calcnode>	constant variable
-%type <calcnode>	atomexpr powexpr unaryexpr mulexpr addexpr expr*/
+%type <keyString>		constant
+%type <symbolType>		type_specifier
+%type <functionType>	function_type
+%type <namesVector>		declarator_list
+%type <typesVector>		parameter_definition_list parameter_types_list
 
 /*%destructor { delete $$; } STRING_LITERAL
 %destructor { delete $$; } constant variable
@@ -115,14 +130,36 @@ argument_expression_list
 	| argument_expression_list ',' expression
 	;
 
+constant
+	: CONSTANT										{
+														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
+														val->intVal = $1;
+														$$ = compiler.symbolTable->installConstant(vype10::SYM_INT, val);
+													}
+	| CHAR_LITERAL									{
+														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
+														val->charVal = $1;
+														$$ = compiler.symbolTable->installConstant(vype10::SYM_CHAR, val);
+													}
+	| STRING_LITERAL								{
+														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
+														val->stringVal = $1;
+														$$ = compiler.symbolTable->installConstant(vype10::SYM_STRING, val);
+													}
+	;	
+
 expression
-	: ID											{ std::cerr << "Identifier: " << *$1 << std::endl; }
-	| CONSTANT										{ std::cerr << "Int constant: " << $1 << std::endl; }
-	| CHAR_LITERAL									{ std::cerr << "Character literal: " << $1 << std::endl; }
-	| STRING_LITERAL								{ std::cerr << "String literal: " << *$1 << std::endl; }
+	: ID
 	| ID '(' ')'
-	| ID '(' argument_expression_list ')'			{ std::cerr << "Function call: " << *$1 << std::endl; }
+	| ID '(' argument_expression_list ')'
+	| PRINT '(' argument_expression_list ')'
+	| STRCAT '(' expression ',' expression ')'
+	| READ_CHAR '(' ')'
+	| READ_SHORT '(' ')'
+	| READ_INT '(' ')'
+	| READ_STRING '(' ')'
 	| ID '[' expression ']'
+	| constant
 	| expression '+' expression
 	| expression '-' expression
 	| expression '*' expression
@@ -145,37 +182,66 @@ expression
 	;
 
 declaration
-	: type_specifier declarator_list ';'
+	: type_specifier declarator_list ';'	{ compiler.symbolTable->installSymbol($2, $1); }
 	;
 
 declarator_list
-	: ID
-	| declarator_list ',' ID
+	: ID						{
+									$$ = new std::vector<std::string*>();
+									if(compiler.symbolTable->getSymbol($1) != (SymbolTable::SymbolRecord*) NULL) {
+										compiler.error(yylloc, "Identifier with name '" + *$1 + "' already defined.", RET_ERR_SEMANTICAL);
+										YYERROR;
+									}
+									$$->push_back($1);
+								}
+	| declarator_list ',' ID	{
+									if(compiler.symbolTable->getSymbol($3) != (SymbolTable::SymbolRecord*) NULL) {
+										compiler.error(yylloc, "Identifier with name '" + *$3 + "' already defined.", RET_ERR_SEMANTICAL);
+										YYERROR;
+									}
+									$$->push_back($3); 
+								}
 	;
 
 function_type
-	: VOID
-	| CHAR
-	| SHORT
-	| INT
-	| STRING
+	: VOID		{ $$ = vype10::FUN_VOID; }
+	| CHAR		{ $$ = vype10::FUN_CHAR; }
+	| SHORT		{ $$ = vype10::FUN_SHORT; }
+	| INT		{ $$ = vype10::FUN_INT; }
+	| STRING	{ $$ = vype10::FUN_STRING; }
 	;
 
 type_specifier
-	: CHAR
-	| SHORT
-	| INT
-	| STRING
+	: CHAR		{ $$ = vype10::SYM_CHAR; }
+	| SHORT		{ $$ = vype10::SYM_SHORT; }
+	| INT		{ $$ = vype10::SYM_INT; }
+	| STRING	{ $$ = vype10::SYM_STRING; }
 	;
 	
 parameter_types_list
-	: type_specifier
-	| parameter_types_list ',' type_specifier
+	: type_specifier			{
+									$$ = new std::vector<SymbolType>();
+									// no check needed
+									$$->push_back($1);
+								}
+	| parameter_types_list ',' type_specifier	{
+									// no check needed
+									$$->push_back($3); 
+								}
 	;
 	
 parameter_definition_list
-	: type_specifier ID
-	| parameter_definition_list ',' type_specifier ID
+	: type_specifier ID			{
+									$$ = new std::vector<SymbolType>();
+									// no check needed -> install symbol to the next scope
+									compiler.symbolTable->installSymbol($2, $1, false);
+									$$->push_back($1);
+								}
+	| parameter_definition_list ',' type_specifier ID	{
+									// no check needed -> install symbol to the next scope
+									compiler.symbolTable->installSymbol($4, $3, false);
+									$$->push_back($3); 
+								}
 	;
 
 statement
@@ -208,13 +274,27 @@ expression_statement
 	| assignment_expression ';'
 	;
 
+/* unattached from selection statement because of need to generate intermediate symbols before reduction of whole selection_statement */
+if_statement
+	: IF '(' expression ')'
+	;
+
+/* same as if_statement */
+else_statement
+	: ELSE
+	;
+
 selection_statement
-	: /*IF '(' expression ')' statement
-	|*/ IF '(' expression ')' statement ELSE statement
+	: if_statement statement else_statement statement
+	;
+
+/* same as if_statement */
+while_statement
+	: WHILE '(' expression ')'
 	;
 
 iteration_statement
-	: WHILE '(' expression ')' statement
+	: while_statement statement
 	;
 
 jump_statement
@@ -235,13 +315,41 @@ external_declaration
 	;
 
 function_definition
-	: function_type ID '(' VOID ')' compound_statement
-	| function_type ID '(' parameter_definition_list ')' compound_statement
+	: function_type ID '(' VOID ')' compound_statement	{
+										std::string *key;
+										key = compiler.symbolTable->installFunction($2, $1, (std::vector<SymbolType>*) NULL, true);
+										if(key == (std::string*) NULL) {
+											compiler.error(yylloc, "Function with name '" + *$2 + "' already defined.", RET_ERR_SEMANTICAL);
+											YYERROR;
+										}
+									}
+	| function_type ID '(' parameter_definition_list ')' compound_statement 	{
+										std::string *key;
+										key = compiler.symbolTable->installFunction($2, $1, $4, true);
+										if(key == (std::string*) NULL) {
+											compiler.error(yylloc, "Function with name '" + *$2 + "' already defined.", RET_ERR_SEMANTICAL);
+											YYERROR;
+										}
+									}
 	;
 
 function_declaration
-	: function_type ID '(' VOID ')' ';'
-	| function_type ID '(' parameter_types_list ')' ';'
+	: function_type ID '(' VOID ')' ';'	{
+										std::string *key;
+										key = compiler.symbolTable->installFunction($2, $1, (std::vector<SymbolType>*) NULL, false);
+										if(key == (std::string*) NULL) {
+											compiler.error(yylloc, "Function with name '" + *$2 + "' already defined (or declared).", RET_ERR_SEMANTICAL);
+											YYERROR;
+										}
+									}
+	| function_type ID '(' parameter_types_list ')' ';'		{
+										std::string *key;
+										key = compiler.symbolTable->installFunction($2, $1, $4, false);
+										if(key == (std::string*) NULL) {
+											compiler.error(yylloc, "Function with name '" + *$2 + "' already defined (or declared).", RET_ERR_SEMANTICAL);
+											YYERROR;
+										}
+									}
 	;
 
 %% /*** Additional Code ***/

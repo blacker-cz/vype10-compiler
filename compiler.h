@@ -8,6 +8,7 @@
 #define VYPE10_COMPILER_H_
 
 #include <string>
+#include "symbolTable.h"
 #include "location.hh"
 #include "misc.h"
 
@@ -18,6 +19,9 @@ namespace vype10 {
 			std::string input;
 			std::string output;
 
+			/** Error level */
+			int errorLevel;
+
 		public:
 			Compiler(std::string input);
 			Compiler(std::string input, std::string output);
@@ -25,6 +29,8 @@ namespace vype10 {
 			int run(void);
 
 			class Scanner* lexer;
+
+			class SymbolTable* symbolTable;
 
 			/** Stream name used for error messages */
 			std::string streamname;

@@ -13,14 +13,16 @@
 
 namespace vype10 {
 
+typedef enum SymbolType_T {SYM_INT = 0, SYM_SHORT, SYM_CHAR, SYM_STRING} SymbolType;
+typedef enum FunctionType_T {FUN_INT = 0, FUN_SHORT, FUN_CHAR, FUN_STRING, FUN_VOID} FunctionType;
+
+typedef std::vector<std::string*>	stringpVector;
+
 class SymbolTable {
 
 public:
 	SymbolTable();
 	virtual ~SymbolTable();
-
-	typedef enum SymbolType_T {SYM_INT, SYM_SHORT, SYM_CHAR, SYM_STRING} SymbolType;
-	typedef enum FunctionType_T {FUN_INT, FUN_SHORT, FUN_CHAR, FUN_STRING, FUN_VOID} FunctionType;
 
 	/** Union for storing constants value */
 	typedef union value_t {
@@ -50,6 +52,7 @@ public:
 	typedef struct funRecord {
 		std::string *name;
 		FunctionType type;
+		bool defined;
 		std::vector<SymbolType> paramsType;
 
 		/** Structure destructor */
@@ -58,25 +61,29 @@ public:
 		}
 	} FunctionRecord;
 
-	std::string *installFunction(std::string *name, FunctionType type, ...);
+	std::string *installFunction(std::string *name, FunctionType type, std::vector<SymbolType> *types, bool defined);
 
-	bool addFunctionParam(std::string *name, SymbolType type);
+	std::string* installSymbol(std::string *name, SymbolType type, bool thisScope);
 
-	std::string *installSymbol(std::string *name, SymbolType type);
+	void installSymbol(std::vector<std::string*> *names, SymbolType type);
 
 	std::string *installSymbol(SymbolType type);
 
 	std::string *installConstant(SymbolType type, Value *value);
 
+	SymbolRecord *getSymbol(std::string *key, bool recursive);
+
 	SymbolRecord *getSymbol(std::string *key);
 
 	FunctionRecord *getFunction(std::string *key);
 
-	SymbolType *getSymbolType(std::string *name);
+	SymbolType *getSymbolType(std::string *name, bool recursive);
 
 	void scopeUp(void);
 
 	void scopeDown(void);
+
+	int getScope(void);
 
 private:
 	/** Private map of symbols */
@@ -91,14 +98,17 @@ private:
 
 	/** Private scope stack (using vector for reading records lower on stack without need to pop) */
 	std::vector<int> scopeStack;
-	/** Private scope stack iterator*/
-	std::vector<int> scopeStackIter;
+	/** Private scope stack reverse iterator*/
+	std::vector<int>::reverse_iterator scopeStackRIter;
 
 	/** Current scope ID */
 	int currentScope;
 
 	/** Next available scope ID */
 	int nextScope;
+
+	/** Previous scope ID */
+	int previousScope;
 
 	/** Special counter used for unnamed identifiers */
 	int unnamedCounter;

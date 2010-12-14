@@ -95,14 +95,20 @@ whitespace	[ \t]+
 "continue"      {return token::CONTINUE;}
 "break"         {return token::BREAK;}
 "return"        {return token::RETURN;}
+"print"       	{return token::PRINT;}
+"read_char"   	{return token::READ_CHAR;}
+"read_short"   	{return token::READ_SHORT;}
+"read_int"   	{return token::READ_INT;}
+"read_string"  	{return token::READ_STRING;}
+"strcat"       	{return token::STRCAT;}
 "<="            {return token::LE_OP;}
 ">="            {return token::GE_OP;}
 "=="            {return token::EQ_OP;}
 "!="            {return token::NE_OP;}
 "&&"            {return token::AND_OP;}
 "||"            {return token::OR_OP;}
-"}"		{return (token_type)'}'; }
-"{"		{return (token_type)'{'; }
+"}"		{parent->symbolTable->scopeUp(); return (token_type)'}'; }
+"{"		{parent->symbolTable->scopeDown(); return (token_type)'{'; }
 ";"		{return (token_type)';'; }
 ","		{return (token_type)','; }
 ":"		{return (token_type)':'; }

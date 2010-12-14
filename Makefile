@@ -19,7 +19,7 @@ DOXYFLAGS :=
 
 VYPE_CXXFLAGS =  -I. $(CPPFLAGS) $(CXXFLAGS)
 VYPE_OBJECTS =  \
-  vype10.o compiler.o lex.yy.o parser.tab.o
+  vype10.o compiler.o lex.yy.o parser.tab.o symbolTable.o
 VYPE_SRCS = \
   vype10.cpp compiler.cpp lex.yy.cc parser.tab.cc symbolTable.cpp
 VYPE_HEADERS = \

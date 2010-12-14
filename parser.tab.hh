@@ -37,6 +37,17 @@
 #ifndef PARSER_HEADER_H
 # define PARSER_HEADER_H
 
+/* "%code requires" blocks.  */
+
+/* Line 35 of lalr1.cc  */
+#line 53 "parser.yy"
+
+	#include "symbolTable.h"
+
+
+
+/* Line 35 of lalr1.cc  */
+#line 51 "parser.tab.hh"
 
 
 #include <string>
@@ -50,7 +61,7 @@
 namespace vype10 {
 
 /* Line 35 of lalr1.cc  */
-#line 54 "parser.tab.hh"
+#line 65 "parser.tab.hh"
   class position;
   class location;
 
@@ -60,7 +71,7 @@ namespace vype10 {
 } // vype10
 
 /* Line 35 of lalr1.cc  */
-#line 64 "parser.tab.hh"
+#line 75 "parser.tab.hh"
 
 #include "location.hh"
 
@@ -108,7 +119,7 @@ do {							\
 namespace vype10 {
 
 /* Line 35 of lalr1.cc  */
-#line 112 "parser.tab.hh"
+#line 123 "parser.tab.hh"
 
   /// A Bison parser.
   class Parser
@@ -120,17 +131,23 @@ namespace vype10 {
     {
 
 /* Line 35 of lalr1.cc  */
-#line 54 "parser.yy"
+#line 58 "parser.yy"
 
     int  			integerVal;
     char			charVal;
     std::string*	stringVal;
     std::string*	idName;
+    std::string*	keyString;
+    SymbolType symbolType;
+	FunctionType functionType;
+	std::vector<SymbolType>		*typesVector;
+	
+	stringpVector	*namesVector;
 
 
 
 /* Line 35 of lalr1.cc  */
-#line 134 "parser.tab.hh"
+#line 151 "parser.tab.hh"
     };
 #else
     typedef YYSTYPE semantic_type;
@@ -148,25 +165,31 @@ namespace vype10 {
      STRING_LITERAL = 260,
      ID = 261,
      CONSTANT = 262,
-     CHAR = 263,
-     SHORT = 264,
-     INT = 265,
-     VOID = 266,
-     STRING = 267,
-     IF = 268,
-     ELSE = 269,
-     WHILE = 270,
-     CONTINUE = 271,
-     BREAK = 272,
-     RETURN = 273,
-     LOW_PRIORITY = 274,
-     OR_OP = 275,
-     AND_OP = 276,
-     NE_OP = 277,
-     EQ_OP = 278,
-     GE_OP = 279,
-     LE_OP = 280,
-     UNARY_OP = 281
+     PRINT = 263,
+     READ_CHAR = 264,
+     READ_SHORT = 265,
+     READ_INT = 266,
+     READ_STRING = 267,
+     STRCAT = 268,
+     CHAR = 269,
+     SHORT = 270,
+     INT = 271,
+     VOID = 272,
+     STRING = 273,
+     IF = 274,
+     ELSE = 275,
+     WHILE = 276,
+     CONTINUE = 277,
+     BREAK = 278,
+     RETURN = 279,
+     LOW_PRIORITY = 280,
+     OR_OP = 281,
+     AND_OP = 282,
+     NE_OP = 283,
+     EQ_OP = 284,
+     GE_OP = 285,
+     LE_OP = 286,
+     UNARY_OP = 287
    };
 
     };
@@ -253,7 +276,7 @@ namespace vype10 {
     static const unsigned char yydefact_[];
 
     static const short int yypgoto_[];
-    static const signed char yydefgoto_[];
+    static const short int yydefgoto_[];
 
     /// What to do in a state.
     /// \a yytable_[yypact_[s]]: what to do in state \a s.
@@ -289,9 +312,9 @@ namespace vype10 {
     /// A `-1'-separated list of the rules' RHS.
     static const rhs_number_type yyrhs_[];
     /// For each rule, the index of the first RHS symbol in \a yyrhs_.
-    static const unsigned char yyprhs_[];
+    static const unsigned short int yyprhs_[];
     /// For each rule, its source line number.
-    static const unsigned char yyrline_[];
+    static const unsigned short int yyrline_[];
     /// For each scanner token number, its symbol number.
     static const unsigned short int yytoken_number_[];
     /// Report on the debug stream that the rule \a r is going to be reduced.
@@ -343,7 +366,7 @@ namespace vype10 {
 } // vype10
 
 /* Line 35 of lalr1.cc  */
-#line 347 "parser.tab.hh"
+#line 370 "parser.tab.hh"
 
 
 
