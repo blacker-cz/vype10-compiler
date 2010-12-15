@@ -92,8 +92,9 @@
 %left '+' '-'
 %left '*' '/' '%'
 %left UNARY_OP	/* unary operators */
+%left HIGH_PRIORITY
 
-%type <keyString>		constant
+%type <keyString>		constant expression
 %type <symbolType>		type_specifier
 %type <functionType>	function_type
 %type <namesVector>		declarator_list
@@ -143,16 +144,64 @@ constant
 	;	
 
 expression
-	: ID
+	: ID											{
+														$$ = compiler.symbolTable->getSymbolKey($1, true);
+														if($$ == (std::string*) NULL) {
+															compiler.error(yylloc, "Undefined identifier '" + *$1 + "'.", RET_ERR_SEMANTICAL);
+															YYERROR;
+														}
+													}
 	| ID '(' ')'
 	| ID '(' argument_expression_list ')'
 	| PRINT '(' argument_expression_list ')'
-	| STRCAT '(' expression ',' expression ')'
-	| READ_CHAR '(' ')'
-	| READ_SHORT '(' ')'
-	| READ_INT '(' ')'
-	| READ_STRING '(' ')'
-	| ID '[' expression ']'
+	| STRCAT '(' expression ',' expression ')'		{
+														SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($3, true);
+														if(first->type != vype10::SYM_STRING) {
+															compiler.error(yylloc, "First parameter must be of type string.", RET_ERR_SEMANTICAL);
+															YYERROR;
+														}
+														SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($5, true);
+														if(second->type != vype10::SYM_STRING) {
+															compiler.error(yylloc, "Second parameter must be of type string.", RET_ERR_SEMANTICAL);
+															YYERROR;
+														}
+														$$ = compiler.symbolTable->installSymbol(vype10::SYM_STRING);
+														compiler.intermediateCode->add(vype10::IntermediateCode::STRCAT, $3, $5, $$);
+													}
+	| READ_CHAR '(' ')'								{
+														$$ = compiler.symbolTable->installSymbol(vype10::SYM_CHAR);
+														compiler.intermediateCode->add(vype10::IntermediateCode::READ_CHAR, (std::string*)NULL, (std::string*)NULL, $$);
+													}
+	| READ_SHORT '(' ')'								{
+														$$ = compiler.symbolTable->installSymbol(vype10::SYM_SHORT);
+														compiler.intermediateCode->add(vype10::IntermediateCode::READ_SHORT, (std::string*)NULL, (std::string*)NULL, $$);
+													}
+	| READ_INT '(' ')'								{
+														$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+														compiler.intermediateCode->add(vype10::IntermediateCode::READ_INT, (std::string*)NULL, (std::string*)NULL, $$);
+													}
+	| READ_STRING '(' ')'							{
+														$$ = compiler.symbolTable->installSymbol(vype10::SYM_STRING);
+														compiler.intermediateCode->add(vype10::IntermediateCode::READ_STRING, (std::string*)NULL, (std::string*)NULL, $$);
+													}
+	| ID '[' expression ']'							{
+														SymbolTable::SymbolRecord *id = compiler.symbolTable->getSymbol($1, true);
+														if(id == (SymbolTable::SymbolRecord*) NULL) {
+															compiler.error(yylloc, "Undefined identifier '" + *$1 + "'.", RET_ERR_SEMANTICAL);
+															YYERROR;
+														}
+														if(id->type != vype10::SYM_STRING) {
+															compiler.error(yylloc, "Only strings allow array access.", RET_ERR_SEMANTICAL);
+															YYERROR;
+														}
+														SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol($3, true);
+														if(sym->type != vype10::SYM_SHORT && sym->type != vype10::SYM_INT) {
+															compiler.error(yylloc, "Index must be of type short or int.", RET_ERR_SEMANTICAL);
+															YYERROR;
+														}
+														$$ = compiler.symbolTable->installSymbol(vype10::SYM_CHAR);
+														compiler.intermediateCode->add(vype10::IntermediateCode::INDEX, compiler.symbolTable->getSymbolKey($1, true), $3, $$);
+													}
 	| constant
 	| expression '+' expression
 	| expression '-' expression
@@ -171,8 +220,8 @@ expression
 	| expression GE_OP expression
 	| '!' expression %prec UNARY_OP
 	| '~' expression %prec UNARY_OP
-	| '(' expression ')'
-	| '(' type_specifier ')' expression %prec UNARY_OP
+	| '(' expression ')'							{ $$ = $2; }
+	| '(' type_specifier ')' expression %prec HIGH_PRIORITY
 	;
 
 declaration

@@ -189,7 +189,8 @@ namespace vype10 {
      EQ_OP = 284,
      GE_OP = 285,
      LE_OP = 286,
-     UNARY_OP = 287
+     UNARY_OP = 287,
+     HIGH_PRIORITY = 288
    };
 
     };
@@ -366,7 +367,7 @@ namespace vype10 {
 } // vype10
 
 /* Line 35 of lalr1.cc  */
-#line 370 "parser.tab.hh"
+#line 371 "parser.tab.hh"
 
 
 
