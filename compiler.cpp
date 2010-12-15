@@ -69,6 +69,8 @@ int Compiler::run(void) {
     scanner.set_debug(this->trace_scanning);
     this->lexer = &scanner;
 
+    intermediateCode = new IntermediateCode();
+
     Parser parser(*this);
     parser.set_debug_level(this->trace_parsing);
     parser.parse();

@@ -9,6 +9,7 @@
 
 #include <string>
 #include "symbolTable.h"
+#include "intermediateCode.h"
 #include "location.hh"
 #include "misc.h"
 
@@ -31,6 +32,8 @@ namespace vype10 {
 			class Scanner* lexer;
 
 			class SymbolTable* symbolTable;
+
+			class IntermediateCode* intermediateCode;
 
 			/** Stream name used for error messages */
 			std::string streamname;
