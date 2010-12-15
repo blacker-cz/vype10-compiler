@@ -75,9 +75,15 @@ public:
 
 	SymbolRecord *getSymbol(std::string *key);
 
+	std::string *getSymbolKey(std::string *key, bool recursive);
+
+	std::string *getSymbolKey(std::string *key);
+
 	FunctionRecord *getFunction(std::string *key);
 
 	SymbolType *getSymbolType(std::string *name, bool recursive);
+
+	std::string *getUndefinedFunctions(void);
 
 	void scopeUp(void);
 

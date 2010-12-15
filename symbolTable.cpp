@@ -210,7 +210,7 @@ SymbolTable::SymbolRecord *SymbolTable::getSymbol(std::string *key, bool recursi
 		} else {	// recursive search for identifier
 
 			for(scopeStackRIter = scopeStack.rbegin(); scopeStackRIter < scopeStack.rend(); ++scopeStackRIter) {
-				stream.clear();
+				stream.str("");	// empty stringstream
 				stream << ":" << *key << "_" << *scopeStackRIter;
 
 				symTableIter = symTable.find(stream.str());
@@ -234,6 +234,62 @@ SymbolTable::SymbolRecord *SymbolTable::getSymbol(std::string *key, bool recursi
  */
 SymbolTable::SymbolRecord *SymbolTable::getSymbol(std::string *key) {
 	return getSymbol(key, false);
+}
+
+/**
+ * Gets symbol key from symbol table.
+ * Provides check if identifier is in table.
+ *
+ * @param std::string*		key in symbol table (or identifier name)
+ * @param bool				flag for recursive search in scopes if name was given
+ * @return SymbolRecord*	pointer to string with symbol key or NULL (if not found)
+ */
+std::string *SymbolTable::getSymbolKey(std::string *key, bool recursive) {
+	// check if key or name of identifier was passed
+
+	if(key->compare(0, 1, ":") == 0) {
+		symTableIter = symTable.find(*key);
+
+		if(symTableIter == symTable.end())
+			return (std::string*) NULL;
+	} else {
+		std::stringstream stream;
+
+		if(!recursive) {
+			stream << ":" << *key << "_" << currentScope;
+			symTableIter = symTable.find(stream.str());
+
+			if(symTableIter == symTable.end())
+				return (std::string*) NULL;
+
+		} else {	// recursive search for identifier
+
+			for(scopeStackRIter = scopeStack.rbegin(); scopeStackRIter < scopeStack.rend(); ++scopeStackRIter) {
+				stream.str("");	// empty stringstream
+				stream << ":" << *key << "_" << *scopeStackRIter;
+
+				symTableIter = symTable.find(stream.str());
+
+				if(symTableIter != symTable.end())
+					return new std::string(symTableIter->first);
+			}
+			return (std::string*) NULL;
+
+		}
+	}
+
+	return new std::string(symTableIter->first);
+}
+
+/**
+ * Gets symbol key from symbol table (in current scope only).
+ * Provides check if identifier is in table.
+ *
+ * @param std::string*		key in symbol table (or identifier name)
+ * @return std::string*		pointer to string with symbol key or NULL (if not found)
+ */
+std::string *SymbolTable::getSymbolKey(std::string *key) {
+	return getSymbolKey(key, false);
 }
 
 /**
@@ -266,6 +322,19 @@ SymbolType *SymbolTable::getSymbolType(std::string *name, bool recursive) {
 		return (SymbolType*) NULL;
 
 	return &symRec->type;
+}
+
+/**
+ * Checks for declared but undefined functions.
+ *
+ * @return std::string*		pointer to name of the first declared but undefined function
+ */
+std::string *SymbolTable::getUndefinedFunctions(void) {
+	for(funTableIter = funTable.begin(); funTableIter != funTable.end(); funTableIter++) {
+		if(!funTableIter->second->defined)
+			return funTableIter->second->name;
+	}
+	return (std::string*) NULL;
 }
 
 /**

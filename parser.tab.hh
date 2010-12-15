@@ -40,7 +40,7 @@
 /* "%code requires" blocks.  */
 
 /* Line 35 of lalr1.cc  */
-#line 53 "parser.yy"
+#line 54 "parser.yy"
 
 	#include "symbolTable.h"
 

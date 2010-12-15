@@ -73,9 +73,24 @@ int Compiler::run(void) {
     parser.set_debug_level(this->trace_parsing);
     parser.parse();
 
-    /**
-     * @todo: check here semantic action (e.g. all declared functions are defined, main is defined, ...)
-     */
+    if(this->errorLevel != RET_ERR_OK)
+    	return this->errorLevel;
+
+    // check if all declared functions are also defined
+    std::string *name = symbolTable->getUndefinedFunctions();
+    if(name != (std::string*) NULL) {
+    	error("Declared but undefined function '" + *name +"'", RET_ERR_SEMANTICAL);
+        return this->errorLevel;
+    }
+
+    // check if main function is defined
+    name = new string("main");
+    if(symbolTable->getFunction(name) == (SymbolTable::FunctionRecord*) NULL) {
+    	error("Undefined function '" + *name +"'", RET_ERR_SEMANTICAL);
+    	delete name;
+        return this->errorLevel;
+    }
+    delete name;
 
     return this->errorLevel;
 }
@@ -138,7 +153,7 @@ void Compiler::error(const std::string& m, int errorType) {
 		break;
 	}
 
-	cerr << err << ": " << m << endl;
+	cerr << err << " " << m << endl;
 }
 
 /**

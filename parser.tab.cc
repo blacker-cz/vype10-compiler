@@ -57,7 +57,7 @@
 /* User implementation prologue.  */
 
 /* Line 317 of lalr1.cc  */
-#line 108 "parser.yy"
+#line 102 "parser.yy"
 
 
 #include "compiler.h"
@@ -444,7 +444,7 @@ namespace vype10 {
 	  case 6:
 
 /* Line 678 of lalr1.cc  */
-#line 134 "parser.yy"
+#line 128 "parser.yy"
     {
 														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
 														val->intVal = (yysemantic_stack_[(1) - (1)].integerVal);
@@ -455,7 +455,7 @@ namespace vype10 {
   case 7:
 
 /* Line 678 of lalr1.cc  */
-#line 139 "parser.yy"
+#line 133 "parser.yy"
     {
 														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
 														val->charVal = (yysemantic_stack_[(1) - (1)].charVal);
@@ -466,7 +466,7 @@ namespace vype10 {
   case 8:
 
 /* Line 678 of lalr1.cc  */
-#line 144 "parser.yy"
+#line 138 "parser.yy"
     {
 														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
 														val->stringVal = (yysemantic_stack_[(1) - (1)].stringVal);
@@ -477,18 +477,22 @@ namespace vype10 {
   case 39:
 
 /* Line 678 of lalr1.cc  */
-#line 185 "parser.yy"
+#line 179 "parser.yy"
     { compiler.symbolTable->installSymbol((yysemantic_stack_[(3) - (2)].namesVector), (yysemantic_stack_[(3) - (1)].symbolType)); }
     break;
 
   case 40:
 
 /* Line 678 of lalr1.cc  */
-#line 189 "parser.yy"
+#line 183 "parser.yy"
     {
 									(yyval.namesVector) = new std::vector<std::string*>();
-									if(compiler.symbolTable->getSymbol((yysemantic_stack_[(1) - (1)].idName)) != (SymbolTable::SymbolRecord*) NULL) {
+									if(compiler.symbolTable->getSymbol((yysemantic_stack_[(1) - (1)].idName)) != (SymbolTable::SymbolRecord*) NULL || compiler.symbolTable->getFunction((yysemantic_stack_[(1) - (1)].idName)) != (SymbolTable::FunctionRecord*) NULL) {
 										compiler.error(yylloc, "Identifier with name '" + *(yysemantic_stack_[(1) - (1)].idName) + "' already defined.", RET_ERR_SEMANTICAL);
+										YYERROR;
+									}
+									if(compiler.symbolTable->getFunction((yysemantic_stack_[(1) - (1)].idName)) != (SymbolTable::FunctionRecord*) NULL) {
+										compiler.error(yylloc, "Identifier '" + *(yysemantic_stack_[(1) - (1)].idName) + "' can't have same name as defined/declared function.", RET_ERR_SEMANTICAL);
 										YYERROR;
 									}
 									(yyval.namesVector)->push_back((yysemantic_stack_[(1) - (1)].idName));
@@ -498,10 +502,14 @@ namespace vype10 {
   case 41:
 
 /* Line 678 of lalr1.cc  */
-#line 197 "parser.yy"
+#line 195 "parser.yy"
     {
 									if(compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].idName)) != (SymbolTable::SymbolRecord*) NULL) {
 										compiler.error(yylloc, "Identifier with name '" + *(yysemantic_stack_[(3) - (3)].idName) + "' already defined.", RET_ERR_SEMANTICAL);
+										YYERROR;
+									}
+									if(compiler.symbolTable->getFunction((yysemantic_stack_[(3) - (3)].idName)) != (SymbolTable::FunctionRecord*) NULL) {
+										compiler.error(yylloc, "Identifier '" + *(yysemantic_stack_[(3) - (3)].idName) + "' can't have same name as defined/declared function.", RET_ERR_SEMANTICAL);
 										YYERROR;
 									}
 									(yyval.namesVector)->push_back((yysemantic_stack_[(3) - (3)].idName)); 
@@ -511,70 +519,70 @@ namespace vype10 {
   case 42:
 
 /* Line 678 of lalr1.cc  */
-#line 207 "parser.yy"
+#line 209 "parser.yy"
     { (yyval.functionType) = vype10::FUN_VOID; }
     break;
 
   case 43:
 
 /* Line 678 of lalr1.cc  */
-#line 208 "parser.yy"
+#line 210 "parser.yy"
     { (yyval.functionType) = vype10::FUN_CHAR; }
     break;
 
   case 44:
 
 /* Line 678 of lalr1.cc  */
-#line 209 "parser.yy"
+#line 211 "parser.yy"
     { (yyval.functionType) = vype10::FUN_SHORT; }
     break;
 
   case 45:
 
 /* Line 678 of lalr1.cc  */
-#line 210 "parser.yy"
+#line 212 "parser.yy"
     { (yyval.functionType) = vype10::FUN_INT; }
     break;
 
   case 46:
 
 /* Line 678 of lalr1.cc  */
-#line 211 "parser.yy"
+#line 213 "parser.yy"
     { (yyval.functionType) = vype10::FUN_STRING; }
     break;
 
   case 47:
 
 /* Line 678 of lalr1.cc  */
-#line 215 "parser.yy"
+#line 217 "parser.yy"
     { (yyval.symbolType) = vype10::SYM_CHAR; }
     break;
 
   case 48:
 
 /* Line 678 of lalr1.cc  */
-#line 216 "parser.yy"
+#line 218 "parser.yy"
     { (yyval.symbolType) = vype10::SYM_SHORT; }
     break;
 
   case 49:
 
 /* Line 678 of lalr1.cc  */
-#line 217 "parser.yy"
+#line 219 "parser.yy"
     { (yyval.symbolType) = vype10::SYM_INT; }
     break;
 
   case 50:
 
 /* Line 678 of lalr1.cc  */
-#line 218 "parser.yy"
+#line 220 "parser.yy"
     { (yyval.symbolType) = vype10::SYM_STRING; }
     break;
 
   case 51:
 
 /* Line 678 of lalr1.cc  */
-#line 222 "parser.yy"
+#line 224 "parser.yy"
     {
 									(yyval.typesVector) = new std::vector<SymbolType>();
 									// no check needed
@@ -585,7 +593,7 @@ namespace vype10 {
   case 52:
 
 /* Line 678 of lalr1.cc  */
-#line 227 "parser.yy"
+#line 229 "parser.yy"
     {
 									// no check needed
 									(yyval.typesVector)->push_back((yysemantic_stack_[(3) - (3)].symbolType)); 
@@ -595,10 +603,14 @@ namespace vype10 {
   case 53:
 
 /* Line 678 of lalr1.cc  */
-#line 234 "parser.yy"
+#line 236 "parser.yy"
     {
 									(yyval.typesVector) = new std::vector<SymbolType>();
-									// no check needed -> install symbol to the next scope
+									if(compiler.symbolTable->getFunction((yysemantic_stack_[(2) - (2)].idName)) != (SymbolTable::FunctionRecord*) NULL) {
+										compiler.error(yylloc, "Identifier '" + *(yysemantic_stack_[(2) - (2)].idName) + "' can't have same name as defined function.", RET_ERR_SEMANTICAL);
+										YYERROR;
+									}
+									// install symbol to the next scope
 									compiler.symbolTable->installSymbol((yysemantic_stack_[(2) - (2)].idName), (yysemantic_stack_[(2) - (1)].symbolType), false);
 									(yyval.typesVector)->push_back((yysemantic_stack_[(2) - (1)].symbolType));
 								}
@@ -607,9 +619,13 @@ namespace vype10 {
   case 54:
 
 /* Line 678 of lalr1.cc  */
-#line 240 "parser.yy"
+#line 246 "parser.yy"
     {
-									// no check needed -> install symbol to the next scope
+									if(compiler.symbolTable->getFunction((yysemantic_stack_[(4) - (4)].idName)) != (SymbolTable::FunctionRecord*) NULL) {
+										compiler.error(yylloc, "Identifier '" + *(yysemantic_stack_[(4) - (4)].idName) + "' can't have same name as defined function.", RET_ERR_SEMANTICAL);
+										YYERROR;
+									}
+									// install symbol to the next scope
 									compiler.symbolTable->installSymbol((yysemantic_stack_[(4) - (4)].idName), (yysemantic_stack_[(4) - (3)].symbolType), false);
 									(yyval.typesVector)->push_back((yysemantic_stack_[(4) - (3)].symbolType)); 
 								}
@@ -618,12 +634,12 @@ namespace vype10 {
   case 83:
 
 /* Line 678 of lalr1.cc  */
-#line 318 "parser.yy"
+#line 331 "parser.yy"
     {
 										std::string *key;
-										key = compiler.symbolTable->installFunction((yysemantic_stack_[(6) - (2)].idName), (yysemantic_stack_[(6) - (1)].functionType), (std::vector<SymbolType>*) NULL, true);
+										key = compiler.symbolTable->installFunction((yysemantic_stack_[(5) - (2)].idName), (yysemantic_stack_[(5) - (1)].functionType), (std::vector<SymbolType>*) NULL, true);
 										if(key == (std::string*) NULL) {
-											compiler.error(yylloc, "Function with name '" + *(yysemantic_stack_[(6) - (2)].idName) + "' already defined.", RET_ERR_SEMANTICAL);
+											compiler.error(yylloc, "Function with name '" + *(yysemantic_stack_[(5) - (2)].idName) + "' already defined.", RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
 									}
@@ -632,21 +648,21 @@ namespace vype10 {
   case 84:
 
 /* Line 678 of lalr1.cc  */
-#line 326 "parser.yy"
+#line 339 "parser.yy"
     {
 										std::string *key;
-										key = compiler.symbolTable->installFunction((yysemantic_stack_[(6) - (2)].idName), (yysemantic_stack_[(6) - (1)].functionType), (yysemantic_stack_[(6) - (4)].typesVector), true);
+										key = compiler.symbolTable->installFunction((yysemantic_stack_[(5) - (2)].idName), (yysemantic_stack_[(5) - (1)].functionType), (yysemantic_stack_[(5) - (4)].typesVector), true);
 										if(key == (std::string*) NULL) {
-											compiler.error(yylloc, "Function with name '" + *(yysemantic_stack_[(6) - (2)].idName) + "' already defined.", RET_ERR_SEMANTICAL);
+											compiler.error(yylloc, "Function with name '" + *(yysemantic_stack_[(5) - (2)].idName) + "' already defined.", RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
 									}
     break;
 
-  case 85:
+  case 86:
 
 /* Line 678 of lalr1.cc  */
-#line 337 "parser.yy"
+#line 354 "parser.yy"
     {
 										std::string *key;
 										key = compiler.symbolTable->installFunction((yysemantic_stack_[(6) - (2)].idName), (yysemantic_stack_[(6) - (1)].functionType), (std::vector<SymbolType>*) NULL, false);
@@ -657,10 +673,10 @@ namespace vype10 {
 									}
     break;
 
-  case 86:
+  case 87:
 
 /* Line 678 of lalr1.cc  */
-#line 345 "parser.yy"
+#line 362 "parser.yy"
     {
 										std::string *key;
 										key = compiler.symbolTable->installFunction((yysemantic_stack_[(6) - (2)].idName), (yysemantic_stack_[(6) - (1)].functionType), (yysemantic_stack_[(6) - (4)].typesVector), false);
@@ -674,7 +690,7 @@ namespace vype10 {
 
 
 /* Line 678 of lalr1.cc  */
-#line 678 "parser.tab.cc"
+#line 694 "parser.tab.cc"
 	default:
           break;
       }
@@ -879,27 +895,27 @@ namespace vype10 {
 
   /* YYPACT[STATE-NUM] -- Index in YYTABLE of the portion describing
      STATE-NUM.  */
-  const signed char Parser::yypact_ninf_ = -57;
+  const signed char Parser::yypact_ninf_ = -43;
   const short int
   Parser::yypact_[] =
   {
-        45,   -57,   -57,   -57,   -57,   -57,    -1,    19,   -57,   -57,
-     -57,   -36,   -57,   -57,    83,   -57,   -57,   -57,   -34,   -57,
-      15,    59,    98,    14,   -57,    24,   -21,    24,    28,   -57,
-      62,   -57,   -57,   -57,   102,   -57,   -57,   -57,   -26,   -57,
-      61,    65,    84,    87,   113,   133,   134,   136,   125,   137,
-     141,   279,   306,   306,   -57,   -57,   138,   -57,   450,   -57,
-     180,   -57,   -57,   160,   111,   -57,   258,   -57,   258,   -57,
-     -57,   -57,   306,   190,   306,   306,   147,   148,   161,   162,
-     306,   306,   306,   -57,   -57,   112,   -57,   303,   352,   178,
-     -57,   -57,   -57,   306,   306,   306,   306,   306,   306,   306,
-     306,   306,   306,   306,   306,   306,   306,   306,   -57,   -37,
-     -57,   -57,   -57,   -57,   209,   185,   -57,   450,   -57,    99,
-     450,   330,   131,   -57,   -57,   -57,   -57,   432,   372,   392,
-     -57,   -57,   306,   464,   212,   476,   487,    55,    55,   100,
-     100,   100,   100,   -12,   -12,   -57,   -57,   -57,   218,   -57,
-     -57,   -57,   258,   306,   -57,   -57,   -57,   306,   -57,   -57,
-     -57,   -57,   -57,   450,   412,   -57
+         0,   -43,   -43,   -43,   -43,   -43,     2,     5,   -43,   -19,
+     -43,   -43,     1,   -43,   -43,    58,   -43,    69,   -43,   -43,
+      52,   -43,    31,    34,    49,    59,    60,    90,   -43,   -43,
+     -43,   -43,    93,   102,    50,    68,   147,   285,   312,   312,
+     -43,   -43,    97,   -43,   456,   -43,   142,   -43,   -43,   166,
+     117,   -43,   264,   -43,   264,   -43,   -43,   104,   144,   -34,
+      56,   312,   196,   312,   312,   118,   119,   135,   136,   312,
+     312,   312,   -43,   -43,    73,   -43,   309,   358,   137,   -43,
+     -43,   -43,   312,   312,   312,   312,   312,   312,   312,   312,
+     312,   312,   312,   312,   312,   312,   312,   -43,   -37,   -43,
+     -43,   -43,   -43,   215,   163,   -43,   112,   -43,    74,   134,
+      74,   -43,   456,   -43,    99,   456,   336,   100,   -43,   -43,
+     -43,   -43,   438,   378,   398,   -43,   -43,   312,   470,   218,
+     482,   493,     4,     4,    75,    75,    75,    75,    -9,    -9,
+     -43,   -43,   -43,   180,   -43,   -43,   -43,   264,   -43,   -43,
+     -43,   186,   312,   -43,   -43,   -43,   312,   -43,   -43,   -43,
+     -43,   -43,   -43,   456,   418,   -43
   };
 
   /* YYDEFACT[S] -- default rule to reduce with in state S when YYTABLE
@@ -908,41 +924,41 @@ namespace vype10 {
   const unsigned char
   Parser::yydefact_[] =
   {
-         0,    43,    44,    45,    42,    46,     0,     0,    79,    82,
-      81,     0,     1,    80,     0,    47,    48,    49,     0,    50,
-      51,     0,     0,     0,    53,     0,     0,     0,     0,    85,
-       0,    83,    52,    86,     0,    84,     7,     8,     9,     6,
+         0,    43,    44,    45,    42,    46,     0,     0,    79,     0,
+      82,    81,     0,     1,    80,     0,    85,     0,     7,     8,
+       9,     6,     0,     0,     0,     0,     0,     0,    47,    48,
+      49,    50,     0,     0,     0,     0,     0,     0,     0,     0,
+      68,    60,     0,    19,     3,    66,     0,    64,    55,     0,
+       0,    56,     0,    57,     0,    58,    59,     0,    51,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,    68,    60,     0,    19,     3,    66,
-       0,    64,    55,     0,     0,    56,     0,    57,     0,    58,
-      59,    54,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,    75,    76,     9,    77,     0,     0,     0,
-      35,    36,    69,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,     0,    40,     0,
-      61,    65,    62,    67,     0,     0,    74,     2,    10,     0,
-       4,     0,     0,    14,    15,    16,    17,     0,     0,     0,
-      78,    37,     0,    30,    29,    24,    25,    32,    31,    26,
-      27,    34,    33,    20,    21,    22,    23,    28,     0,    39,
-      63,    71,     0,     0,    11,    18,    12,     0,    70,    73,
-      38,    41,    72,     5,     0,    13
+       0,     0,    75,    76,     9,    77,     0,     0,     0,    35,
+      36,    69,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,    40,     0,    61,
+      65,    62,    67,     0,     0,    74,    83,    53,     0,     0,
+       0,    84,     2,    10,     0,     4,     0,     0,    14,    15,
+      16,    17,     0,     0,     0,    78,    37,     0,    30,    29,
+      24,    25,    32,    31,    26,    27,    34,    33,    20,    21,
+      22,    23,    28,     0,    39,    63,    71,     0,    86,    52,
+      87,     0,     0,    11,    18,    12,     0,    70,    73,    38,
+      41,    72,    54,     5,     0,    13
   };
 
   /* YYPGOTO[NTERM-NUM].  */
   const short int
   Parser::yypgoto_[] =
   {
-       -57,   -57,   150,   -57,   -50,   163,   -57,   -57,   -10,   -57,
-     -57,   -56,   -14,   165,   -57,   -57,   -57,   -57,   -57,   -57,
-     -57,   -57,   -57,   219,   -57,   -57
+       -43,   -43,   129,   -43,   -36,   148,   -43,   -43,   -13,   -43,
+     -43,   -42,   185,   149,   -43,   -43,   -43,   -43,   -43,   -43,
+     -43,   -43,   -43,   204,   -43,   -43,   -43
   };
 
   /* YYDEFGOTO[NTERM-NUM].  */
   const short int
   Parser::yydefgoto_[] =
   {
-        -1,    56,   119,    57,    58,    59,   109,     6,    60,    21,
-      22,    61,    62,    63,    64,    65,    66,   152,    67,    68,
-      69,    70,     7,     8,     9,    10
+        -1,    42,   114,    43,    44,    45,    98,     6,    46,    59,
+      60,    47,    48,    49,    50,    51,    52,   147,    53,    54,
+      55,    56,     7,     8,     9,    10,    11
   };
 
   /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -952,118 +968,120 @@ namespace vype10 {
   const unsigned char
   Parser::yytable_[] =
   {
-        87,    88,    90,    91,    20,    11,   148,   111,    14,    31,
-     115,    23,   116,   149,    35,    32,    72,    34,    73,    12,
-      74,    24,   117,   120,   121,   120,   105,   106,   107,    33,
-     127,   128,   129,     1,     2,     3,     4,     5,    15,    16,
-      17,    89,    19,   133,   134,   135,   136,   137,   138,   139,
-     140,   141,   142,   143,   144,   145,   146,   147,   111,     1,
-       2,     3,     4,     5,    29,    30,    36,    37,    38,    39,
-      40,    41,    42,    43,    44,    45,    15,    16,    17,    30,
-      19,    46,   160,    47,    48,    49,    50,    99,   100,   101,
-     102,   103,   104,   105,   106,   107,   162,    15,    16,    17,
-      18,    19,    25,   163,    26,    75,    51,   164,    71,    76,
-      52,    53,    54,    30,    55,    36,    37,    38,    39,    40,
-      41,    42,    43,    44,    45,    15,    16,    17,    77,    19,
-      46,    78,    47,    48,    49,    50,   103,   104,   105,   106,
-     107,    27,   153,    28,   154,    36,    37,    85,    39,    40,
-      41,    42,    43,    44,    45,    51,    73,    79,    74,    52,
-      53,    54,    30,   112,    36,    37,    38,    39,    40,    41,
-      42,    43,    44,    45,   153,    83,   156,    80,    81,    46,
-      82,    47,    48,    49,    50,    51,   108,    84,    92,    52,
-      53,    86,   123,   124,    36,    37,    85,    39,    40,    41,
-      42,    43,    44,    45,    51,   151,   125,   126,    52,    53,
-      54,    30,   110,    36,    37,    38,    39,    40,    41,    42,
-      43,    44,    45,   132,   161,   122,    13,   113,    46,   114,
-      47,    48,    49,    50,    51,   118,     0,     0,    52,    53,
-      95,    96,    97,    98,    99,   100,   101,   102,   103,   104,
-     105,   106,   107,    51,     0,     0,     0,    52,    53,    54,
-      30,   150,    36,    37,    38,    39,    40,    41,    42,    43,
-      44,    45,     0,     0,     0,     0,     0,    46,     0,    47,
-      48,    49,    50,    36,    37,    85,    39,    40,    41,    42,
-      43,    44,    45,    15,    16,    17,     0,    19,     0,     0,
-       0,     0,    51,     0,     0,     0,    52,    53,    54,    30,
-      36,    37,    85,    39,    40,    41,    42,    43,    44,    45,
-       0,     0,     0,    51,     0,     0,     0,    52,    53,    93,
-      94,    95,    96,    97,    98,    99,   100,   101,   102,   103,
-     104,   105,   106,   107,     0,     0,     0,     0,     0,     0,
-      51,     0,     0,   130,    52,    53,    93,    94,    95,    96,
-      97,    98,    99,   100,   101,   102,   103,   104,   105,   106,
-     107,     0,     0,     0,     0,     0,     0,   155,    93,    94,
-      95,    96,    97,    98,    99,   100,   101,   102,   103,   104,
-     105,   106,   107,     0,     0,     0,     0,   131,    93,    94,
-      95,    96,    97,    98,    99,   100,   101,   102,   103,   104,
-     105,   106,   107,     0,     0,     0,     0,   158,    93,    94,
-      95,    96,    97,    98,    99,   100,   101,   102,   103,   104,
-     105,   106,   107,     0,     0,     0,     0,   159,    93,    94,
-      95,    96,    97,    98,    99,   100,   101,   102,   103,   104,
-     105,   106,   107,     0,     0,     0,     0,   165,    93,    94,
-      95,    96,    97,    98,    99,   100,   101,   102,   103,   104,
-     105,   106,   107,     0,     0,   157,    93,    94,    95,    96,
-      97,    98,    99,   100,   101,   102,   103,   104,   105,   106,
-     107,    94,    95,    96,    97,    98,    99,   100,   101,   102,
-     103,   104,   105,   106,   107,    96,    97,    98,    99,   100,
-     101,   102,   103,   104,   105,   106,   107,    97,    98,    99,
-     100,   101,   102,   103,   104,   105,   106,   107
+        76,    77,    79,    80,    58,    13,   143,   100,    12,   108,
+     104,   109,   105,   144,     1,     2,     3,     4,     5,     1,
+       2,     3,     4,     5,    78,   112,   115,   116,   115,    94,
+      95,    96,    15,   122,   123,   124,    88,    89,    90,    91,
+      92,    93,    94,    95,    96,    17,   128,   129,   130,   131,
+     132,   133,   134,   135,   136,   137,   138,   139,   140,   141,
+     142,   100,    18,    19,    20,    21,    22,    23,    24,    25,
+      26,    27,    28,    29,    30,    64,    31,    32,    65,    33,
+      34,    35,    36,    28,    29,    30,    57,    31,    28,    29,
+      30,   159,    31,    66,    61,   149,    62,   151,    63,   110,
+      72,   111,    37,    67,    68,   161,    38,    39,    40,    15,
+      41,    92,    93,    94,    95,    96,   163,    62,    73,    63,
+     164,    18,    19,    20,    21,    22,    23,    24,    25,    26,
+      27,    28,    29,    30,    69,    31,    32,    70,    33,    34,
+      35,    36,   152,   152,   153,   155,    71,    81,    97,   106,
+     107,    18,    19,    74,    21,    22,    23,    24,    25,    26,
+      27,    37,   148,   118,   119,    38,    39,    40,    15,   101,
+      18,    19,    20,    21,    22,    23,    24,    25,    26,    27,
+     120,   121,   127,   146,   150,    32,   160,    33,    34,    35,
+      36,    37,   162,   117,    16,    38,    39,    75,   102,   103,
+      18,    19,    74,    21,    22,    23,    24,    25,    26,    27,
+      37,    14,     0,     0,    38,    39,    40,    15,    99,    18,
+      19,    20,    21,    22,    23,    24,    25,    26,    27,     0,
+       0,     0,     0,     0,    32,     0,    33,    34,    35,    36,
+      37,   113,     0,     0,    38,    39,    84,    85,    86,    87,
+      88,    89,    90,    91,    92,    93,    94,    95,    96,    37,
+       0,     0,     0,    38,    39,    40,    15,   145,    18,    19,
+      20,    21,    22,    23,    24,    25,    26,    27,     0,     0,
+       0,     0,     0,    32,     0,    33,    34,    35,    36,    18,
+      19,    74,    21,    22,    23,    24,    25,    26,    27,    28,
+      29,    30,     0,    31,     0,     0,     0,     0,    37,     0,
+       0,     0,    38,    39,    40,    15,    18,    19,    74,    21,
+      22,    23,    24,    25,    26,    27,     0,     0,     0,    37,
+       0,     0,     0,    38,    39,    82,    83,    84,    85,    86,
+      87,    88,    89,    90,    91,    92,    93,    94,    95,    96,
+       0,     0,     0,     0,     0,     0,    37,     0,     0,   125,
+      38,    39,    82,    83,    84,    85,    86,    87,    88,    89,
+      90,    91,    92,    93,    94,    95,    96,     0,     0,     0,
+       0,     0,     0,   154,    82,    83,    84,    85,    86,    87,
+      88,    89,    90,    91,    92,    93,    94,    95,    96,     0,
+       0,     0,     0,   126,    82,    83,    84,    85,    86,    87,
+      88,    89,    90,    91,    92,    93,    94,    95,    96,     0,
+       0,     0,     0,   157,    82,    83,    84,    85,    86,    87,
+      88,    89,    90,    91,    92,    93,    94,    95,    96,     0,
+       0,     0,     0,   158,    82,    83,    84,    85,    86,    87,
+      88,    89,    90,    91,    92,    93,    94,    95,    96,     0,
+       0,     0,     0,   165,    82,    83,    84,    85,    86,    87,
+      88,    89,    90,    91,    92,    93,    94,    95,    96,     0,
+       0,   156,    82,    83,    84,    85,    86,    87,    88,    89,
+      90,    91,    92,    93,    94,    95,    96,    83,    84,    85,
+      86,    87,    88,    89,    90,    91,    92,    93,    94,    95,
+      96,    85,    86,    87,    88,    89,    90,    91,    92,    93,
+      94,    95,    96,    86,    87,    88,    89,    90,    91,    92,
+      93,    94,    95,    96
   };
 
   /* YYCHECK.  */
   const short int
   Parser::yycheck_[] =
   {
-        50,    51,    52,    53,    14,     6,    43,    63,    44,    23,
-      66,    45,    68,    50,    28,    25,    42,    27,    44,     0,
-      46,     6,    72,    73,    74,    75,    38,    39,    40,    50,
-      80,    81,    82,    14,    15,    16,    17,    18,    14,    15,
-      16,    51,    18,    93,    94,    95,    96,    97,    98,    99,
-     100,   101,   102,   103,   104,   105,   106,   107,   114,    14,
-      15,    16,    17,    18,    50,    51,     4,     5,     6,     7,
-       8,     9,    10,    11,    12,    13,    14,    15,    16,    51,
-      18,    19,   132,    21,    22,    23,    24,    32,    33,    34,
-      35,    36,    37,    38,    39,    40,   152,    14,    15,    16,
-      17,    18,    43,   153,    45,    44,    44,   157,     6,    44,
-      48,    49,    50,    51,    52,     4,     5,     6,     7,     8,
-       9,    10,    11,    12,    13,    14,    15,    16,    44,    18,
-      19,    44,    21,    22,    23,    24,    36,    37,    38,    39,
-      40,    43,    43,    45,    45,     4,     5,     6,     7,     8,
-       9,    10,    11,    12,    13,    44,    44,    44,    46,    48,
-      49,    50,    51,    52,     4,     5,     6,     7,     8,     9,
-      10,    11,    12,    13,    43,    50,    45,    44,    44,    19,
-      44,    21,    22,    23,    24,    44,     6,    50,    50,    48,
-      49,    50,    45,    45,     4,     5,     6,     7,     8,     9,
-      10,    11,    12,    13,    44,    20,    45,    45,    48,    49,
-      50,    51,    52,     4,     5,     6,     7,     8,     9,    10,
-      11,    12,    13,    45,     6,    75,     7,    64,    19,    64,
-      21,    22,    23,    24,    44,    45,    -1,    -1,    48,    49,
-      28,    29,    30,    31,    32,    33,    34,    35,    36,    37,
-      38,    39,    40,    44,    -1,    -1,    -1,    48,    49,    50,
-      51,    52,     4,     5,     6,     7,     8,     9,    10,    11,
-      12,    13,    -1,    -1,    -1,    -1,    -1,    19,    -1,    21,
-      22,    23,    24,     4,     5,     6,     7,     8,     9,    10,
-      11,    12,    13,    14,    15,    16,    -1,    18,    -1,    -1,
-      -1,    -1,    44,    -1,    -1,    -1,    48,    49,    50,    51,
+        36,    37,    38,    39,    17,     0,    43,    49,     6,    43,
+      52,    45,    54,    50,    14,    15,    16,    17,    18,    14,
+      15,    16,    17,    18,    37,    61,    62,    63,    64,    38,
+      39,    40,    51,    69,    70,    71,    32,    33,    34,    35,
+      36,    37,    38,    39,    40,    44,    82,    83,    84,    85,
+      86,    87,    88,    89,    90,    91,    92,    93,    94,    95,
+      96,   103,     4,     5,     6,     7,     8,     9,    10,    11,
+      12,    13,    14,    15,    16,    44,    18,    19,    44,    21,
+      22,    23,    24,    14,    15,    16,    17,    18,    14,    15,
+      16,   127,    18,    44,    42,   108,    44,   110,    46,    43,
+      50,    45,    44,    44,    44,   147,    48,    49,    50,    51,
+      52,    36,    37,    38,    39,    40,   152,    44,    50,    46,
+     156,     4,     5,     6,     7,     8,     9,    10,    11,    12,
+      13,    14,    15,    16,    44,    18,    19,    44,    21,    22,
+      23,    24,    43,    43,    45,    45,    44,    50,     6,    45,
+       6,     4,     5,     6,     7,     8,     9,    10,    11,    12,
+      13,    44,    50,    45,    45,    48,    49,    50,    51,    52,
        4,     5,     6,     7,     8,     9,    10,    11,    12,    13,
-      -1,    -1,    -1,    44,    -1,    -1,    -1,    48,    49,    26,
-      27,    28,    29,    30,    31,    32,    33,    34,    35,    36,
-      37,    38,    39,    40,    -1,    -1,    -1,    -1,    -1,    -1,
-      44,    -1,    -1,    50,    48,    49,    26,    27,    28,    29,
+      45,    45,    45,    20,    50,    19,     6,    21,    22,    23,
+      24,    44,     6,    64,     9,    48,    49,    50,    50,    50,
+       4,     5,     6,     7,     8,     9,    10,    11,    12,    13,
+      44,     7,    -1,    -1,    48,    49,    50,    51,    52,     4,
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    -1,
+      -1,    -1,    -1,    -1,    19,    -1,    21,    22,    23,    24,
+      44,    45,    -1,    -1,    48,    49,    28,    29,    30,    31,
+      32,    33,    34,    35,    36,    37,    38,    39,    40,    44,
+      -1,    -1,    -1,    48,    49,    50,    51,    52,     4,     5,
+       6,     7,     8,     9,    10,    11,    12,    13,    -1,    -1,
+      -1,    -1,    -1,    19,    -1,    21,    22,    23,    24,     4,
+       5,     6,     7,     8,     9,    10,    11,    12,    13,    14,
+      15,    16,    -1,    18,    -1,    -1,    -1,    -1,    44,    -1,
+      -1,    -1,    48,    49,    50,    51,     4,     5,     6,     7,
+       8,     9,    10,    11,    12,    13,    -1,    -1,    -1,    44,
+      -1,    -1,    -1,    48,    49,    26,    27,    28,    29,    30,
+      31,    32,    33,    34,    35,    36,    37,    38,    39,    40,
+      -1,    -1,    -1,    -1,    -1,    -1,    44,    -1,    -1,    50,
+      48,    49,    26,    27,    28,    29,    30,    31,    32,    33,
+      34,    35,    36,    37,    38,    39,    40,    -1,    -1,    -1,
+      -1,    -1,    -1,    47,    26,    27,    28,    29,    30,    31,
+      32,    33,    34,    35,    36,    37,    38,    39,    40,    -1,
+      -1,    -1,    -1,    45,    26,    27,    28,    29,    30,    31,
+      32,    33,    34,    35,    36,    37,    38,    39,    40,    -1,
+      -1,    -1,    -1,    45,    26,    27,    28,    29,    30,    31,
+      32,    33,    34,    35,    36,    37,    38,    39,    40,    -1,
+      -1,    -1,    -1,    45,    26,    27,    28,    29,    30,    31,
+      32,    33,    34,    35,    36,    37,    38,    39,    40,    -1,
+      -1,    -1,    -1,    45,    26,    27,    28,    29,    30,    31,
+      32,    33,    34,    35,    36,    37,    38,    39,    40,    -1,
+      -1,    43,    26,    27,    28,    29,    30,    31,    32,    33,
+      34,    35,    36,    37,    38,    39,    40,    27,    28,    29,
       30,    31,    32,    33,    34,    35,    36,    37,    38,    39,
-      40,    -1,    -1,    -1,    -1,    -1,    -1,    47,    26,    27,
-      28,    29,    30,    31,    32,    33,    34,    35,    36,    37,
-      38,    39,    40,    -1,    -1,    -1,    -1,    45,    26,    27,
-      28,    29,    30,    31,    32,    33,    34,    35,    36,    37,
-      38,    39,    40,    -1,    -1,    -1,    -1,    45,    26,    27,
-      28,    29,    30,    31,    32,    33,    34,    35,    36,    37,
-      38,    39,    40,    -1,    -1,    -1,    -1,    45,    26,    27,
-      28,    29,    30,    31,    32,    33,    34,    35,    36,    37,
-      38,    39,    40,    -1,    -1,    -1,    -1,    45,    26,    27,
-      28,    29,    30,    31,    32,    33,    34,    35,    36,    37,
-      38,    39,    40,    -1,    -1,    43,    26,    27,    28,    29,
-      30,    31,    32,    33,    34,    35,    36,    37,    38,    39,
-      40,    27,    28,    29,    30,    31,    32,    33,    34,    35,
-      36,    37,    38,    39,    40,    29,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,    30,    31,    32,
-      33,    34,    35,    36,    37,    38,    39,    40
+      40,    29,    30,    31,    32,    33,    34,    35,    36,    37,
+      38,    39,    40,    30,    31,    32,    33,    34,    35,    36,
+      37,    38,    39,    40
   };
 
   /* STOS_[STATE-NUM] -- The (internal number of the) accessing
@@ -1072,22 +1090,22 @@ namespace vype10 {
   Parser::yystos_[] =
   {
          0,    14,    15,    16,    17,    18,    60,    75,    76,    77,
-      78,     6,     0,    76,    44,    14,    15,    16,    17,    18,
-      61,    62,    63,    45,     6,    43,    45,    43,    45,    50,
-      51,    65,    61,    50,    61,    65,     4,     5,     6,     7,
-       8,     9,    10,    11,    12,    13,    19,    21,    22,    23,
-      24,    44,    48,    49,    50,    52,    54,    56,    57,    58,
-      61,    64,    65,    66,    67,    68,    69,    71,    72,    73,
-      74,     6,    42,    44,    46,    44,    44,    44,    44,    44,
-      44,    44,    44,    50,    50,     6,    50,    57,    57,    61,
-      57,    57,    50,    26,    27,    28,    29,    30,    31,    32,
-      33,    34,    35,    36,    37,    38,    39,    40,     6,    59,
-      52,    64,    52,    58,    66,    64,    64,    57,    45,    55,
-      57,    57,    55,    45,    45,    45,    45,    57,    57,    57,
-      50,    45,    45,    57,    57,    57,    57,    57,    57,    57,
-      57,    57,    57,    57,    57,    57,    57,    57,    43,    50,
-      52,    20,    70,    43,    45,    47,    45,    43,    45,    45,
-      57,     6,    64,    57,    57,    45
+      78,    79,     6,     0,    76,    51,    65,    44,     4,     5,
+       6,     7,     8,     9,    10,    11,    12,    13,    14,    15,
+      16,    18,    19,    21,    22,    23,    24,    44,    48,    49,
+      50,    52,    54,    56,    57,    58,    61,    64,    65,    66,
+      67,    68,    69,    71,    72,    73,    74,    17,    61,    62,
+      63,    42,    44,    46,    44,    44,    44,    44,    44,    44,
+      44,    44,    50,    50,     6,    50,    57,    57,    61,    57,
+      57,    50,    26,    27,    28,    29,    30,    31,    32,    33,
+      34,    35,    36,    37,    38,    39,    40,     6,    59,    52,
+      64,    52,    58,    66,    64,    64,    45,     6,    43,    45,
+      43,    45,    57,    45,    55,    57,    57,    55,    45,    45,
+      45,    45,    57,    57,    57,    50,    45,    45,    57,    57,
+      57,    57,    57,    57,    57,    57,    57,    57,    57,    57,
+      57,    57,    57,    43,    50,    52,    20,    70,    50,    61,
+      50,    61,    43,    45,    47,    45,    43,    45,    45,    57,
+       6,    64,     6,    57,    57,    45
   };
 
 #if YYDEBUG
@@ -1117,7 +1135,7 @@ namespace vype10 {
       61,    62,    62,    63,    63,    64,    64,    64,    64,    64,
       65,    65,    65,    65,    66,    66,    67,    67,    68,    68,
       69,    70,    71,    72,    73,    74,    74,    74,    74,    75,
-      75,    76,    76,    77,    77,    78,    78
+      75,    76,    76,    77,    77,    78,    79,    79
   };
 
   /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
@@ -1132,7 +1150,7 @@ namespace vype10 {
        1,     1,     3,     2,     4,     1,     1,     1,     1,     1,
        2,     3,     3,     4,     1,     2,     1,     2,     1,     2,
        4,     1,     4,     4,     2,     2,     2,     2,     3,     1,
-       2,     1,     1,     6,     6,     6,     6
+       2,     1,     1,     5,     5,     2,     6,     6
   };
 
 #if YYDEBUG || YYERROR_VERBOSE || YYTOKEN_TABLE
@@ -1156,7 +1174,7 @@ namespace vype10 {
   "expression_statement", "if_statement", "else_statement",
   "selection_statement", "while_statement", "iteration_statement",
   "jump_statement", "translation_unit", "external_declaration",
-  "function_definition", "function_declaration", 0
+  "function_head", "function_definition", "function_declaration", 0
   };
 #endif
 
@@ -1191,10 +1209,10 @@ namespace vype10 {
       20,    -1,    69,    64,    70,    64,    -1,    21,    44,    57,
       45,    -1,    72,    64,    -1,    22,    50,    -1,    23,    50,
       -1,    24,    50,    -1,    24,    57,    50,    -1,    76,    -1,
-      75,    76,    -1,    78,    -1,    77,    -1,    60,     6,    44,
-      17,    45,    65,    -1,    60,     6,    44,    63,    45,    65,
-      -1,    60,     6,    44,    17,    45,    50,    -1,    60,     6,
-      44,    62,    45,    50,    -1
+      75,    76,    -1,    79,    -1,    78,    -1,    60,     6,    44,
+      17,    45,    -1,    60,     6,    44,    63,    45,    -1,    77,
+      65,    -1,    60,     6,    44,    17,    45,    50,    -1,    60,
+       6,    44,    62,    45,    50,    -1
   };
 
   /* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in
@@ -1210,22 +1228,22 @@ namespace vype10 {
      168,   170,   172,   176,   179,   184,   186,   188,   190,   192,
      194,   197,   201,   205,   210,   212,   215,   217,   220,   222,
      225,   230,   232,   237,   242,   245,   248,   251,   254,   258,
-     260,   263,   265,   267,   274,   281,   288
+     260,   263,   265,   267,   273,   279,   282,   289
   };
 
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
   const unsigned short int
   Parser::yyrline_[] =
   {
-         0,   124,   124,   125,   129,   130,   134,   139,   144,   152,
-     153,   154,   155,   156,   157,   158,   159,   160,   161,   162,
-     163,   164,   165,   166,   167,   168,   169,   170,   171,   172,
-     173,   174,   175,   176,   177,   178,   179,   180,   181,   185,
-     189,   197,   207,   208,   209,   210,   211,   215,   216,   217,
-     218,   222,   227,   234,   240,   248,   249,   250,   251,   252,
-     256,   257,   258,   259,   263,   264,   268,   269,   273,   274,
-     279,   284,   288,   293,   297,   301,   302,   303,   304,   308,
-     309,   313,   314,   318,   326,   337,   345
+         0,   118,   118,   119,   123,   124,   128,   133,   138,   146,
+     147,   148,   149,   150,   151,   152,   153,   154,   155,   156,
+     157,   158,   159,   160,   161,   162,   163,   164,   165,   166,
+     167,   168,   169,   170,   171,   172,   173,   174,   175,   179,
+     183,   195,   209,   210,   211,   212,   213,   217,   218,   219,
+     220,   224,   229,   236,   246,   258,   259,   260,   261,   262,
+     266,   267,   268,   269,   273,   274,   278,   279,   283,   284,
+     290,   295,   299,   304,   308,   312,   313,   314,   315,   319,
+     320,   324,   325,   331,   339,   350,   354,   362
   };
 
   // Print the state stack on the debug stream.
@@ -1302,10 +1320,10 @@ namespace vype10 {
   }
 
   const int Parser::yyeof_ = 0;
-  const int Parser::yylast_ = 527;
-  const int Parser::yynnts_ = 26;
+  const int Parser::yylast_ = 533;
+  const int Parser::yynnts_ = 27;
   const int Parser::yyempty_ = -2;
-  const int Parser::yyfinal_ = 12;
+  const int Parser::yyfinal_ = 13;
   const int Parser::yyterror_ = 1;
   const int Parser::yyerrcode_ = 256;
   const int Parser::yyntokens_ = 53;
@@ -1320,11 +1338,11 @@ namespace vype10 {
 } // vype10
 
 /* Line 1054 of lalr1.cc  */
-#line 1324 "parser.tab.cc"
+#line 1342 "parser.tab.cc"
 
 
 /* Line 1056 of lalr1.cc  */
-#line 355 "parser.yy"
+#line 372 "parser.yy"
  /*** Additional Code ***/
 
 void vype10::Parser::error(const Parser::location_type& l, const std::string& m)

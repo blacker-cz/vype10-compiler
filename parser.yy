@@ -50,11 +50,11 @@
 /* verbose error messages */
 %error-verbose
 
+/* Include symbolTable.h to the generated header file */
 %code requires {
 	#include "symbolTable.h"
 }
 
- /*** BEGIN EXAMPLE - Change the example grammar's tokens below ***/
 %union {
     int  			integerVal;
     char			charVal;
@@ -98,12 +98,6 @@
 %type <functionType>	function_type
 %type <namesVector>		declarator_list
 %type <typesVector>		parameter_definition_list parameter_types_list
-
-/*%destructor { delete $$; } STRING_LITERAL
-%destructor { delete $$; } constant variable
-%destructor { delete $$; } atomexpr powexpr unaryexpr mulexpr addexpr expr*/
-
- /*** END EXAMPLE - Change the example grammar's tokens above ***/
 
 %{
 
@@ -188,8 +182,12 @@ declaration
 declarator_list
 	: ID						{
 									$$ = new std::vector<std::string*>();
-									if(compiler.symbolTable->getSymbol($1) != (SymbolTable::SymbolRecord*) NULL) {
+									if(compiler.symbolTable->getSymbol($1) != (SymbolTable::SymbolRecord*) NULL || compiler.symbolTable->getFunction($1) != (SymbolTable::FunctionRecord*) NULL) {
 										compiler.error(yylloc, "Identifier with name '" + *$1 + "' already defined.", RET_ERR_SEMANTICAL);
+										YYERROR;
+									}
+									if(compiler.symbolTable->getFunction($1) != (SymbolTable::FunctionRecord*) NULL) {
+										compiler.error(yylloc, "Identifier '" + *$1 + "' can't have same name as defined/declared function.", RET_ERR_SEMANTICAL);
 										YYERROR;
 									}
 									$$->push_back($1);
@@ -197,6 +195,10 @@ declarator_list
 	| declarator_list ',' ID	{
 									if(compiler.symbolTable->getSymbol($3) != (SymbolTable::SymbolRecord*) NULL) {
 										compiler.error(yylloc, "Identifier with name '" + *$3 + "' already defined.", RET_ERR_SEMANTICAL);
+										YYERROR;
+									}
+									if(compiler.symbolTable->getFunction($3) != (SymbolTable::FunctionRecord*) NULL) {
+										compiler.error(yylloc, "Identifier '" + *$3 + "' can't have same name as defined/declared function.", RET_ERR_SEMANTICAL);
 										YYERROR;
 									}
 									$$->push_back($3); 
@@ -233,12 +235,20 @@ parameter_types_list
 parameter_definition_list
 	: type_specifier ID			{
 									$$ = new std::vector<SymbolType>();
-									// no check needed -> install symbol to the next scope
+									if(compiler.symbolTable->getFunction($2) != (SymbolTable::FunctionRecord*) NULL) {
+										compiler.error(yylloc, "Identifier '" + *$2 + "' can't have same name as defined function.", RET_ERR_SEMANTICAL);
+										YYERROR;
+									}
+									// install symbol to the next scope
 									compiler.symbolTable->installSymbol($2, $1, false);
 									$$->push_back($1);
 								}
 	| parameter_definition_list ',' type_specifier ID	{
-									// no check needed -> install symbol to the next scope
+									if(compiler.symbolTable->getFunction($4) != (SymbolTable::FunctionRecord*) NULL) {
+										compiler.error(yylloc, "Identifier '" + *$4 + "' can't have same name as defined function.", RET_ERR_SEMANTICAL);
+										YYERROR;
+									}
+									// install symbol to the next scope
 									compiler.symbolTable->installSymbol($4, $3, false);
 									$$->push_back($3); 
 								}
@@ -274,7 +284,8 @@ expression_statement
 	| assignment_expression ';'
 	;
 
-/* unattached from selection statement because of need to generate intermediate symbols before reduction of whole selection_statement */
+/* unattached from selection statement because of need to generate intermediate symbols before reduction of whole selection_statement
+	-> i am not so sure about this anymore, but it works :)  */
 if_statement
 	: IF '(' expression ')'
 	;
@@ -314,8 +325,10 @@ external_declaration
 	| function_definition
 	;
 
-function_definition
-	: function_type ID '(' VOID ')' compound_statement	{
+/* separated from function_definition because of need to generate intermediate code for function header before reduction of whole function
+	-> i am not so sure about this anymore, but it works :) */
+function_head
+	: function_type ID '(' VOID ')'	{
 										std::string *key;
 										key = compiler.symbolTable->installFunction($2, $1, (std::vector<SymbolType>*) NULL, true);
 										if(key == (std::string*) NULL) {
@@ -323,7 +336,7 @@ function_definition
 											YYERROR;
 										}
 									}
-	| function_type ID '(' parameter_definition_list ')' compound_statement 	{
+	| function_type ID '(' parameter_definition_list ')' 	{
 										std::string *key;
 										key = compiler.symbolTable->installFunction($2, $1, $4, true);
 										if(key == (std::string*) NULL) {
@@ -331,6 +344,10 @@ function_definition
 											YYERROR;
 										}
 									}
+	;
+
+function_definition
+	: function_head compound_statement
 	;
 
 function_declaration
