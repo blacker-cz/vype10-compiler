@@ -18,10 +18,10 @@ public:
 	virtual ~IntermediateCode();
 
 	/** Enum with possible instructions */
-	typedef enum Instruction_T {FUNC_CALL = 0, PRINT, STRCAT, READ_CHAR, READ_STRING,
-		READ_INT, READ_SHORT, IF, ELSE, WHILE, CONTINUE, BREAK, RETURN, AND, OR,
-		BIN_AND, BIN_OR, EQ, NE, GT, LT, GE, LE, ADD, SUB, MUL, DIV, MOD, NOT,
-		BIN_NOT, INDEX, NOP, ASSIGN, CAST, ENDIF, ENDWHILE, PUSH} Instruction;
+	typedef enum Instruction_T {FUNC_CALL = 0, PRINT, STRCAT, READ_CHAR, READ_STRING, READ_INT,		//  0-5
+		READ_SHORT, IF, ELSE, WHILE, CONTINUE, BREAK, RETURN, AND, OR, BIN_AND,						//  6-15
+		BIN_OR, EQ, NE, GT, LT, GE, LE, ADD, SUB, MUL, DIV, MOD, NOT, BIN_NOT, INDEX,				// 16-30
+		NOP, ASSIGN, CAST, ENDIF, ENDWHILE, PUSH, FUNC_DEF, FUNC_END} Instruction;					// 31-38
 
 	/** Structure for keeping instruction record */
 	typedef struct InstructionRecord_T {

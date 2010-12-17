@@ -6,6 +6,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <climits>
 #include "symbolTable.h"
 
 %}
@@ -56,7 +57,7 @@
 }
 
 %union {
-    int  			integerVal;
+    long  			integerVal;
     char			charVal;
     std::string*	stringVal;
     std::string*	idName;
@@ -98,7 +99,7 @@
 %type <symbolType>		type_specifier
 %type <functionType>	function_type
 %type <namesVector>		declarator_list
-%type <typesVector>		parameter_definition_list parameter_types_list
+%type <typesVector>		parameter_definition_list parameter_types_list argument_expression_list
 
 %{
 
@@ -116,20 +117,60 @@
 %% /*** Grammar Rules ***/
 
 assignment_expression
-	: ID '=' expression
+	: ID '=' expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								if(first == (SymbolTable::SymbolRecord*) NULL) {
+									compiler.error(yylloc, "Undefined identifier '" + *$1 + "'.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type != second->type && (first->type != vype10::SYM_INT && second->type != vype10::SYM_SHORT)) {
+									compiler.error(yylloc, "Mismatching types in assignment.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+								
+								compiler.intermediateCode->add(vype10::IntermediateCode::ASSIGN, $3, (std::string*) NULL, compiler.symbolTable->getSymbolKey($3, true));
+							}
 	| expression
 	;
 
 argument_expression_list
-	: expression
-	| argument_expression_list ',' expression
+	: expression			{
+									$$ = new std::vector<SymbolType>();
+
+									SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol($1, true);
+									if(sym == (SymbolTable::SymbolRecord*) NULL) {	// this shouldn't happen
+										compiler.error(yylloc, "Lost expression result.", RET_ERR_INTERNAL);
+										YYERROR;
+									}
+									
+									compiler.intermediateCode->add(vype10::IntermediateCode::PUSH, $1, (std::string*) NULL, (std::string*) NULL);
+
+									$$->push_back(sym->type);
+								}
+	| argument_expression_list ',' expression			{
+
+									SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol($3, true);
+									if(sym == (SymbolTable::SymbolRecord*) NULL) {	// this shouldn't happen
+										compiler.error(yylloc, "Lost expression result.", RET_ERR_INTERNAL);
+										YYERROR;
+									}
+									
+									compiler.intermediateCode->add(vype10::IntermediateCode::PUSH, $3, (std::string*) NULL, (std::string*) NULL);
+
+									$$->push_back(sym->type);
+								}
 	;
 
 constant
 	: CONSTANT										{
 														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
 														val->intVal = $1;
-														$$ = compiler.symbolTable->installConstant(vype10::SYM_INT, val);
+														if($1 >= SHRT_MIN && $1 <= SHRT_MAX) {
+															$$ = compiler.symbolTable->installConstant(vype10::SYM_SHORT, val);
+														} else {
+															$$ = compiler.symbolTable->installConstant(vype10::SYM_INT, val);
+														}
 													}
 	| CHAR_LITERAL									{
 														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
@@ -151,8 +192,42 @@ expression
 															YYERROR;
 														}
 													}
-	| ID '(' ')'
-	| ID '(' argument_expression_list ')'
+	| ID '(' ')'									{
+														SymbolTable::FunctionRecord *fun = compiler.symbolTable->getFunction($1);
+														if(fun == (SymbolTable::FunctionRecord*) NULL) {
+															compiler.error(yylloc, "Call of undefined/undeclared function '" + *$1 + "'.", RET_ERR_SEMANTICAL);
+															YYERROR;
+														}
+														if(fun->paramsType.size() != 0) {
+															compiler.error(yylloc, "Function '" + *$1 + "' expect " + (char) ('0' + (int)fun->paramsType.size()) + " params, none given.", RET_ERR_SEMANTICAL);
+															YYERROR;
+														}
+														if(fun->type != vype10::FUN_VOID) {
+															$$ = compiler.symbolTable->installSymbol((vype10::SymbolType) fun->type);
+															compiler.intermediateCode->add(vype10::IntermediateCode::FUNC_CALL, $1, (std::string*) NULL, $$);
+														} else {
+															$$ = (std::string*) NULL;
+															compiler.intermediateCode->add(vype10::IntermediateCode::FUNC_CALL, $1, (std::string*) NULL, (std::string*) NULL);
+														}
+													}
+	| ID '(' argument_expression_list ')'			{
+														SymbolTable::FunctionRecord *fun = compiler.symbolTable->getFunction($1);
+														if(fun == (SymbolTable::FunctionRecord*) NULL) {
+															compiler.error(yylloc, "Call of undefined/undeclared function '" + *$1 + "'.", RET_ERR_SEMANTICAL);
+															YYERROR;
+														}
+														if(fun->paramsType != *$3) {
+															compiler.error(yylloc, "Invalid arguments passed to function '" + *$1 + "'.", RET_ERR_SEMANTICAL);
+															YYERROR;
+														}
+														if(fun->type != vype10::FUN_VOID) {
+															$$ = compiler.symbolTable->installSymbol((vype10::SymbolType) fun->type);
+															compiler.intermediateCode->add(vype10::IntermediateCode::FUNC_CALL, $1, (std::string*) NULL, $$);
+														} else {
+															$$ = (std::string*) NULL;
+															compiler.intermediateCode->add(vype10::IntermediateCode::FUNC_CALL, $1, (std::string*) NULL, (std::string*) NULL);
+														}
+													}
 	| PRINT '(' argument_expression_list ')'
 	| STRCAT '(' expression ',' expression ')'		{
 														SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($3, true);
@@ -203,10 +278,62 @@ expression
 														compiler.intermediateCode->add(vype10::IntermediateCode::INDEX, compiler.symbolTable->getSymbolKey($1, true), $3, $$);
 													}
 	| constant
-	| expression '+' expression
-	| expression '-' expression
-	| expression '*' expression
-	| expression '/' expression
+	| expression '+' expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(first->type);
+								} else if(first->type != second->type && (first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+								} else {
+									compiler.error(yylloc, "Invalid types in '+' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+								
+								compiler.intermediateCode->add(vype10::IntermediateCode::ADD, $1, $3, $$);
+							}
+	| expression '-' expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(first->type);
+								} else if(first->type != second->type && (first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+								} else {
+									compiler.error(yylloc, "Invalid types in '-' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+								
+								compiler.intermediateCode->add(vype10::IntermediateCode::SUB, $1, $3, $$);
+							}
+	| expression '*' expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(first->type);
+								} else if(first->type != second->type && (first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+								} else {
+									compiler.error(yylloc, "Invalid types in '*' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+								
+								compiler.intermediateCode->add(vype10::IntermediateCode::MUL, $1, $3, $$);
+							}
+	| expression '/' expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(first->type);
+								} else if(first->type != second->type && (first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+								} else {
+									compiler.error(yylloc, "Invalid types in '/' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+								
+								compiler.intermediateCode->add(vype10::IntermediateCode::DIV, $1, $3, $$);
+							}
 	| expression '|' expression
 	| expression '&' expression
 	| expression '<' expression
@@ -221,7 +348,28 @@ expression
 	| '!' expression %prec UNARY_OP
 	| '~' expression %prec UNARY_OP
 	| '(' expression ')'							{ $$ = $2; }
-	| '(' type_specifier ')' expression %prec HIGH_PRIORITY
+	| '(' type_specifier ')' expression %prec HIGH_PRIORITY		{
+										SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol($4, true);
+										if(sym == (SymbolTable::SymbolRecord*) NULL) {	// this shouldn't happen
+											compiler.error(yylloc, "Lost expression result.", RET_ERR_INTERNAL);
+											YYERROR;
+										}
+										
+										if(sym->type == $2) {	// same type -> do nothing
+										} else if(sym->type == vype10::SYM_CHAR && $2 == vype10::SYM_STRING) {	// char -> string
+											$$ = compiler.symbolTable->installSymbol(vype10::SYM_STRING);
+											compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $4, (std::string*) NULL, $$);
+										} else if(sym->type == vype10::SYM_CHAR && $2 == vype10::SYM_SHORT) {	// char -> short
+											$$ = compiler.symbolTable->installSymbol(vype10::SYM_SHORT);
+											compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $4, (std::string*) NULL, $$);
+										} else if(sym->type == vype10::SYM_CHAR && $2 == vype10::SYM_INT) {		// char -> int
+											$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+											compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $4, (std::string*) NULL, $$);
+										} else if(sym->type == vype10::SYM_SHORT && $2 == vype10::SYM_INT) {	// short -> int
+											$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+											compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $4, (std::string*) NULL, $$);
+										}
+ 									}
 	;
 
 declaration
@@ -336,30 +484,55 @@ expression_statement
 /* unattached from selection statement because of need to generate intermediate symbols before reduction of whole selection_statement
 	-> i am not so sure about this anymore, but it works :)  */
 if_statement
-	: IF '(' expression ')'
+	: IF '(' expression ')'			{
+										SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol($3, true);
+										if(sym->type != vype10::SYM_SHORT && sym->type != vype10::SYM_INT) {
+											compiler.error(yylloc, "Expression must be of type short or int.", RET_ERR_SEMANTICAL);
+											YYERROR;
+										}
+										compiler.intermediateCode->add(vype10::IntermediateCode::IF, compiler.symbolTable->getSymbolKey($3, true), (std::string*) NULL,  (std::string*) NULL);
+									}
 	;
 
 /* same as if_statement */
 else_statement
-	: ELSE
+	: ELSE							{
+										compiler.intermediateCode->add(vype10::IntermediateCode::ELSE, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
+									}
 	;
 
 selection_statement
-	: if_statement statement else_statement statement
+	: if_statement statement else_statement statement	{
+										compiler.intermediateCode->add(vype10::IntermediateCode::ENDIF, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
+									}
 	;
 
 /* same as if_statement */
 while_statement
-	: WHILE '(' expression ')'
+	: WHILE '(' expression ')'		{
+										SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol($3, true);
+										if(sym->type != vype10::SYM_SHORT && sym->type != vype10::SYM_INT) {
+											compiler.error(yylloc, "Expression must be of type short or int.", RET_ERR_SEMANTICAL);
+											YYERROR;
+										}
+										compiler.intermediateCode->add(vype10::IntermediateCode::WHILE, compiler.symbolTable->getSymbolKey($3, true), (std::string*) NULL,  (std::string*) NULL);
+									}
+	
 	;
 
 iteration_statement
-	: while_statement statement
+	: while_statement statement	{
+									compiler.intermediateCode->add(vype10::IntermediateCode::ENDWHILE, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
+								}
 	;
 
 jump_statement
-	: CONTINUE ';'
-	| BREAK ';'
+	: CONTINUE ';'				{
+									compiler.intermediateCode->add(vype10::IntermediateCode::CONTINUE, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
+								}
+	| BREAK ';'					{
+									compiler.intermediateCode->add(vype10::IntermediateCode::BREAK, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
+								}
 	| RETURN ';'
 	| RETURN expression ';'
 	;
@@ -384,6 +557,8 @@ function_head
 											compiler.error(yylloc, "Function with name '" + *$2 + "' already defined.", RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
+
+										compiler.intermediateCode->add(vype10::IntermediateCode::FUNC_DEF, key, (std::string*) NULL,  (std::string*) NULL);
 									}
 	| function_type ID '(' parameter_definition_list ')' 	{
 										std::string *key;
@@ -392,11 +567,15 @@ function_head
 											compiler.error(yylloc, "Function with name '" + *$2 + "' already defined.", RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
+
+										compiler.intermediateCode->add(vype10::IntermediateCode::FUNC_DEF, key, (std::string*) NULL,  (std::string*) NULL);
 									}
 	;
 
 function_definition
-	: function_head compound_statement
+	: function_head compound_statement {
+										compiler.intermediateCode->add(vype10::IntermediateCode::FUNC_END, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
+									}
 	;
 
 function_declaration

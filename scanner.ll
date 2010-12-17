@@ -137,7 +137,7 @@ whitespace	[ \t]+
 }
 
 {number}        {
-	yylval->integerVal = atoi(yytext);
+	yylval->integerVal = atol(yytext);
 	return token::CONSTANT;
 }
 
@@ -171,7 +171,7 @@ whitespace	[ \t]+
 		return token::CHAR_LITERAL;
 	} 
 
-\'[^\\]\' {
+\'[^\\"']\' {
 		yylval->charVal = *(yytext+1);
 		return token::CHAR_LITERAL;
 }

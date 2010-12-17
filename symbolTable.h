@@ -26,7 +26,7 @@ public:
 
 	/** Union for storing constants value */
 	typedef union value_t {
-		int intVal;
+		long intVal;
 		std::string *stringVal;
 		char charVal;
 	} Value;
