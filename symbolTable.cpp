@@ -190,8 +190,10 @@ std::string *SymbolTable::installConstant(SymbolType type, Value *value) {
  * @return SymbolRecord*	pointer to symbol record or NULL (if not found)
  */
 SymbolTable::SymbolRecord *SymbolTable::getSymbol(std::string *key, bool recursive) {
-	// check if key or name of identifier was passed
+	if(key == (std::string*) NULL)
+		return (SymbolRecord*) NULL;
 
+	// check if key or name of identifier was passed
 	if(key->compare(0, 1, ":") == 0) {
 		symTableIter = symTable.find(*key);
 
@@ -245,8 +247,10 @@ SymbolTable::SymbolRecord *SymbolTable::getSymbol(std::string *key) {
  * @return SymbolRecord*	pointer to string with symbol key or NULL (if not found)
  */
 std::string *SymbolTable::getSymbolKey(std::string *key, bool recursive) {
-	// check if key or name of identifier was passed
+	if(key == (std::string*) NULL)
+		return (SymbolRecord*) NULL;
 
+	// check if key or name of identifier was passed
 	if(key->compare(0, 1, ":") == 0) {
 		symTableIter = symTable.find(*key);
 
@@ -299,6 +303,9 @@ std::string *SymbolTable::getSymbolKey(std::string *key) {
  * @return FunctionRecord*	pointer to function record or NULL (if not found)
  */
 SymbolTable::FunctionRecord *SymbolTable::getFunction(std::string *key) {
+	if(key == (std::string*) NULL)
+		return (FunctionRecord*) NULL;
+
 	funTableIter = funTable.find(*key);
 
 	if(funTableIter == funTable.end())
