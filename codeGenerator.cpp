@@ -13,8 +13,9 @@ namespace vype10 {
  *
  * @param IntermediateCode*		pointer to the intermediate code class
  */
-CodeGenerator::CodeGenerator(IntermediateCode *intermediateCode) {
+CodeGenerator::CodeGenerator(IntermediateCode *intermediateCode, std::string output) {
 	this->intermediateCode = intermediateCode;
+	this->output = output;
 }
 
 CodeGenerator::~CodeGenerator() {

@@ -7,6 +7,7 @@
 #ifndef CODEGENERATOR_H_
 #define CODEGENERATOR_H_
 
+#include <string>
 #include "symbolTable.h"
 #include "intermediateCode.h"
 #include "compiler.h"
@@ -16,7 +17,7 @@ namespace vype10 {
 
 class CodeGenerator {
 public:
-	CodeGenerator(IntermediateCode *intermediateCode);
+	CodeGenerator(IntermediateCode *intermediateCode, std::string output);
 	virtual ~CodeGenerator();
 
 	/** Compiler class */
@@ -25,7 +26,12 @@ public:
 	void run(void);
 
 private:
+	/** Class with intermediate code */
 	IntermediateCode *intermediateCode;
+
+	/** Path to the output file */
+	std::string output;
+
 };
 
 }

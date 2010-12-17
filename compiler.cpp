@@ -95,7 +95,7 @@ int Compiler::run(void) {
     delete name;
 
     // start generation of assembler code
-    CodeGenerator generator(intermediateCode);
+    CodeGenerator generator(intermediateCode, output);
     generator.compiler = this;
     generator.run();
 
