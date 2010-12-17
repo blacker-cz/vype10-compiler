@@ -10,6 +10,7 @@
 #include <string>
 #include "symbolTable.h"
 #include "intermediateCode.h"
+#include "codeGenerator.h"
 #include "location.hh"
 #include "misc.h"
 

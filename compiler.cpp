@@ -94,6 +94,11 @@ int Compiler::run(void) {
     }
     delete name;
 
+    // start generation of assembler code
+    CodeGenerator generator(intermediateCode);
+    generator.compiler = this;
+    generator.run();
+
     return this->errorLevel;
 }
 
