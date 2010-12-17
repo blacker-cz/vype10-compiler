@@ -248,7 +248,7 @@ SymbolTable::SymbolRecord *SymbolTable::getSymbol(std::string *key) {
  */
 std::string *SymbolTable::getSymbolKey(std::string *key, bool recursive) {
 	if(key == (std::string*) NULL)
-		return (SymbolRecord*) NULL;
+		return (std::string*) NULL;
 
 	// check if key or name of identifier was passed
 	if(key->compare(0, 1, ":") == 0) {
