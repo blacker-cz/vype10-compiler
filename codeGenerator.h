@@ -9,6 +9,7 @@
 
 #include "symbolTable.h"
 #include "intermediateCode.h"
+#include "compiler.h"
 #include "misc.h"
 
 namespace vype10 {
