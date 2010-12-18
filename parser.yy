@@ -124,12 +124,16 @@ assignment_expression
 									YYERROR;
 								}
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
-								if(first->type != second->type && (first->type != vype10::SYM_INT && second->type != vype10::SYM_SHORT)) {
+								if(first->type == second->type) {
+									compiler.intermediateCode->add(vype10::IntermediateCode::ASSIGN, $3, (std::string*) NULL, compiler.symbolTable->getSymbolKey($1, true));
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $3, (std::string*) NULL, pom);
+									compiler.intermediateCode->add(vype10::IntermediateCode::ASSIGN, pom, (std::string*) NULL, compiler.symbolTable->getSymbolKey($1, true));
+								} else {
 									compiler.error(yylloc, "Mismatching types in assignment.", RET_ERR_SEMANTICAL);
 									YYERROR;
 								}
-								
-								compiler.intermediateCode->add(vype10::IntermediateCode::ASSIGN, $3, (std::string*) NULL, compiler.symbolTable->getSymbolKey($3, true));
 							}
 	| expression
 	;
@@ -613,6 +617,7 @@ expression
 										}
 										
 										if(sym->type == $2) {	// same type -> do nothing
+											$$ = $4;
 										} else if(sym->type == vype10::SYM_CHAR && $2 == vype10::SYM_STRING) {	// char -> string
 											$$ = compiler.symbolTable->installSymbol(vype10::SYM_STRING);
 											compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $4, (std::string*) NULL, $$);
@@ -626,7 +631,7 @@ expression
 											$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 											compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $4, (std::string*) NULL, $$);
 										} else {
-											compiler.error(yylloc, "Invalid cast.", RET_ERR_INTERNAL);
+											compiler.error(yylloc, "Invalid cast.", RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
  									}
