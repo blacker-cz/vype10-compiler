@@ -818,9 +818,10 @@ external_declaration
 function_head
 	: function_type ID '(' VOID ')'	{
 										std::string *key;
-										key = compiler.symbolTable->installFunction($2, $1, (std::vector<SymbolType>*) NULL, true);
+										std::string error;
+										key = compiler.symbolTable->installFunction($2, $1, (std::vector<SymbolType>*) NULL, true, error);
 										if(key == (std::string*) NULL) {
-											compiler.error(yylloc, "Function with name '" + *$2 + "' already defined.", RET_ERR_SEMANTICAL);
+											compiler.error(yylloc, error, RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
 
@@ -828,9 +829,10 @@ function_head
 									}
 	| function_type ID '(' parameter_definition_list ')' 	{
 										std::string *key;
-										key = compiler.symbolTable->installFunction($2, $1, $4, true);
+										std::string error;
+										key = compiler.symbolTable->installFunction($2, $1, $4, true, error);
 										if(key == (std::string*) NULL) {
-											compiler.error(yylloc, "Function with name '" + *$2 + "' already defined.", RET_ERR_SEMANTICAL);
+											compiler.error(yylloc, error, RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
 
@@ -847,17 +849,19 @@ function_definition
 function_declaration
 	: function_type ID '(' VOID ')' ';'	{
 										std::string *key;
-										key = compiler.symbolTable->installFunction($2, $1, (std::vector<SymbolType>*) NULL, false);
+										std::string error;
+										key = compiler.symbolTable->installFunction($2, $1, (std::vector<SymbolType>*) NULL, false, error);
 										if(key == (std::string*) NULL) {
-											compiler.error(yylloc, "Function with name '" + *$2 + "' already defined (or declared).", RET_ERR_SEMANTICAL);
+											compiler.error(yylloc, error + "(or declared).", RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
 									}
 	| function_type ID '(' parameter_types_list ')' ';'		{
 										std::string *key;
-										key = compiler.symbolTable->installFunction($2, $1, $4, false);
+										std::string error;
+										key = compiler.symbolTable->installFunction($2, $1, $4, false, error);
 										if(key == (std::string*) NULL) {
-											compiler.error(yylloc, "Function with name '" + *$2 + "' already defined (or declared).", RET_ERR_SEMANTICAL);
+											compiler.error(yylloc, error + " (or declared).", RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
 									}

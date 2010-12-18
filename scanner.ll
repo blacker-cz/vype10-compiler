@@ -202,10 +202,10 @@ whitespace	[ \t]+
         lexicalError("unterminated string constant", yylloc);
         }
      
-<str>\\n  	stringBuilder->append("\n");
-<str>\\t  	stringBuilder->append("\t");
-<str>\\\\  	stringBuilder->append("\\");
-<str>\\\"  	stringBuilder->append("\"");
+<str>\\n  	stringBuilder->append("\\n");
+<str>\\t  	stringBuilder->append("\\t");
+<str>\\\\  	stringBuilder->append("\\\\");
+<str>\\\"  	stringBuilder->append("\\\"");
 <str>\\\'  	stringBuilder->append("'");
      
 <str>[^\\\n\"]+        {

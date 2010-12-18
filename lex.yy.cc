@@ -1281,22 +1281,22 @@ YY_RULE_SETUP
 case 62:
 YY_RULE_SETUP
 #line 205 "scanner.ll"
-stringBuilder->append("\n");
+stringBuilder->append("\\n");
 	YY_BREAK
 case 63:
 YY_RULE_SETUP
 #line 206 "scanner.ll"
-stringBuilder->append("\t");
+stringBuilder->append("\\t");
 	YY_BREAK
 case 64:
 YY_RULE_SETUP
 #line 207 "scanner.ll"
-stringBuilder->append("\\");
+stringBuilder->append("\\\\");
 	YY_BREAK
 case 65:
 YY_RULE_SETUP
 #line 208 "scanner.ll"
-stringBuilder->append("\"");
+stringBuilder->append("\\\"");
 	YY_BREAK
 case 66:
 YY_RULE_SETUP

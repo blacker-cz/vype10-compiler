@@ -1422,9 +1422,10 @@ namespace vype10 {
 #line 819 "parser.yy"
     {
 										std::string *key;
-										key = compiler.symbolTable->installFunction((yysemantic_stack_[(5) - (2)].idName), (yysemantic_stack_[(5) - (1)].functionType), (std::vector<SymbolType>*) NULL, true);
+										std::string error;
+										key = compiler.symbolTable->installFunction((yysemantic_stack_[(5) - (2)].idName), (yysemantic_stack_[(5) - (1)].functionType), (std::vector<SymbolType>*) NULL, true, error);
 										if(key == (std::string*) NULL) {
-											compiler.error(yylloc, "Function with name '" + *(yysemantic_stack_[(5) - (2)].idName) + "' already defined.", RET_ERR_SEMANTICAL);
+											compiler.error(yylloc, error, RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
 
@@ -1435,12 +1436,13 @@ namespace vype10 {
   case 86:
 
 /* Line 678 of lalr1.cc  */
-#line 829 "parser.yy"
+#line 830 "parser.yy"
     {
 										std::string *key;
-										key = compiler.symbolTable->installFunction((yysemantic_stack_[(5) - (2)].idName), (yysemantic_stack_[(5) - (1)].functionType), (yysemantic_stack_[(5) - (4)].typesVector), true);
+										std::string error;
+										key = compiler.symbolTable->installFunction((yysemantic_stack_[(5) - (2)].idName), (yysemantic_stack_[(5) - (1)].functionType), (yysemantic_stack_[(5) - (4)].typesVector), true, error);
 										if(key == (std::string*) NULL) {
-											compiler.error(yylloc, "Function with name '" + *(yysemantic_stack_[(5) - (2)].idName) + "' already defined.", RET_ERR_SEMANTICAL);
+											compiler.error(yylloc, error, RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
 
@@ -1451,7 +1453,7 @@ namespace vype10 {
   case 87:
 
 /* Line 678 of lalr1.cc  */
-#line 842 "parser.yy"
+#line 844 "parser.yy"
     {
 										compiler.intermediateCode->add(vype10::IntermediateCode::FUNC_END, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 									}
@@ -1460,12 +1462,13 @@ namespace vype10 {
   case 88:
 
 /* Line 678 of lalr1.cc  */
-#line 848 "parser.yy"
+#line 850 "parser.yy"
     {
 										std::string *key;
-										key = compiler.symbolTable->installFunction((yysemantic_stack_[(6) - (2)].idName), (yysemantic_stack_[(6) - (1)].functionType), (std::vector<SymbolType>*) NULL, false);
+										std::string error;
+										key = compiler.symbolTable->installFunction((yysemantic_stack_[(6) - (2)].idName), (yysemantic_stack_[(6) - (1)].functionType), (std::vector<SymbolType>*) NULL, false, error);
 										if(key == (std::string*) NULL) {
-											compiler.error(yylloc, "Function with name '" + *(yysemantic_stack_[(6) - (2)].idName) + "' already defined (or declared).", RET_ERR_SEMANTICAL);
+											compiler.error(yylloc, error + "(or declared).", RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
 									}
@@ -1474,12 +1477,13 @@ namespace vype10 {
   case 89:
 
 /* Line 678 of lalr1.cc  */
-#line 856 "parser.yy"
+#line 859 "parser.yy"
     {
 										std::string *key;
-										key = compiler.symbolTable->installFunction((yysemantic_stack_[(6) - (2)].idName), (yysemantic_stack_[(6) - (1)].functionType), (yysemantic_stack_[(6) - (4)].typesVector), false);
+										std::string error;
+										key = compiler.symbolTable->installFunction((yysemantic_stack_[(6) - (2)].idName), (yysemantic_stack_[(6) - (1)].functionType), (yysemantic_stack_[(6) - (4)].typesVector), false, error);
 										if(key == (std::string*) NULL) {
-											compiler.error(yylloc, "Function with name '" + *(yysemantic_stack_[(6) - (2)].idName) + "' already defined (or declared).", RET_ERR_SEMANTICAL);
+											compiler.error(yylloc, error + " (or declared).", RET_ERR_SEMANTICAL);
 											YYERROR;
 										}
 									}
@@ -1488,7 +1492,7 @@ namespace vype10 {
 
 
 /* Line 678 of lalr1.cc  */
-#line 1492 "parser.tab.cc"
+#line 1496 "parser.tab.cc"
 	default:
           break;
       }
@@ -2045,7 +2049,7 @@ namespace vype10 {
      677,   678,   679,   683,   688,   695,   705,   717,   718,   719,
      720,   721,   725,   726,   727,   728,   732,   733,   737,   738,
      742,   743,   749,   761,   767,   774,   786,   792,   795,   798,
-     801,   807,   808,   812,   813,   819,   829,   842,   848,   856
+     801,   807,   808,   812,   813,   819,   830,   844,   850,   859
   };
 
   // Print the state stack on the debug stream.
@@ -2140,11 +2144,11 @@ namespace vype10 {
 } // vype10
 
 /* Line 1054 of lalr1.cc  */
-#line 2144 "parser.tab.cc"
+#line 2148 "parser.tab.cc"
 
 
 /* Line 1056 of lalr1.cc  */
-#line 866 "parser.yy"
+#line 870 "parser.yy"
  /*** Additional Code ***/
 
 void vype10::Parser::error(const Parser::location_type& l, const std::string& m)

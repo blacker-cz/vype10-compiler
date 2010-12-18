@@ -8,10 +8,16 @@
 #define CODEGENERATOR_H_
 
 #include <string>
+#include <fstream>
+#include <algorithm>
 #include "symbolTable.h"
 #include "intermediateCode.h"
 #include "compiler.h"
 #include "misc.h"
+
+#define comment(x)		output << "// " << x << std::endl
+#define command(x)		output << "\t" << x << std::endl
+#define label(x)		output << x << std::endl
 
 namespace vype10 {
 
@@ -29,8 +35,16 @@ private:
 	/** Class with intermediate code */
 	IntermediateCode *intermediateCode;
 
-	/** Path to the output file */
-	std::string output;
+	/** Stream for output file */
+	std::ofstream output;
+
+	void head(void);
+
+	void data(void);
+
+	std::string generateName(std::string);
+
+	bool process(IntermediateCode::InstructionRecord* instruction);
 
 };
 

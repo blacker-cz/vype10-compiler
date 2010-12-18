@@ -38,6 +38,7 @@ public:
 		SymbolType type;
 		int scopeID;
 		Value *value;
+		std::string key;
 
 		/** Structure destructor */
 		~symRecord() {
@@ -54,6 +55,7 @@ public:
 		FunctionType type;
 		bool defined;
 		std::vector<SymbolType> paramsType;
+		std::string key;
 
 		/** Structure destructor */
 		~funRecord() {
@@ -61,7 +63,7 @@ public:
 		}
 	} FunctionRecord;
 
-	std::string *installFunction(std::string *name, FunctionType type, std::vector<SymbolType> *types, bool defined);
+	std::string *installFunction(std::string *name, FunctionType type, std::vector<SymbolType> *types, bool defined, std::string & error);
 
 	std::string* installSymbol(std::string *name, SymbolType type, bool thisScope);
 
@@ -84,6 +86,10 @@ public:
 	SymbolType *getSymbolType(std::string *name, bool recursive);
 
 	std::string *getUndefinedFunctions(void);
+
+	std::vector<std::string*> *getConstants(void);
+
+	std::vector<std::string*> *getIdentifiers(void);
 
 	void scopeUp(void);
 

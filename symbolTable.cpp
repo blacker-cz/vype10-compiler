@@ -33,23 +33,25 @@ SymbolTable::~SymbolTable() {
  * @param bool						flag if function is defined or declared
  * @return std::string*		key to the symbol table
  */
-std::string *SymbolTable::installFunction(std::string *name, FunctionType type, std::vector<SymbolType> *types, bool defined) {
+std::string *SymbolTable::installFunction(std::string *name, FunctionType type, std::vector<SymbolType> *types, bool defined, std::string &error) {
 	// try to find function in table
 	FunctionRecord *funRec = getFunction(name);
 
-	/**
-	 * @todo: need to output info about error type (message)
-	 */
-
 	if(funRec != (FunctionRecord*) NULL) {	// found
-		if(funRec->defined == true or funRec->defined == defined)
+		if(funRec->defined == true or funRec->defined == defined) {
+			error = "Function '" + *name + "' already defined";
 			return (std::string*) NULL;		// already defined or trying another declaration -> return NULL pointer
+		}
 
-		if(funRec->paramsType != *types)	// mismatch parameter types
+		if(funRec->paramsType != *types) {	// mismatch parameter types
+			error = "Mismatch parameter types.";
 			return (std::string*) NULL;
+		}
 
-		if(funRec->type != type)			// mismatch function type
+		if(funRec->type != type) {			// mismatch function type
+			error = "Mismatch function type.";
 			return (std::string*) NULL;
+		}
 
 		funRec->defined = true;	// set defined to true
 
@@ -58,6 +60,7 @@ std::string *SymbolTable::installFunction(std::string *name, FunctionType type, 
 
 		funRec->name = name;
 		funRec->type = type;
+		funRec->key = "fun:" + *name;
 		if(types != (std::vector<SymbolType>*) NULL)
 			funRec->paramsType = *types;
 		funRec->defined = defined;
@@ -86,6 +89,7 @@ std::string* SymbolTable::installSymbol(SymbolType type) {
 	key = new std::string(name);
 
 	symRec->name = pname;
+	symRec->key = name;
 	symRec->constant = false;
 	symRec->scopeID = currentScope;
 	symRec->type = type;
@@ -113,6 +117,7 @@ std::string* SymbolTable::installSymbol(std::string *name, SymbolType type, bool
 	pkey = new std::string(key);
 
 	symRec->name = name;
+	symRec->key = key;
 	symRec->constant = false;
 	symRec->scopeID = (thisScope ? currentScope : nextScope);
 	symRec->type = type;
@@ -143,6 +148,7 @@ void SymbolTable::installSymbol(std::vector<std::string*> *names, SymbolType typ
 		pkey = new std::string(key);
 
 		symRec->name = name;
+		symRec->key = key;
 		symRec->constant = false;
 		symRec->scopeID = currentScope;
 		symRec->type = type;
@@ -173,6 +179,7 @@ std::string *SymbolTable::installConstant(SymbolType type, Value *value) {
 	key = new std::string(name);
 
 	symRec->name = pname;
+	symRec->key = name;
 	symRec->constant = true;
 	symRec->scopeID = currentScope;
 	symRec->type = type;
@@ -342,6 +349,38 @@ std::string *SymbolTable::getUndefinedFunctions(void) {
 			return funTableIter->second->name;
 	}
 	return (std::string*) NULL;
+}
+
+/**
+ * Returns vector of constants.
+ *
+ * @return std::vector<SymbolRecord*>	pointers to symbol records
+ */
+std::vector<std::string*> *SymbolTable::getConstants(void) {
+	std::vector<std::string*> *retval = new std::vector<std::string*>;
+
+	for(symTableIter = symTable.begin(); symTableIter != symTable.end(); symTableIter++) {
+		if(symTableIter->second->constant)
+			retval->push_back(new std::string(symTableIter->first));
+	}
+
+	return retval;
+}
+
+/**
+ * Returns vector of identifiers.
+ *
+ * @return std::vector<SymbolRecord*>	pointers to symbol records
+ */
+std::vector<std::string*> *SymbolTable::getIdentifiers(void) {
+	std::vector<std::string*> *retval = new std::vector<std::string*>;
+
+	for(symTableIter = symTable.begin(); symTableIter != symTable.end(); symTableIter++) {
+		if(symTableIter->first.compare(0, 4, ":id:") == 0)
+			retval->push_back(new std::string(symTableIter->first));
+	}
+
+	return retval;
 }
 
 /**
