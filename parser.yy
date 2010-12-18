@@ -16,11 +16,10 @@
 /* Require bison 2.3 or later */
 %require "2.3"
 
-/* add debug output code to generated parser. disable this for release
- * versions. */
+/* add debug output code to generated parser. */
 %debug
 
-/* start symbol is named "start" */
+/* start symbol is named "translation_unit" */
 %start translation_unit
 
 /* write out a header file containing the token defines */
@@ -43,9 +42,7 @@
     @$.begin.filename = @$.end.filename = &compiler.streamname;
 };
 
-/* The driver is passed by reference to the parser and to the scanner. This
- * provides a simple but effective pure interface, not relying on global
- * variables. */
+/* The driver is passed by reference to the parser and to the scanner. */
 %parse-param { class Compiler& compiler }
 
 /* verbose error messages */

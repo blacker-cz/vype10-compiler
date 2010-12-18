@@ -58,7 +58,7 @@
 /* User implementation prologue.  */
 
 /* Line 317 of lalr1.cc  */
-#line 104 "parser.yy"
+#line 101 "parser.yy"
 
 
 #include "compiler.h"
@@ -319,7 +319,7 @@ namespace vype10 {
     /* User initialization code.  */
     
 /* Line 553 of lalr1.cc  */
-#line 41 "parser.yy"
+#line 40 "parser.yy"
 {
     // initialize the initial location object
     yylloc.begin.filename = yylloc.end.filename = &compiler.streamname;
@@ -445,7 +445,7 @@ namespace vype10 {
 	  case 2:
 
 /* Line 678 of lalr1.cc  */
-#line 120 "parser.yy"
+#line 117 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].idName), true);
 								if(first == (SymbolTable::SymbolRecord*) NULL) {
@@ -469,7 +469,7 @@ namespace vype10 {
   case 4:
 
 /* Line 678 of lalr1.cc  */
-#line 142 "parser.yy"
+#line 139 "parser.yy"
     {
 									(yyval.typesVector) = new std::vector<SymbolType>();
 
@@ -488,7 +488,7 @@ namespace vype10 {
   case 5:
 
 /* Line 678 of lalr1.cc  */
-#line 155 "parser.yy"
+#line 152 "parser.yy"
     {
 
 									SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -506,7 +506,7 @@ namespace vype10 {
   case 6:
 
 /* Line 678 of lalr1.cc  */
-#line 170 "parser.yy"
+#line 167 "parser.yy"
     {
 									SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol((yysemantic_stack_[(1) - (1)].keyString), true);
 									if(sym == (SymbolTable::SymbolRecord*) NULL) {	// this shouldn't happen
@@ -522,7 +522,7 @@ namespace vype10 {
   case 7:
 
 /* Line 678 of lalr1.cc  */
-#line 180 "parser.yy"
+#line 177 "parser.yy"
     {
 
 									SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -538,7 +538,7 @@ namespace vype10 {
   case 8:
 
 /* Line 678 of lalr1.cc  */
-#line 193 "parser.yy"
+#line 190 "parser.yy"
     {
 														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
 														val->intVal = (yysemantic_stack_[(1) - (1)].integerVal);
@@ -553,7 +553,7 @@ namespace vype10 {
   case 9:
 
 /* Line 678 of lalr1.cc  */
-#line 202 "parser.yy"
+#line 199 "parser.yy"
     {
 														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
 														val->charVal = (yysemantic_stack_[(1) - (1)].charVal);
@@ -564,7 +564,7 @@ namespace vype10 {
   case 10:
 
 /* Line 678 of lalr1.cc  */
-#line 207 "parser.yy"
+#line 204 "parser.yy"
     {
 														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
 														val->stringVal = (yysemantic_stack_[(1) - (1)].stringVal);
@@ -575,7 +575,7 @@ namespace vype10 {
   case 11:
 
 /* Line 678 of lalr1.cc  */
-#line 215 "parser.yy"
+#line 212 "parser.yy"
     {
 														(yyval.keyString) = compiler.symbolTable->getSymbolKey((yysemantic_stack_[(1) - (1)].idName), true);
 														if((yyval.keyString) == (std::string*) NULL) {
@@ -588,7 +588,7 @@ namespace vype10 {
   case 12:
 
 /* Line 678 of lalr1.cc  */
-#line 222 "parser.yy"
+#line 219 "parser.yy"
     {
 														SymbolTable::FunctionRecord *fun = compiler.symbolTable->getFunction((yysemantic_stack_[(3) - (1)].idName));
 														if(fun == (SymbolTable::FunctionRecord*) NULL) {
@@ -612,7 +612,7 @@ namespace vype10 {
   case 13:
 
 /* Line 678 of lalr1.cc  */
-#line 240 "parser.yy"
+#line 237 "parser.yy"
     {
 														SymbolTable::FunctionRecord *fun = compiler.symbolTable->getFunction((yysemantic_stack_[(4) - (1)].idName));
 														if(fun == (SymbolTable::FunctionRecord*) NULL) {
@@ -636,14 +636,14 @@ namespace vype10 {
   case 14:
 
 /* Line 678 of lalr1.cc  */
-#line 258 "parser.yy"
+#line 255 "parser.yy"
     { (yyval.keyString) = (std::string*) NULL; }
     break;
 
   case 15:
 
 /* Line 678 of lalr1.cc  */
-#line 259 "parser.yy"
+#line 256 "parser.yy"
     {
 														SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(6) - (3)].keyString), true);
 														if(first->type != vype10::SYM_STRING) {
@@ -663,7 +663,7 @@ namespace vype10 {
   case 16:
 
 /* Line 678 of lalr1.cc  */
-#line 273 "parser.yy"
+#line 270 "parser.yy"
     {
 														(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_CHAR);
 														compiler.intermediateCode->add(vype10::IntermediateCode::READ_CHAR, (std::string*)NULL, (std::string*)NULL, (yyval.keyString));
@@ -673,7 +673,7 @@ namespace vype10 {
   case 17:
 
 /* Line 678 of lalr1.cc  */
-#line 277 "parser.yy"
+#line 274 "parser.yy"
     {
 														(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_SHORT);
 														compiler.intermediateCode->add(vype10::IntermediateCode::READ_SHORT, (std::string*)NULL, (std::string*)NULL, (yyval.keyString));
@@ -683,7 +683,7 @@ namespace vype10 {
   case 18:
 
 /* Line 678 of lalr1.cc  */
-#line 281 "parser.yy"
+#line 278 "parser.yy"
     {
 														(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 														compiler.intermediateCode->add(vype10::IntermediateCode::READ_INT, (std::string*)NULL, (std::string*)NULL, (yyval.keyString));
@@ -693,7 +693,7 @@ namespace vype10 {
   case 19:
 
 /* Line 678 of lalr1.cc  */
-#line 285 "parser.yy"
+#line 282 "parser.yy"
     {
 														(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_STRING);
 														compiler.intermediateCode->add(vype10::IntermediateCode::READ_STRING, (std::string*)NULL, (std::string*)NULL, (yyval.keyString));
@@ -703,7 +703,7 @@ namespace vype10 {
   case 20:
 
 /* Line 678 of lalr1.cc  */
-#line 289 "parser.yy"
+#line 286 "parser.yy"
     {
 														SymbolTable::SymbolRecord *id = compiler.symbolTable->getSymbol((yysemantic_stack_[(4) - (1)].idName), true);
 														if(id == (SymbolTable::SymbolRecord*) NULL) {
@@ -727,7 +727,7 @@ namespace vype10 {
   case 22:
 
 /* Line 678 of lalr1.cc  */
-#line 308 "parser.yy"
+#line 305 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -747,7 +747,7 @@ namespace vype10 {
   case 23:
 
 /* Line 678 of lalr1.cc  */
-#line 322 "parser.yy"
+#line 319 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -767,7 +767,7 @@ namespace vype10 {
   case 24:
 
 /* Line 678 of lalr1.cc  */
-#line 336 "parser.yy"
+#line 333 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -787,7 +787,7 @@ namespace vype10 {
   case 25:
 
 /* Line 678 of lalr1.cc  */
-#line 350 "parser.yy"
+#line 347 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -807,7 +807,7 @@ namespace vype10 {
   case 26:
 
 /* Line 678 of lalr1.cc  */
-#line 364 "parser.yy"
+#line 361 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -834,7 +834,7 @@ namespace vype10 {
   case 27:
 
 /* Line 678 of lalr1.cc  */
-#line 385 "parser.yy"
+#line 382 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -861,7 +861,7 @@ namespace vype10 {
   case 28:
 
 /* Line 678 of lalr1.cc  */
-#line 406 "parser.yy"
+#line 403 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -888,7 +888,7 @@ namespace vype10 {
   case 29:
 
 /* Line 678 of lalr1.cc  */
-#line 427 "parser.yy"
+#line 424 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -915,7 +915,7 @@ namespace vype10 {
   case 30:
 
 /* Line 678 of lalr1.cc  */
-#line 448 "parser.yy"
+#line 445 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -935,7 +935,7 @@ namespace vype10 {
   case 31:
 
 /* Line 678 of lalr1.cc  */
-#line 462 "parser.yy"
+#line 459 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -962,7 +962,7 @@ namespace vype10 {
   case 32:
 
 /* Line 678 of lalr1.cc  */
-#line 483 "parser.yy"
+#line 480 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -989,7 +989,7 @@ namespace vype10 {
   case 33:
 
 /* Line 678 of lalr1.cc  */
-#line 504 "parser.yy"
+#line 501 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -1016,7 +1016,7 @@ namespace vype10 {
   case 34:
 
 /* Line 678 of lalr1.cc  */
-#line 525 "parser.yy"
+#line 522 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -1043,7 +1043,7 @@ namespace vype10 {
   case 35:
 
 /* Line 678 of lalr1.cc  */
-#line 546 "parser.yy"
+#line 543 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -1070,7 +1070,7 @@ namespace vype10 {
   case 36:
 
 /* Line 678 of lalr1.cc  */
-#line 567 "parser.yy"
+#line 564 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
@@ -1097,7 +1097,7 @@ namespace vype10 {
   case 37:
 
 /* Line 678 of lalr1.cc  */
-#line 588 "parser.yy"
+#line 585 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(2) - (2)].keyString), true);
 								if(first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT) {
@@ -1113,7 +1113,7 @@ namespace vype10 {
   case 38:
 
 /* Line 678 of lalr1.cc  */
-#line 598 "parser.yy"
+#line 595 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(2) - (2)].keyString), true);
 								if(first->type == vype10::SYM_INT) {
@@ -1132,14 +1132,14 @@ namespace vype10 {
   case 39:
 
 /* Line 678 of lalr1.cc  */
-#line 611 "parser.yy"
+#line 608 "parser.yy"
     { (yyval.keyString) = (yysemantic_stack_[(3) - (2)].keyString); }
     break;
 
   case 40:
 
 /* Line 678 of lalr1.cc  */
-#line 612 "parser.yy"
+#line 609 "parser.yy"
     {
 										SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol((yysemantic_stack_[(4) - (4)].keyString), true);
 										if(sym == (SymbolTable::SymbolRecord*) NULL) {	// this shouldn't happen
@@ -1171,14 +1171,14 @@ namespace vype10 {
   case 41:
 
 /* Line 678 of lalr1.cc  */
-#line 641 "parser.yy"
+#line 638 "parser.yy"
     { compiler.symbolTable->installSymbol((yysemantic_stack_[(3) - (2)].namesVector), (yysemantic_stack_[(3) - (1)].symbolType)); }
     break;
 
   case 42:
 
 /* Line 678 of lalr1.cc  */
-#line 645 "parser.yy"
+#line 642 "parser.yy"
     {
 									(yyval.namesVector) = new std::vector<std::string*>();
 									if(compiler.symbolTable->getSymbol((yysemantic_stack_[(1) - (1)].idName)) != (SymbolTable::SymbolRecord*) NULL || compiler.symbolTable->getFunction((yysemantic_stack_[(1) - (1)].idName)) != (SymbolTable::FunctionRecord*) NULL) {
@@ -1196,7 +1196,7 @@ namespace vype10 {
   case 43:
 
 /* Line 678 of lalr1.cc  */
-#line 657 "parser.yy"
+#line 654 "parser.yy"
     {
 									if(compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].idName)) != (SymbolTable::SymbolRecord*) NULL) {
 										compiler.error(yylloc, "Identifier with name '" + *(yysemantic_stack_[(3) - (3)].idName) + "' already defined.", RET_ERR_SEMANTICAL);
@@ -1213,70 +1213,70 @@ namespace vype10 {
   case 44:
 
 /* Line 678 of lalr1.cc  */
-#line 671 "parser.yy"
+#line 668 "parser.yy"
     { (yyval.functionType) = vype10::FUN_VOID; }
     break;
 
   case 45:
 
 /* Line 678 of lalr1.cc  */
-#line 672 "parser.yy"
+#line 669 "parser.yy"
     { (yyval.functionType) = vype10::FUN_CHAR; }
     break;
 
   case 46:
 
 /* Line 678 of lalr1.cc  */
-#line 673 "parser.yy"
+#line 670 "parser.yy"
     { (yyval.functionType) = vype10::FUN_SHORT; }
     break;
 
   case 47:
 
 /* Line 678 of lalr1.cc  */
-#line 674 "parser.yy"
+#line 671 "parser.yy"
     { (yyval.functionType) = vype10::FUN_INT; }
     break;
 
   case 48:
 
 /* Line 678 of lalr1.cc  */
-#line 675 "parser.yy"
+#line 672 "parser.yy"
     { (yyval.functionType) = vype10::FUN_STRING; }
     break;
 
   case 49:
 
 /* Line 678 of lalr1.cc  */
-#line 679 "parser.yy"
+#line 676 "parser.yy"
     { (yyval.symbolType) = vype10::SYM_CHAR; }
     break;
 
   case 50:
 
 /* Line 678 of lalr1.cc  */
-#line 680 "parser.yy"
+#line 677 "parser.yy"
     { (yyval.symbolType) = vype10::SYM_SHORT; }
     break;
 
   case 51:
 
 /* Line 678 of lalr1.cc  */
-#line 681 "parser.yy"
+#line 678 "parser.yy"
     { (yyval.symbolType) = vype10::SYM_INT; }
     break;
 
   case 52:
 
 /* Line 678 of lalr1.cc  */
-#line 682 "parser.yy"
+#line 679 "parser.yy"
     { (yyval.symbolType) = vype10::SYM_STRING; }
     break;
 
   case 53:
 
 /* Line 678 of lalr1.cc  */
-#line 686 "parser.yy"
+#line 683 "parser.yy"
     {
 									(yyval.typesVector) = new std::vector<SymbolType>();
 									// no check needed
@@ -1287,7 +1287,7 @@ namespace vype10 {
   case 54:
 
 /* Line 678 of lalr1.cc  */
-#line 691 "parser.yy"
+#line 688 "parser.yy"
     {
 									// no check needed
 									(yyval.typesVector)->push_back((yysemantic_stack_[(3) - (3)].symbolType)); 
@@ -1297,7 +1297,7 @@ namespace vype10 {
   case 55:
 
 /* Line 678 of lalr1.cc  */
-#line 698 "parser.yy"
+#line 695 "parser.yy"
     {
 									(yyval.typesVector) = new std::vector<SymbolType>();
 									if(compiler.symbolTable->getFunction((yysemantic_stack_[(2) - (2)].idName)) != (SymbolTable::FunctionRecord*) NULL) {
@@ -1313,7 +1313,7 @@ namespace vype10 {
   case 56:
 
 /* Line 678 of lalr1.cc  */
-#line 708 "parser.yy"
+#line 705 "parser.yy"
     {
 									if(compiler.symbolTable->getFunction((yysemantic_stack_[(4) - (4)].idName)) != (SymbolTable::FunctionRecord*) NULL) {
 										compiler.error(yylloc, "Identifier '" + *(yysemantic_stack_[(4) - (4)].idName) + "' can't have same name as defined function.", RET_ERR_SEMANTICAL);
@@ -1328,7 +1328,7 @@ namespace vype10 {
   case 72:
 
 /* Line 678 of lalr1.cc  */
-#line 752 "parser.yy"
+#line 749 "parser.yy"
     {
 										SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol((yysemantic_stack_[(4) - (3)].keyString), true);
 										if(sym->type != vype10::SYM_SHORT && sym->type != vype10::SYM_INT) {
@@ -1342,7 +1342,7 @@ namespace vype10 {
   case 73:
 
 /* Line 678 of lalr1.cc  */
-#line 764 "parser.yy"
+#line 761 "parser.yy"
     {
 										compiler.intermediateCode->add(vype10::IntermediateCode::ELSE, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 									}
@@ -1351,7 +1351,7 @@ namespace vype10 {
   case 74:
 
 /* Line 678 of lalr1.cc  */
-#line 770 "parser.yy"
+#line 767 "parser.yy"
     {
 										compiler.intermediateCode->add(vype10::IntermediateCode::ENDIF, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 									}
@@ -1360,7 +1360,7 @@ namespace vype10 {
   case 75:
 
 /* Line 678 of lalr1.cc  */
-#line 777 "parser.yy"
+#line 774 "parser.yy"
     {
 										SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol((yysemantic_stack_[(4) - (3)].keyString), true);
 										if(sym->type != vype10::SYM_SHORT && sym->type != vype10::SYM_INT) {
@@ -1374,7 +1374,7 @@ namespace vype10 {
   case 76:
 
 /* Line 678 of lalr1.cc  */
-#line 789 "parser.yy"
+#line 786 "parser.yy"
     {
 									compiler.intermediateCode->add(vype10::IntermediateCode::ENDWHILE, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 								}
@@ -1383,7 +1383,7 @@ namespace vype10 {
   case 77:
 
 /* Line 678 of lalr1.cc  */
-#line 795 "parser.yy"
+#line 792 "parser.yy"
     {
 									compiler.intermediateCode->add(vype10::IntermediateCode::CONTINUE, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 								}
@@ -1392,7 +1392,7 @@ namespace vype10 {
   case 78:
 
 /* Line 678 of lalr1.cc  */
-#line 798 "parser.yy"
+#line 795 "parser.yy"
     {
 									compiler.intermediateCode->add(vype10::IntermediateCode::BREAK, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 								}
@@ -1401,7 +1401,7 @@ namespace vype10 {
   case 79:
 
 /* Line 678 of lalr1.cc  */
-#line 801 "parser.yy"
+#line 798 "parser.yy"
     {
 									compiler.intermediateCode->add(vype10::IntermediateCode::RETURN, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 								}
@@ -1410,7 +1410,7 @@ namespace vype10 {
   case 80:
 
 /* Line 678 of lalr1.cc  */
-#line 804 "parser.yy"
+#line 801 "parser.yy"
     {
 									compiler.intermediateCode->add(vype10::IntermediateCode::RETURN, (yysemantic_stack_[(3) - (2)].keyString), (std::string*) NULL,  (std::string*) NULL);
 								}
@@ -1419,7 +1419,7 @@ namespace vype10 {
   case 85:
 
 /* Line 678 of lalr1.cc  */
-#line 822 "parser.yy"
+#line 819 "parser.yy"
     {
 										std::string *key;
 										key = compiler.symbolTable->installFunction((yysemantic_stack_[(5) - (2)].idName), (yysemantic_stack_[(5) - (1)].functionType), (std::vector<SymbolType>*) NULL, true);
@@ -1435,7 +1435,7 @@ namespace vype10 {
   case 86:
 
 /* Line 678 of lalr1.cc  */
-#line 832 "parser.yy"
+#line 829 "parser.yy"
     {
 										std::string *key;
 										key = compiler.symbolTable->installFunction((yysemantic_stack_[(5) - (2)].idName), (yysemantic_stack_[(5) - (1)].functionType), (yysemantic_stack_[(5) - (4)].typesVector), true);
@@ -1451,7 +1451,7 @@ namespace vype10 {
   case 87:
 
 /* Line 678 of lalr1.cc  */
-#line 845 "parser.yy"
+#line 842 "parser.yy"
     {
 										compiler.intermediateCode->add(vype10::IntermediateCode::FUNC_END, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 									}
@@ -1460,7 +1460,7 @@ namespace vype10 {
   case 88:
 
 /* Line 678 of lalr1.cc  */
-#line 851 "parser.yy"
+#line 848 "parser.yy"
     {
 										std::string *key;
 										key = compiler.symbolTable->installFunction((yysemantic_stack_[(6) - (2)].idName), (yysemantic_stack_[(6) - (1)].functionType), (std::vector<SymbolType>*) NULL, false);
@@ -1474,7 +1474,7 @@ namespace vype10 {
   case 89:
 
 /* Line 678 of lalr1.cc  */
-#line 859 "parser.yy"
+#line 856 "parser.yy"
     {
 										std::string *key;
 										key = compiler.symbolTable->installFunction((yysemantic_stack_[(6) - (2)].idName), (yysemantic_stack_[(6) - (1)].functionType), (yysemantic_stack_[(6) - (4)].typesVector), false);
@@ -2037,15 +2037,15 @@ namespace vype10 {
   const unsigned short int
   Parser::yyrline_[] =
   {
-         0,   120,   120,   138,   142,   155,   170,   180,   193,   202,
-     207,   215,   222,   240,   258,   259,   273,   277,   281,   285,
-     289,   307,   308,   322,   336,   350,   364,   385,   406,   427,
-     448,   462,   483,   504,   525,   546,   567,   588,   598,   611,
-     612,   641,   645,   657,   671,   672,   673,   674,   675,   679,
-     680,   681,   682,   686,   691,   698,   708,   720,   721,   722,
-     723,   724,   728,   729,   730,   731,   735,   736,   740,   741,
-     745,   746,   752,   764,   770,   777,   789,   795,   798,   801,
-     804,   810,   811,   815,   816,   822,   832,   845,   851,   859
+         0,   117,   117,   135,   139,   152,   167,   177,   190,   199,
+     204,   212,   219,   237,   255,   256,   270,   274,   278,   282,
+     286,   304,   305,   319,   333,   347,   361,   382,   403,   424,
+     445,   459,   480,   501,   522,   543,   564,   585,   595,   608,
+     609,   638,   642,   654,   668,   669,   670,   671,   672,   676,
+     677,   678,   679,   683,   688,   695,   705,   717,   718,   719,
+     720,   721,   725,   726,   727,   728,   732,   733,   737,   738,
+     742,   743,   749,   761,   767,   774,   786,   792,   795,   798,
+     801,   807,   808,   812,   813,   819,   829,   842,   848,   856
   };
 
   // Print the state stack on the debug stream.
@@ -2144,7 +2144,7 @@ namespace vype10 {
 
 
 /* Line 1056 of lalr1.cc  */
-#line 869 "parser.yy"
+#line 866 "parser.yy"
  /*** Additional Code ***/
 
 void vype10::Parser::error(const Parser::location_type& l, const std::string& m)
