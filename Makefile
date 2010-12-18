@@ -49,6 +49,6 @@ doc: $(VYPE_SRCS) Doxyfile
 # Packing
 pack:
 	make clean
-	zip -r vype10.zip $(VYPE_SRCS) $(VYPE_HEADERS) Makefile -x *.svn* *.git*
+	zip -r xcerny37.zip $(VYPE_SRCS) $(VYPE_HEADERS) Makefile -x *.svn* *.git*
 
 .PHONY: all clean

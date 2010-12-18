@@ -504,6 +504,38 @@ namespace vype10 {
 /* Line 678 of lalr1.cc  */
 #line 166 "parser.yy"
     {
+									SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol((yysemantic_stack_[(1) - (1)].keyString), true);
+									if(sym == (SymbolTable::SymbolRecord*) NULL) {	// this shouldn't happen
+										compiler.error(yylloc, "Lost expression result.", RET_ERR_INTERNAL);
+										YYERROR;
+									}
+									
+									compiler.intermediateCode->add(vype10::IntermediateCode::PRINT, (yysemantic_stack_[(1) - (1)].keyString), (std::string*) NULL, (std::string*) NULL);
+									
+								}
+    break;
+
+  case 7:
+
+/* Line 678 of lalr1.cc  */
+#line 176 "parser.yy"
+    {
+
+									SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
+									if(sym == (SymbolTable::SymbolRecord*) NULL) {	// this shouldn't happen
+										compiler.error(yylloc, "Lost expression result.", RET_ERR_INTERNAL);
+										YYERROR;
+									}
+									
+									compiler.intermediateCode->add(vype10::IntermediateCode::PRINT, (yysemantic_stack_[(3) - (3)].keyString), (std::string*) NULL, (std::string*) NULL);
+								}
+    break;
+
+  case 8:
+
+/* Line 678 of lalr1.cc  */
+#line 189 "parser.yy"
+    {
 														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
 														val->intVal = (yysemantic_stack_[(1) - (1)].integerVal);
 														if((yysemantic_stack_[(1) - (1)].integerVal) >= SHRT_MIN && (yysemantic_stack_[(1) - (1)].integerVal) <= SHRT_MAX) {
@@ -514,10 +546,10 @@ namespace vype10 {
 													}
     break;
 
-  case 7:
+  case 9:
 
 /* Line 678 of lalr1.cc  */
-#line 175 "parser.yy"
+#line 198 "parser.yy"
     {
 														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
 														val->charVal = (yysemantic_stack_[(1) - (1)].charVal);
@@ -525,10 +557,10 @@ namespace vype10 {
 													}
     break;
 
-  case 8:
+  case 10:
 
 /* Line 678 of lalr1.cc  */
-#line 180 "parser.yy"
+#line 203 "parser.yy"
     {
 														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
 														val->stringVal = (yysemantic_stack_[(1) - (1)].stringVal);
@@ -536,10 +568,10 @@ namespace vype10 {
 													}
     break;
 
-  case 9:
+  case 11:
 
 /* Line 678 of lalr1.cc  */
-#line 188 "parser.yy"
+#line 211 "parser.yy"
     {
 														(yyval.keyString) = compiler.symbolTable->getSymbolKey((yysemantic_stack_[(1) - (1)].idName), true);
 														if((yyval.keyString) == (std::string*) NULL) {
@@ -549,10 +581,10 @@ namespace vype10 {
 													}
     break;
 
-  case 10:
+  case 12:
 
 /* Line 678 of lalr1.cc  */
-#line 195 "parser.yy"
+#line 218 "parser.yy"
     {
 														SymbolTable::FunctionRecord *fun = compiler.symbolTable->getFunction((yysemantic_stack_[(3) - (1)].idName));
 														if(fun == (SymbolTable::FunctionRecord*) NULL) {
@@ -573,10 +605,10 @@ namespace vype10 {
 													}
     break;
 
-  case 11:
+  case 13:
 
 /* Line 678 of lalr1.cc  */
-#line 213 "parser.yy"
+#line 236 "parser.yy"
     {
 														SymbolTable::FunctionRecord *fun = compiler.symbolTable->getFunction((yysemantic_stack_[(4) - (1)].idName));
 														if(fun == (SymbolTable::FunctionRecord*) NULL) {
@@ -597,10 +629,17 @@ namespace vype10 {
 													}
     break;
 
-  case 13:
+  case 14:
 
 /* Line 678 of lalr1.cc  */
-#line 232 "parser.yy"
+#line 254 "parser.yy"
+    { (yyval.keyString) = (std::string*) NULL; }
+    break;
+
+  case 15:
+
+/* Line 678 of lalr1.cc  */
+#line 255 "parser.yy"
     {
 														SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(6) - (3)].keyString), true);
 														if(first->type != vype10::SYM_STRING) {
@@ -617,50 +656,50 @@ namespace vype10 {
 													}
     break;
 
-  case 14:
+  case 16:
 
 /* Line 678 of lalr1.cc  */
-#line 246 "parser.yy"
+#line 269 "parser.yy"
     {
 														(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_CHAR);
 														compiler.intermediateCode->add(vype10::IntermediateCode::READ_CHAR, (std::string*)NULL, (std::string*)NULL, (yyval.keyString));
 													}
     break;
 
-  case 15:
+  case 17:
 
 /* Line 678 of lalr1.cc  */
-#line 250 "parser.yy"
+#line 273 "parser.yy"
     {
 														(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_SHORT);
 														compiler.intermediateCode->add(vype10::IntermediateCode::READ_SHORT, (std::string*)NULL, (std::string*)NULL, (yyval.keyString));
 													}
     break;
 
-  case 16:
+  case 18:
 
 /* Line 678 of lalr1.cc  */
-#line 254 "parser.yy"
+#line 277 "parser.yy"
     {
 														(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 														compiler.intermediateCode->add(vype10::IntermediateCode::READ_INT, (std::string*)NULL, (std::string*)NULL, (yyval.keyString));
 													}
     break;
 
-  case 17:
+  case 19:
 
 /* Line 678 of lalr1.cc  */
-#line 258 "parser.yy"
+#line 281 "parser.yy"
     {
 														(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_STRING);
 														compiler.intermediateCode->add(vype10::IntermediateCode::READ_STRING, (std::string*)NULL, (std::string*)NULL, (yyval.keyString));
 													}
     break;
 
-  case 18:
+  case 20:
 
 /* Line 678 of lalr1.cc  */
-#line 262 "parser.yy"
+#line 285 "parser.yy"
     {
 														SymbolTable::SymbolRecord *id = compiler.symbolTable->getSymbol((yysemantic_stack_[(4) - (1)].idName), true);
 														if(id == (SymbolTable::SymbolRecord*) NULL) {
@@ -681,16 +720,16 @@ namespace vype10 {
 													}
     break;
 
-  case 20:
+  case 22:
 
 /* Line 678 of lalr1.cc  */
-#line 281 "parser.yy"
+#line 304 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
 								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
 									(yyval.keyString) = compiler.symbolTable->installSymbol(first->type);
-								} else if(first->type != second->type && (first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT)) {
+								} else if(first->type != second->type && ((first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) || (first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT))) {
 									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 								} else {
 									compiler.error(yylloc, "Invalid types in '+' expression.", RET_ERR_SEMANTICAL);
@@ -701,16 +740,16 @@ namespace vype10 {
 							}
     break;
 
-  case 21:
+  case 23:
 
 /* Line 678 of lalr1.cc  */
-#line 295 "parser.yy"
+#line 318 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
 								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
 									(yyval.keyString) = compiler.symbolTable->installSymbol(first->type);
-								} else if(first->type != second->type && (first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT)) {
+								} else if(first->type != second->type && ((first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) || (first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT))) {
 									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 								} else {
 									compiler.error(yylloc, "Invalid types in '-' expression.", RET_ERR_SEMANTICAL);
@@ -721,16 +760,16 @@ namespace vype10 {
 							}
     break;
 
-  case 22:
+  case 24:
 
 /* Line 678 of lalr1.cc  */
-#line 309 "parser.yy"
+#line 332 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
 								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
 									(yyval.keyString) = compiler.symbolTable->installSymbol(first->type);
-								} else if(first->type != second->type && (first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT)) {
+								} else if(first->type != second->type && ((first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) || (first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT))) {
 									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 								} else {
 									compiler.error(yylloc, "Invalid types in '*' expression.", RET_ERR_SEMANTICAL);
@@ -741,16 +780,16 @@ namespace vype10 {
 							}
     break;
 
-  case 23:
+  case 25:
 
 /* Line 678 of lalr1.cc  */
-#line 323 "parser.yy"
+#line 346 "parser.yy"
     {
 								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
 								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
 									(yyval.keyString) = compiler.symbolTable->installSymbol(first->type);
-								} else if(first->type != second->type && (first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT)) {
+								} else if(first->type != second->type && ((first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) || (first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT))) {
 									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 								} else {
 									compiler.error(yylloc, "Invalid types in '/' expression.", RET_ERR_SEMANTICAL);
@@ -761,17 +800,342 @@ namespace vype10 {
 							}
     break;
 
+  case 26:
+
+/* Line 678 of lalr1.cc  */
+#line 360 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									(yyval.keyString) = compiler.symbolTable->installSymbol(first->type);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_OR, (yysemantic_stack_[(3) - (1)].keyString), (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (3)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_OR, (yysemantic_stack_[(3) - (1)].keyString), pom, (yyval.keyString));
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (1)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_OR, pom, (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else {
+									compiler.error(yylloc, "Invalid types in '&' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+    break;
+
+  case 27:
+
+/* Line 678 of lalr1.cc  */
+#line 381 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									(yyval.keyString) = compiler.symbolTable->installSymbol(first->type);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_AND, (yysemantic_stack_[(3) - (1)].keyString), (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (3)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_AND, (yysemantic_stack_[(3) - (1)].keyString), pom, (yyval.keyString));
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (1)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_AND, pom, (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else {
+									compiler.error(yylloc, "Invalid types in '&' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+    break;
+
+  case 28:
+
+/* Line 678 of lalr1.cc  */
+#line 402 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
+								if(first->type == second->type) {	// ok
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::LT, (yysemantic_stack_[(3) - (1)].keyString), (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (3)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::LT, (yysemantic_stack_[(3) - (1)].keyString), pom, (yyval.keyString));
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (1)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::LT, pom, (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else {
+									compiler.error(yylloc, "Invalid types in '<' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+    break;
+
+  case 29:
+
+/* Line 678 of lalr1.cc  */
+#line 423 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
+								if(first->type == second->type) {	// ok
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::GT, (yysemantic_stack_[(3) - (1)].keyString), (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (3)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::GT, (yysemantic_stack_[(3) - (1)].keyString), pom, (yyval.keyString));
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (1)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::GT, pom, (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else {
+									compiler.error(yylloc, "Invalid types in '>' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+    break;
+
+  case 30:
+
+/* Line 678 of lalr1.cc  */
+#line 444 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									(yyval.keyString) = compiler.symbolTable->installSymbol(first->type);
+								} else if(first->type != second->type && ((first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) || (first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT))) {
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_SHORT);
+								} else {
+									compiler.error(yylloc, "Invalid types in '%' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+								
+								compiler.intermediateCode->add(vype10::IntermediateCode::MOD, (yysemantic_stack_[(3) - (1)].keyString), (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+							}
+    break;
+
+  case 31:
+
+/* Line 678 of lalr1.cc  */
+#line 458 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::AND, (yysemantic_stack_[(3) - (1)].keyString), (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (3)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::AND, (yysemantic_stack_[(3) - (1)].keyString), pom, (yyval.keyString));
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (1)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::AND, pom, (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else {
+									compiler.error(yylloc, "Invalid types in '&&' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+    break;
+
+  case 32:
+
+/* Line 678 of lalr1.cc  */
+#line 479 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::OR, (yysemantic_stack_[(3) - (1)].keyString), (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (3)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::OR, (yysemantic_stack_[(3) - (1)].keyString), pom, (yyval.keyString));
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (1)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::OR, pom, (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else {
+									compiler.error(yylloc, "Invalid types in '||' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+    break;
+
+  case 33:
+
+/* Line 678 of lalr1.cc  */
+#line 500 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
+								if(first->type == second->type) {	// ok
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::EQ, (yysemantic_stack_[(3) - (1)].keyString), (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (3)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::EQ, (yysemantic_stack_[(3) - (1)].keyString), pom, (yyval.keyString));
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (1)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::EQ, pom, (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else {
+									compiler.error(yylloc, "Invalid types in '==' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+    break;
+
+  case 34:
+
+/* Line 678 of lalr1.cc  */
+#line 521 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
+								if(first->type == second->type) {	// ok
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::NE, (yysemantic_stack_[(3) - (1)].keyString), (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (3)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::NE, (yysemantic_stack_[(3) - (1)].keyString), pom, (yyval.keyString));
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (1)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::NE, pom, (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else {
+									compiler.error(yylloc, "Invalid types in '!=' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+    break;
+
+  case 35:
+
+/* Line 678 of lalr1.cc  */
+#line 542 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
+								if(first->type == second->type) {	// ok
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::LE, (yysemantic_stack_[(3) - (1)].keyString), (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (3)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::LE, (yysemantic_stack_[(3) - (1)].keyString), pom, (yyval.keyString));
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (1)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::LE, pom, (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else {
+									compiler.error(yylloc, "Invalid types in '<=' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+    break;
+
+  case 36:
+
+/* Line 678 of lalr1.cc  */
+#line 563 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (1)].keyString), true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].keyString), true);
+								if(first->type == second->type) {	// ok
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::GE, (yysemantic_stack_[(3) - (1)].keyString), (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (3)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::GE, (yysemantic_stack_[(3) - (1)].keyString), pom, (yyval.keyString));
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(3) - (1)].keyString), (std::string*) NULL, pom);
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::GE, pom, (yysemantic_stack_[(3) - (3)].keyString), (yyval.keyString));
+								} else {
+									compiler.error(yylloc, "Invalid types in '>=' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+    break;
+
   case 37:
 
 /* Line 678 of lalr1.cc  */
-#line 350 "parser.yy"
-    { (yyval.keyString) = (yysemantic_stack_[(3) - (2)].keyString); }
+#line 584 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(2) - (2)].keyString), true);
+								if(first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT) {
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::NOT, (yysemantic_stack_[(2) - (2)].keyString), (std::string*) NULL, (yyval.keyString));
+								} else {
+									compiler.error(yylloc, "Invalid type in '!' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
     break;
 
   case 38:
 
 /* Line 678 of lalr1.cc  */
-#line 351 "parser.yy"
+#line 594 "parser.yy"
+    {
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol((yysemantic_stack_[(2) - (2)].keyString), true);
+								if(first->type == vype10::SYM_INT) {
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_NOT, (yysemantic_stack_[(2) - (2)].keyString), (std::string*) NULL, (yyval.keyString));
+								} else if(first->type == vype10::SYM_SHORT) {
+									(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_NOT, (yysemantic_stack_[(2) - (2)].keyString), (std::string*) NULL, (yyval.keyString));
+								} else {
+									compiler.error(yylloc, "Invalid type in '~' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+    break;
+
+  case 39:
+
+/* Line 678 of lalr1.cc  */
+#line 607 "parser.yy"
+    { (yyval.keyString) = (yysemantic_stack_[(3) - (2)].keyString); }
+    break;
+
+  case 40:
+
+/* Line 678 of lalr1.cc  */
+#line 608 "parser.yy"
     {
 										SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol((yysemantic_stack_[(4) - (4)].keyString), true);
 										if(sym == (SymbolTable::SymbolRecord*) NULL) {	// this shouldn't happen
@@ -792,21 +1156,24 @@ namespace vype10 {
 										} else if(sym->type == vype10::SYM_SHORT && (yysemantic_stack_[(4) - (2)].symbolType) == vype10::SYM_INT) {	// short -> int
 											(yyval.keyString) = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 											compiler.intermediateCode->add(vype10::IntermediateCode::CAST, (yysemantic_stack_[(4) - (4)].keyString), (std::string*) NULL, (yyval.keyString));
+										} else {
+											compiler.error(yylloc, "Invalid cast.", RET_ERR_INTERNAL);
+											YYERROR;
 										}
  									}
     break;
 
-  case 39:
+  case 41:
 
 /* Line 678 of lalr1.cc  */
-#line 376 "parser.yy"
+#line 636 "parser.yy"
     { compiler.symbolTable->installSymbol((yysemantic_stack_[(3) - (2)].namesVector), (yysemantic_stack_[(3) - (1)].symbolType)); }
     break;
 
-  case 40:
+  case 42:
 
 /* Line 678 of lalr1.cc  */
-#line 380 "parser.yy"
+#line 640 "parser.yy"
     {
 									(yyval.namesVector) = new std::vector<std::string*>();
 									if(compiler.symbolTable->getSymbol((yysemantic_stack_[(1) - (1)].idName)) != (SymbolTable::SymbolRecord*) NULL || compiler.symbolTable->getFunction((yysemantic_stack_[(1) - (1)].idName)) != (SymbolTable::FunctionRecord*) NULL) {
@@ -821,10 +1188,10 @@ namespace vype10 {
 								}
     break;
 
-  case 41:
+  case 43:
 
 /* Line 678 of lalr1.cc  */
-#line 392 "parser.yy"
+#line 652 "parser.yy"
     {
 									if(compiler.symbolTable->getSymbol((yysemantic_stack_[(3) - (3)].idName)) != (SymbolTable::SymbolRecord*) NULL) {
 										compiler.error(yylloc, "Identifier with name '" + *(yysemantic_stack_[(3) - (3)].idName) + "' already defined.", RET_ERR_SEMANTICAL);
@@ -838,73 +1205,73 @@ namespace vype10 {
 								}
     break;
 
-  case 42:
-
-/* Line 678 of lalr1.cc  */
-#line 406 "parser.yy"
-    { (yyval.functionType) = vype10::FUN_VOID; }
-    break;
-
-  case 43:
-
-/* Line 678 of lalr1.cc  */
-#line 407 "parser.yy"
-    { (yyval.functionType) = vype10::FUN_CHAR; }
-    break;
-
   case 44:
 
 /* Line 678 of lalr1.cc  */
-#line 408 "parser.yy"
-    { (yyval.functionType) = vype10::FUN_SHORT; }
+#line 666 "parser.yy"
+    { (yyval.functionType) = vype10::FUN_VOID; }
     break;
 
   case 45:
 
 /* Line 678 of lalr1.cc  */
-#line 409 "parser.yy"
-    { (yyval.functionType) = vype10::FUN_INT; }
+#line 667 "parser.yy"
+    { (yyval.functionType) = vype10::FUN_CHAR; }
     break;
 
   case 46:
 
 /* Line 678 of lalr1.cc  */
-#line 410 "parser.yy"
-    { (yyval.functionType) = vype10::FUN_STRING; }
+#line 668 "parser.yy"
+    { (yyval.functionType) = vype10::FUN_SHORT; }
     break;
 
   case 47:
 
 /* Line 678 of lalr1.cc  */
-#line 414 "parser.yy"
-    { (yyval.symbolType) = vype10::SYM_CHAR; }
+#line 669 "parser.yy"
+    { (yyval.functionType) = vype10::FUN_INT; }
     break;
 
   case 48:
 
 /* Line 678 of lalr1.cc  */
-#line 415 "parser.yy"
-    { (yyval.symbolType) = vype10::SYM_SHORT; }
+#line 670 "parser.yy"
+    { (yyval.functionType) = vype10::FUN_STRING; }
     break;
 
   case 49:
 
 /* Line 678 of lalr1.cc  */
-#line 416 "parser.yy"
-    { (yyval.symbolType) = vype10::SYM_INT; }
+#line 674 "parser.yy"
+    { (yyval.symbolType) = vype10::SYM_CHAR; }
     break;
 
   case 50:
 
 /* Line 678 of lalr1.cc  */
-#line 417 "parser.yy"
-    { (yyval.symbolType) = vype10::SYM_STRING; }
+#line 675 "parser.yy"
+    { (yyval.symbolType) = vype10::SYM_SHORT; }
     break;
 
   case 51:
 
 /* Line 678 of lalr1.cc  */
-#line 421 "parser.yy"
+#line 676 "parser.yy"
+    { (yyval.symbolType) = vype10::SYM_INT; }
+    break;
+
+  case 52:
+
+/* Line 678 of lalr1.cc  */
+#line 677 "parser.yy"
+    { (yyval.symbolType) = vype10::SYM_STRING; }
+    break;
+
+  case 53:
+
+/* Line 678 of lalr1.cc  */
+#line 681 "parser.yy"
     {
 									(yyval.typesVector) = new std::vector<SymbolType>();
 									// no check needed
@@ -912,20 +1279,20 @@ namespace vype10 {
 								}
     break;
 
-  case 52:
+  case 54:
 
 /* Line 678 of lalr1.cc  */
-#line 426 "parser.yy"
+#line 686 "parser.yy"
     {
 									// no check needed
 									(yyval.typesVector)->push_back((yysemantic_stack_[(3) - (3)].symbolType)); 
 								}
     break;
 
-  case 53:
+  case 55:
 
 /* Line 678 of lalr1.cc  */
-#line 433 "parser.yy"
+#line 693 "parser.yy"
     {
 									(yyval.typesVector) = new std::vector<SymbolType>();
 									if(compiler.symbolTable->getFunction((yysemantic_stack_[(2) - (2)].idName)) != (SymbolTable::FunctionRecord*) NULL) {
@@ -938,10 +1305,10 @@ namespace vype10 {
 								}
     break;
 
-  case 54:
+  case 56:
 
 /* Line 678 of lalr1.cc  */
-#line 443 "parser.yy"
+#line 703 "parser.yy"
     {
 									if(compiler.symbolTable->getFunction((yysemantic_stack_[(4) - (4)].idName)) != (SymbolTable::FunctionRecord*) NULL) {
 										compiler.error(yylloc, "Identifier '" + *(yysemantic_stack_[(4) - (4)].idName) + "' can't have same name as defined function.", RET_ERR_SEMANTICAL);
@@ -953,10 +1320,10 @@ namespace vype10 {
 								}
     break;
 
-  case 70:
+  case 72:
 
 /* Line 678 of lalr1.cc  */
-#line 487 "parser.yy"
+#line 747 "parser.yy"
     {
 										SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol((yysemantic_stack_[(4) - (3)].keyString), true);
 										if(sym->type != vype10::SYM_SHORT && sym->type != vype10::SYM_INT) {
@@ -967,28 +1334,28 @@ namespace vype10 {
 									}
     break;
 
-  case 71:
+  case 73:
 
 /* Line 678 of lalr1.cc  */
-#line 499 "parser.yy"
+#line 759 "parser.yy"
     {
 										compiler.intermediateCode->add(vype10::IntermediateCode::ELSE, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 									}
     break;
 
-  case 72:
+  case 74:
 
 /* Line 678 of lalr1.cc  */
-#line 505 "parser.yy"
+#line 765 "parser.yy"
     {
 										compiler.intermediateCode->add(vype10::IntermediateCode::ENDIF, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 									}
     break;
 
-  case 73:
+  case 75:
 
 /* Line 678 of lalr1.cc  */
-#line 512 "parser.yy"
+#line 772 "parser.yy"
     {
 										SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol((yysemantic_stack_[(4) - (3)].keyString), true);
 										if(sym->type != vype10::SYM_SHORT && sym->type != vype10::SYM_INT) {
@@ -999,37 +1366,55 @@ namespace vype10 {
 									}
     break;
 
-  case 74:
+  case 76:
 
 /* Line 678 of lalr1.cc  */
-#line 524 "parser.yy"
+#line 784 "parser.yy"
     {
 									compiler.intermediateCode->add(vype10::IntermediateCode::ENDWHILE, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 								}
     break;
 
-  case 75:
+  case 77:
 
 /* Line 678 of lalr1.cc  */
-#line 530 "parser.yy"
+#line 790 "parser.yy"
     {
 									compiler.intermediateCode->add(vype10::IntermediateCode::CONTINUE, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 								}
     break;
 
-  case 76:
+  case 78:
 
 /* Line 678 of lalr1.cc  */
-#line 533 "parser.yy"
+#line 793 "parser.yy"
     {
 									compiler.intermediateCode->add(vype10::IntermediateCode::BREAK, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 								}
     break;
 
-  case 83:
+  case 79:
 
 /* Line 678 of lalr1.cc  */
-#line 553 "parser.yy"
+#line 796 "parser.yy"
+    {
+									compiler.intermediateCode->add(vype10::IntermediateCode::RETURN, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
+								}
+    break;
+
+  case 80:
+
+/* Line 678 of lalr1.cc  */
+#line 799 "parser.yy"
+    {
+									compiler.intermediateCode->add(vype10::IntermediateCode::RETURN, (yysemantic_stack_[(3) - (2)].keyString), (std::string*) NULL,  (std::string*) NULL);
+								}
+    break;
+
+  case 85:
+
+/* Line 678 of lalr1.cc  */
+#line 817 "parser.yy"
     {
 										std::string *key;
 										key = compiler.symbolTable->installFunction((yysemantic_stack_[(5) - (2)].idName), (yysemantic_stack_[(5) - (1)].functionType), (std::vector<SymbolType>*) NULL, true);
@@ -1042,10 +1427,10 @@ namespace vype10 {
 									}
     break;
 
-  case 84:
+  case 86:
 
 /* Line 678 of lalr1.cc  */
-#line 563 "parser.yy"
+#line 827 "parser.yy"
     {
 										std::string *key;
 										key = compiler.symbolTable->installFunction((yysemantic_stack_[(5) - (2)].idName), (yysemantic_stack_[(5) - (1)].functionType), (yysemantic_stack_[(5) - (4)].typesVector), true);
@@ -1058,19 +1443,19 @@ namespace vype10 {
 									}
     break;
 
-  case 85:
+  case 87:
 
 /* Line 678 of lalr1.cc  */
-#line 576 "parser.yy"
+#line 840 "parser.yy"
     {
 										compiler.intermediateCode->add(vype10::IntermediateCode::FUNC_END, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 									}
     break;
 
-  case 86:
+  case 88:
 
 /* Line 678 of lalr1.cc  */
-#line 582 "parser.yy"
+#line 846 "parser.yy"
     {
 										std::string *key;
 										key = compiler.symbolTable->installFunction((yysemantic_stack_[(6) - (2)].idName), (yysemantic_stack_[(6) - (1)].functionType), (std::vector<SymbolType>*) NULL, false);
@@ -1081,10 +1466,10 @@ namespace vype10 {
 									}
     break;
 
-  case 87:
+  case 89:
 
 /* Line 678 of lalr1.cc  */
-#line 590 "parser.yy"
+#line 854 "parser.yy"
     {
 										std::string *key;
 										key = compiler.symbolTable->installFunction((yysemantic_stack_[(6) - (2)].idName), (yysemantic_stack_[(6) - (1)].functionType), (yysemantic_stack_[(6) - (4)].typesVector), false);
@@ -1098,7 +1483,7 @@ namespace vype10 {
 
 
 /* Line 678 of lalr1.cc  */
-#line 1102 "parser.tab.cc"
+#line 1487 "parser.tab.cc"
 	default:
           break;
       }
@@ -1309,21 +1694,21 @@ namespace vype10 {
   {
          0,   -43,   -43,   -43,   -43,   -43,     2,     5,   -43,   -20,
      -43,   -43,    30,   -43,   -43,    58,   -43,    69,   -43,   -43,
-      70,   -43,    33,    48,    73,    89,    92,   100,   -43,   -43,
-     -43,   -43,   101,   102,    -6,    97,   147,   288,   316,   316,
-     -43,   -43,    99,   -43,   467,   -43,   113,   -43,   -43,   167,
-     117,   -43,   267,   -43,   267,   -43,   -43,   103,   137,   -35,
-      50,   316,   197,   316,   316,   115,   118,   119,   135,   316,
-     316,   316,   -43,   -43,    59,   -43,   313,   364,   136,   -43,
-     -43,   -43,   316,   316,   316,   316,   316,   316,   316,   316,
-     316,   316,   316,   316,   316,   316,   316,   -43,   -38,   -43,
-     -43,   -43,   -43,   217,   143,   -43,   132,   -43,    74,   133,
-      74,   -43,   467,   -43,    68,   467,   341,    98,   -43,   -43,
-     -43,   -43,   448,   385,   406,   -43,   -43,   316,   221,   480,
-     492,   503,     4,     4,    62,    62,    62,    62,    -9,    -9,
-     -43,   -43,   -43,   179,   -43,   -43,   -43,   267,   -43,   -43,
-     -43,   181,   316,   -43,   -43,   -43,   316,   -43,   -43,   -43,
-     -43,   -43,   -43,   467,   427,   -43
+      71,   -43,    33,    43,    59,    60,    67,    74,   -43,   -43,
+     -43,   -43,    76,    91,    -6,    88,   149,   290,   318,   318,
+     -43,   -43,    97,   -43,   469,   -43,   143,   -43,   -43,   169,
+     119,   -43,   269,   -43,   269,   -43,   -43,   104,   145,   -35,
+      50,   318,   199,   318,   318,   106,   117,   120,   121,   318,
+     318,   318,   -43,   -43,    68,   -43,   315,   366,   137,   -43,
+     -43,   -43,   318,   318,   318,   318,   318,   318,   318,   318,
+     318,   318,   318,   318,   318,   318,   318,   -43,   -38,   -43,
+     -43,   -43,   -43,   219,   164,   -43,   114,   -43,    75,   134,
+      75,   -43,   469,   -43,   100,   469,   343,   101,   469,   -43,
+     -43,   -43,   -43,   450,   387,   408,   -43,   -43,   318,   223,
+     482,   494,   505,     4,     4,    62,    62,    62,    62,    -9,
+      -9,   -43,   -43,   -43,   180,   -43,   -43,   -43,   269,   -43,
+     -43,   -43,   181,   318,   -43,   -43,   318,   -43,   318,   -43,
+     -43,   -43,   -43,   -43,   -43,   469,   469,   429,   -43
   };
 
   /* YYDEFACT[S] -- default rule to reduce with in state S when YYTABLE
@@ -1332,41 +1717,41 @@ namespace vype10 {
   const unsigned char
   Parser::yydefact_[] =
   {
-         0,    43,    44,    45,    42,    46,     0,     0,    79,     0,
-      82,    81,     0,     1,    80,     0,    85,     0,     7,     8,
-       9,     6,     0,     0,     0,     0,     0,     0,    47,    48,
-      49,    50,     0,     0,     0,     0,     0,     0,     0,     0,
-      68,    60,     0,    19,     3,    66,     0,    64,    55,     0,
-       0,    56,     0,    57,     0,    58,    59,     0,    51,     0,
+         0,    45,    46,    47,    44,    48,     0,     0,    81,     0,
+      84,    83,     0,     1,    82,     0,    87,     0,     9,    10,
+      11,     8,     0,     0,     0,     0,     0,     0,    49,    50,
+      51,    52,     0,     0,     0,     0,     0,     0,     0,     0,
+      70,    62,     0,    21,     3,    68,     0,    66,    57,     0,
+       0,    58,     0,    59,     0,    60,    61,     0,    53,     0,
        0,     0,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,    75,    76,     9,    77,     0,     0,     0,    35,
-      36,    69,     0,     0,     0,     0,     0,     0,     0,     0,
-       0,     0,     0,     0,     0,     0,     0,    40,     0,    61,
-      65,    62,    67,     0,     0,    74,    83,    53,     0,     0,
-       0,    84,     2,    10,     0,     4,     0,     0,    14,    15,
-      16,    17,     0,     0,     0,    78,    37,     0,    30,    29,
-      24,    25,    32,    31,    26,    27,    34,    33,    20,    21,
-      22,    23,    28,     0,    39,    63,    71,     0,    86,    52,
-      87,     0,     0,    11,    18,    12,     0,    70,    73,    38,
-      41,    72,    54,     5,     0,    13
+       0,     0,    77,    78,    11,    79,     0,     0,     0,    37,
+      38,    71,     0,     0,     0,     0,     0,     0,     0,     0,
+       0,     0,     0,     0,     0,     0,     0,    42,     0,    63,
+      67,    64,    69,     0,     0,    76,    85,    55,     0,     0,
+       0,    86,     2,    12,     0,     4,     0,     0,     6,    16,
+      17,    18,    19,     0,     0,     0,    80,    39,     0,    32,
+      31,    26,    27,    34,    33,    28,    29,    36,    35,    22,
+      23,    24,    25,    30,     0,    41,    65,    73,     0,    88,
+      54,    89,     0,     0,    13,    20,     0,    14,     0,    72,
+      75,    40,    43,    74,    56,     5,     7,     0,    15
   };
 
   /* YYPGOTO[NTERM-NUM].  */
   const short int
   Parser::yypgoto_[] =
   {
-       -43,   -43,   129,   -43,   -36,   144,   -43,   -43,   -13,   -43,
-     -43,   -42,   186,   149,   -43,   -43,   -43,   -43,   -43,   -43,
-     -43,   -43,   -43,   193,   -43,   -43,   -43
+       -43,   -43,   -43,   -43,   -43,   -36,   139,   -43,   -43,   -13,
+     -43,   -43,   -42,   186,   146,   -43,   -43,   -43,   -43,   -43,
+     -43,   -43,   -43,   -43,   190,   -43,   -43,   -43
   };
 
   /* YYDEFGOTO[NTERM-NUM].  */
   const short int
   Parser::yydefgoto_[] =
   {
-        -1,    42,   114,    43,    44,    45,    98,     6,    46,    59,
-      60,    47,    48,    49,    50,    51,    52,   147,    53,    54,
-      55,    56,     7,     8,     9,    10,    11
+        -1,    42,   114,   117,    43,    44,    45,    98,     6,    46,
+      59,    60,    47,    48,    49,    50,    51,    52,   148,    53,
+      54,    55,    56,     7,     8,     9,    10,    11
   };
 
   /* YYTABLE[YYPACT[STATE-NUM]].  What to do in state STATE-NUM.  If
@@ -1376,61 +1761,61 @@ namespace vype10 {
   const unsigned char
   Parser::yytable_[] =
   {
-        76,    77,    79,    80,    58,    13,   143,   100,    12,   108,
-     104,   109,   105,   144,     1,     2,     3,     4,     5,     1,
-       2,     3,     4,     5,    78,   112,   115,   116,   115,    94,
-      95,    96,    15,   122,   123,   124,    88,    89,    90,    91,
-      92,    93,    94,    95,    96,    72,   128,   129,   130,   131,
-     132,   133,   134,   135,   136,   137,   138,   139,   140,   141,
-     142,   100,    18,    19,    20,    21,    22,    23,    24,    25,
+        76,    77,    79,    80,    58,    13,   144,   100,    12,   108,
+     104,   109,   105,   145,     1,     2,     3,     4,     5,     1,
+       2,     3,     4,     5,    78,   112,   115,   116,   118,    94,
+      95,    96,    15,   123,   124,   125,    88,    89,    90,    91,
+      92,    93,    94,    95,    96,    72,   129,   130,   131,   132,
+     133,   134,   135,   136,   137,   138,   139,   140,   141,   142,
+     143,   100,    18,    19,    20,    21,    22,    23,    24,    25,
       26,    27,    28,    29,    30,    17,    31,    32,    64,    33,
-      34,    35,    36,    28,    29,    30,    57,    31,    28,    29,
-      30,   159,    31,    65,   110,   149,   111,   151,    92,    93,
-      94,    95,    96,    37,    62,   161,    63,    38,    39,    40,
-      15,    41,   152,    61,   153,    62,   163,    63,    66,    97,
-     164,    18,    19,    20,    21,    22,    23,    24,    25,    26,
-      27,    28,    29,    30,    67,    31,    32,    68,    33,    34,
-      35,    36,   152,   107,   155,    69,    70,    71,    73,   106,
-      81,    18,    19,    74,    21,    22,    23,    24,    25,    26,
-      27,   118,    37,   146,   119,   120,    38,    39,    40,    15,
-     101,    18,    19,    20,    21,    22,    23,    24,    25,    26,
-      27,   121,   127,   148,   150,   160,    32,   162,    33,    34,
-      35,    36,    37,   117,   102,    16,    38,    39,    75,   103,
-      14,    18,    19,    74,    21,    22,    23,    24,    25,    26,
-      27,     0,    37,     0,     0,     0,    38,    39,    40,    15,
-      99,    18,    19,    20,    21,    22,    23,    24,    25,    26,
-      27,     0,     0,     0,     0,     0,    32,     0,    33,    34,
-      35,    36,    37,   113,     0,     0,    38,    39,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,    37,     0,     0,     0,    38,    39,    40,    15,
-     145,    18,    19,    20,    21,    22,    23,    24,    25,    26,
-      27,     0,     0,     0,     0,     0,    32,     0,    33,    34,
-      35,    36,    18,    19,    74,    21,    22,    23,    24,    25,
-      26,    27,    28,    29,    30,     0,    31,     0,     0,     0,
-       0,     0,    37,     0,     0,     0,    38,    39,    40,    15,
-      18,    19,    74,    21,    22,    23,    24,    25,    26,    27,
-       0,     0,     0,    37,     0,     0,     0,    38,    39,    82,
+      34,    35,    36,    28,    29,    30,    57,    31,    65,    28,
+      29,    30,   161,    31,   110,   150,   111,   152,    92,    93,
+      94,    95,    96,    37,    66,    67,   163,    38,    39,    40,
+      15,    41,    68,    62,    61,    63,    62,   165,    63,    69,
+     166,    70,   167,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,    28,    29,    30,    71,    31,    32,    73,
+      33,    34,    35,    36,   153,   156,   154,   157,    81,    97,
+     106,   107,   119,    18,    19,    74,    21,    22,    23,    24,
+      25,    26,    27,   120,    37,   149,   121,   122,    38,    39,
+      40,    15,   101,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,   128,   147,   151,   162,   164,    32,   102,
+      33,    34,    35,    36,    37,    16,   103,    14,    38,    39,
+      75,     0,     0,    18,    19,    74,    21,    22,    23,    24,
+      25,    26,    27,     0,    37,     0,     0,     0,    38,    39,
+      40,    15,    99,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,     0,     0,     0,     0,     0,    32,     0,
+      33,    34,    35,    36,    37,   113,     0,     0,    38,    39,
+      83,    84,    85,    86,    87,    88,    89,    90,    91,    92,
+      93,    94,    95,    96,    37,     0,     0,     0,    38,    39,
+      40,    15,   146,    18,    19,    20,    21,    22,    23,    24,
+      25,    26,    27,     0,     0,     0,     0,     0,    32,     0,
+      33,    34,    35,    36,    18,    19,    74,    21,    22,    23,
+      24,    25,    26,    27,    28,    29,    30,     0,    31,     0,
+       0,     0,     0,     0,    37,     0,     0,     0,    38,    39,
+      40,    15,    18,    19,    74,    21,    22,    23,    24,    25,
+      26,    27,     0,     0,     0,    37,     0,     0,     0,    38,
+      39,    82,    83,    84,    85,    86,    87,    88,    89,    90,
+      91,    92,    93,    94,    95,    96,     0,     0,     0,     0,
+       0,     0,     0,    37,     0,     0,   126,    38,    39,    82,
       83,    84,    85,    86,    87,    88,    89,    90,    91,    92,
       93,    94,    95,    96,     0,     0,     0,     0,     0,     0,
-       0,    37,     0,     0,   125,    38,    39,    82,    83,    84,
-      85,    86,    87,    88,    89,    90,    91,    92,    93,    94,
-      95,    96,     0,     0,     0,     0,     0,     0,     0,   154,
-      82,    83,    84,    85,    86,    87,    88,    89,    90,    91,
-      92,    93,    94,    95,    96,     0,     0,     0,     0,     0,
-     126,    82,    83,    84,    85,    86,    87,    88,    89,    90,
-      91,    92,    93,    94,    95,    96,     0,     0,     0,     0,
-       0,   157,    82,    83,    84,    85,    86,    87,    88,    89,
+       0,   155,    82,    83,    84,    85,    86,    87,    88,    89,
       90,    91,    92,    93,    94,    95,    96,     0,     0,     0,
-       0,     0,   158,    82,    83,    84,    85,    86,    87,    88,
+       0,     0,   127,    82,    83,    84,    85,    86,    87,    88,
       89,    90,    91,    92,    93,    94,    95,    96,     0,     0,
-       0,     0,     0,   165,    82,    83,    84,    85,    86,    87,
+       0,     0,     0,   159,    82,    83,    84,    85,    86,    87,
       88,    89,    90,    91,    92,    93,    94,    95,    96,     0,
-       0,     0,   156,    82,    83,    84,    85,    86,    87,    88,
-      89,    90,    91,    92,    93,    94,    95,    96,    84,    85,
+       0,     0,     0,     0,   160,    82,    83,    84,    85,    86,
+      87,    88,    89,    90,    91,    92,    93,    94,    95,    96,
+       0,     0,     0,     0,     0,   168,    82,    83,    84,    85,
       86,    87,    88,    89,    90,    91,    92,    93,    94,    95,
-      96,    85,    86,    87,    88,    89,    90,    91,    92,    93,
-      94,    95,    96,    86,    87,    88,    89,    90,    91,    92,
-      93,    94,    95,    96
+      96,     0,     0,     0,   158,    82,    83,    84,    85,    86,
+      87,    88,    89,    90,    91,    92,    93,    94,    95,    96,
+      84,    85,    86,    87,    88,    89,    90,    91,    92,    93,
+      94,    95,    96,    85,    86,    87,    88,    89,    90,    91,
+      92,    93,    94,    95,    96,    86,    87,    88,    89,    90,
+      91,    92,    93,    94,    95,    96
   };
 
   /* YYCHECK.  */
@@ -1445,53 +1830,53 @@ namespace vype10 {
       86,    87,    88,    89,    90,    91,    92,    93,    94,    95,
       96,   103,     4,     5,     6,     7,     8,     9,    10,    11,
       12,    13,    14,    15,    16,    45,    18,    19,    45,    21,
-      22,    23,    24,    14,    15,    16,    17,    18,    14,    15,
-      16,   127,    18,    45,    44,   108,    46,   110,    36,    37,
-      38,    39,    40,    45,    45,   147,    47,    49,    50,    51,
-      52,    53,    44,    43,    46,    45,   152,    47,    45,     6,
-     156,     4,     5,     6,     7,     8,     9,    10,    11,    12,
-      13,    14,    15,    16,    45,    18,    19,    45,    21,    22,
-      23,    24,    44,     6,    46,    45,    45,    45,    51,    46,
-      51,     4,     5,     6,     7,     8,     9,    10,    11,    12,
-      13,    46,    45,    20,    46,    46,    49,    50,    51,    52,
-      53,     4,     5,     6,     7,     8,     9,    10,    11,    12,
-      13,    46,    46,    51,    51,     6,    19,     6,    21,    22,
-      23,    24,    45,    64,    50,     9,    49,    50,    51,    50,
-       7,     4,     5,     6,     7,     8,     9,    10,    11,    12,
-      13,    -1,    45,    -1,    -1,    -1,    49,    50,    51,    52,
-      53,     4,     5,     6,     7,     8,     9,    10,    11,    12,
-      13,    -1,    -1,    -1,    -1,    -1,    19,    -1,    21,    22,
-      23,    24,    45,    46,    -1,    -1,    49,    50,    27,    28,
-      29,    30,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    45,    -1,    -1,    -1,    49,    50,    51,    52,
-      53,     4,     5,     6,     7,     8,     9,    10,    11,    12,
-      13,    -1,    -1,    -1,    -1,    -1,    19,    -1,    21,    22,
-      23,    24,     4,     5,     6,     7,     8,     9,    10,    11,
-      12,    13,    14,    15,    16,    -1,    18,    -1,    -1,    -1,
-      -1,    -1,    45,    -1,    -1,    -1,    49,    50,    51,    52,
-       4,     5,     6,     7,     8,     9,    10,    11,    12,    13,
-      -1,    -1,    -1,    45,    -1,    -1,    -1,    49,    50,    26,
+      22,    23,    24,    14,    15,    16,    17,    18,    45,    14,
+      15,    16,   128,    18,    44,   108,    46,   110,    36,    37,
+      38,    39,    40,    45,    45,    45,   148,    49,    50,    51,
+      52,    53,    45,    45,    43,    47,    45,   153,    47,    45,
+     156,    45,   158,     4,     5,     6,     7,     8,     9,    10,
+      11,    12,    13,    14,    15,    16,    45,    18,    19,    51,
+      21,    22,    23,    24,    44,    44,    46,    46,    51,     6,
+      46,     6,    46,     4,     5,     6,     7,     8,     9,    10,
+      11,    12,    13,    46,    45,    51,    46,    46,    49,    50,
+      51,    52,    53,     4,     5,     6,     7,     8,     9,    10,
+      11,    12,    13,    46,    20,    51,     6,     6,    19,    50,
+      21,    22,    23,    24,    45,     9,    50,     7,    49,    50,
+      51,    -1,    -1,     4,     5,     6,     7,     8,     9,    10,
+      11,    12,    13,    -1,    45,    -1,    -1,    -1,    49,    50,
+      51,    52,    53,     4,     5,     6,     7,     8,     9,    10,
+      11,    12,    13,    -1,    -1,    -1,    -1,    -1,    19,    -1,
+      21,    22,    23,    24,    45,    46,    -1,    -1,    49,    50,
+      27,    28,    29,    30,    31,    32,    33,    34,    35,    36,
+      37,    38,    39,    40,    45,    -1,    -1,    -1,    49,    50,
+      51,    52,    53,     4,     5,     6,     7,     8,     9,    10,
+      11,    12,    13,    -1,    -1,    -1,    -1,    -1,    19,    -1,
+      21,    22,    23,    24,     4,     5,     6,     7,     8,     9,
+      10,    11,    12,    13,    14,    15,    16,    -1,    18,    -1,
+      -1,    -1,    -1,    -1,    45,    -1,    -1,    -1,    49,    50,
+      51,    52,     4,     5,     6,     7,     8,     9,    10,    11,
+      12,    13,    -1,    -1,    -1,    45,    -1,    -1,    -1,    49,
+      50,    26,    27,    28,    29,    30,    31,    32,    33,    34,
+      35,    36,    37,    38,    39,    40,    -1,    -1,    -1,    -1,
+      -1,    -1,    -1,    45,    -1,    -1,    51,    49,    50,    26,
       27,    28,    29,    30,    31,    32,    33,    34,    35,    36,
       37,    38,    39,    40,    -1,    -1,    -1,    -1,    -1,    -1,
-      -1,    45,    -1,    -1,    51,    49,    50,    26,    27,    28,
-      29,    30,    31,    32,    33,    34,    35,    36,    37,    38,
-      39,    40,    -1,    -1,    -1,    -1,    -1,    -1,    -1,    48,
-      26,    27,    28,    29,    30,    31,    32,    33,    34,    35,
-      36,    37,    38,    39,    40,    -1,    -1,    -1,    -1,    -1,
-      46,    26,    27,    28,    29,    30,    31,    32,    33,    34,
-      35,    36,    37,    38,    39,    40,    -1,    -1,    -1,    -1,
-      -1,    46,    26,    27,    28,    29,    30,    31,    32,    33,
+      -1,    48,    26,    27,    28,    29,    30,    31,    32,    33,
       34,    35,    36,    37,    38,    39,    40,    -1,    -1,    -1,
       -1,    -1,    46,    26,    27,    28,    29,    30,    31,    32,
       33,    34,    35,    36,    37,    38,    39,    40,    -1,    -1,
       -1,    -1,    -1,    46,    26,    27,    28,    29,    30,    31,
       32,    33,    34,    35,    36,    37,    38,    39,    40,    -1,
-      -1,    -1,    44,    26,    27,    28,    29,    30,    31,    32,
-      33,    34,    35,    36,    37,    38,    39,    40,    28,    29,
+      -1,    -1,    -1,    -1,    46,    26,    27,    28,    29,    30,
+      31,    32,    33,    34,    35,    36,    37,    38,    39,    40,
+      -1,    -1,    -1,    -1,    -1,    46,    26,    27,    28,    29,
       30,    31,    32,    33,    34,    35,    36,    37,    38,    39,
-      40,    29,    30,    31,    32,    33,    34,    35,    36,    37,
-      38,    39,    40,    30,    31,    32,    33,    34,    35,    36,
-      37,    38,    39,    40
+      40,    -1,    -1,    -1,    44,    26,    27,    28,    29,    30,
+      31,    32,    33,    34,    35,    36,    37,    38,    39,    40,
+      28,    29,    30,    31,    32,    33,    34,    35,    36,    37,
+      38,    39,    40,    29,    30,    31,    32,    33,    34,    35,
+      36,    37,    38,    39,    40,    30,    31,    32,    33,    34,
+      35,    36,    37,    38,    39,    40
   };
 
   /* STOS_[STATE-NUM] -- The (internal number of the) accessing
@@ -1499,23 +1884,23 @@ namespace vype10 {
   const unsigned char
   Parser::yystos_[] =
   {
-         0,    14,    15,    16,    17,    18,    61,    76,    77,    78,
-      79,    80,     6,     0,    77,    52,    66,    45,     4,     5,
+         0,    14,    15,    16,    17,    18,    62,    77,    78,    79,
+      80,    81,     6,     0,    78,    52,    67,    45,     4,     5,
        6,     7,     8,     9,    10,    11,    12,    13,    14,    15,
       16,    18,    19,    21,    22,    23,    24,    45,    49,    50,
-      51,    53,    55,    57,    58,    59,    62,    65,    66,    67,
-      68,    69,    70,    72,    73,    74,    75,    17,    62,    63,
-      64,    43,    45,    47,    45,    45,    45,    45,    45,    45,
-      45,    45,    51,    51,     6,    51,    58,    58,    62,    58,
-      58,    51,    26,    27,    28,    29,    30,    31,    32,    33,
-      34,    35,    36,    37,    38,    39,    40,     6,    60,    53,
-      65,    53,    59,    67,    65,    65,    46,     6,    44,    46,
-      44,    46,    58,    46,    56,    58,    58,    56,    46,    46,
-      46,    46,    58,    58,    58,    51,    46,    46,    58,    58,
-      58,    58,    58,    58,    58,    58,    58,    58,    58,    58,
-      58,    58,    58,    44,    51,    53,    20,    71,    51,    62,
-      51,    62,    44,    46,    48,    46,    44,    46,    46,    58,
-       6,    65,     6,    58,    58,    46
+      51,    53,    55,    58,    59,    60,    63,    66,    67,    68,
+      69,    70,    71,    73,    74,    75,    76,    17,    63,    64,
+      65,    43,    45,    47,    45,    45,    45,    45,    45,    45,
+      45,    45,    51,    51,     6,    51,    59,    59,    63,    59,
+      59,    51,    26,    27,    28,    29,    30,    31,    32,    33,
+      34,    35,    36,    37,    38,    39,    40,     6,    61,    53,
+      66,    53,    60,    68,    66,    66,    46,     6,    44,    46,
+      44,    46,    59,    46,    56,    59,    59,    57,    59,    46,
+      46,    46,    46,    59,    59,    59,    51,    46,    46,    59,
+      59,    59,    59,    59,    59,    59,    59,    59,    59,    59,
+      59,    59,    59,    59,    44,    51,    53,    20,    72,    51,
+      63,    51,    63,    44,    46,    48,    44,    46,    44,    46,
+      46,    59,     6,    66,     6,    59,    59,    59,    46
   };
 
 #if YYDEBUG
@@ -1537,30 +1922,30 @@ namespace vype10 {
   const unsigned char
   Parser::yyr1_[] =
   {
-         0,    54,    55,    55,    56,    56,    57,    57,    57,    58,
-      58,    58,    58,    58,    58,    58,    58,    58,    58,    58,
-      58,    58,    58,    58,    58,    58,    58,    58,    58,    58,
-      58,    58,    58,    58,    58,    58,    58,    58,    58,    59,
-      60,    60,    61,    61,    61,    61,    61,    62,    62,    62,
-      62,    63,    63,    64,    64,    65,    65,    65,    65,    65,
-      66,    66,    66,    66,    67,    67,    68,    68,    69,    69,
-      70,    71,    72,    73,    74,    75,    75,    75,    75,    76,
-      76,    77,    77,    78,    78,    79,    80,    80
+         0,    54,    55,    55,    56,    56,    57,    57,    58,    58,
+      58,    59,    59,    59,    59,    59,    59,    59,    59,    59,
+      59,    59,    59,    59,    59,    59,    59,    59,    59,    59,
+      59,    59,    59,    59,    59,    59,    59,    59,    59,    59,
+      59,    60,    61,    61,    62,    62,    62,    62,    62,    63,
+      63,    63,    63,    64,    64,    65,    65,    66,    66,    66,
+      66,    66,    67,    67,    67,    67,    68,    68,    69,    69,
+      70,    70,    71,    72,    73,    74,    75,    76,    76,    76,
+      76,    77,    77,    78,    78,    79,    79,    80,    81,    81
   };
 
   /* YYR2[YYN] -- Number of symbols composing right hand side of rule YYN.  */
   const unsigned char
   Parser::yyr2_[] =
   {
-         0,     2,     3,     1,     1,     3,     1,     1,     1,     1,
-       3,     4,     4,     6,     3,     3,     3,     3,     4,     1,
-       3,     3,     3,     3,     3,     3,     3,     3,     3,     3,
-       3,     3,     3,     3,     3,     2,     2,     3,     4,     3,
-       1,     3,     1,     1,     1,     1,     1,     1,     1,     1,
-       1,     1,     3,     2,     4,     1,     1,     1,     1,     1,
-       2,     3,     3,     4,     1,     2,     1,     2,     1,     2,
-       4,     1,     4,     4,     2,     2,     2,     2,     3,     1,
-       2,     1,     1,     5,     5,     2,     6,     6
+         0,     2,     3,     1,     1,     3,     1,     3,     1,     1,
+       1,     1,     3,     4,     4,     6,     3,     3,     3,     3,
+       4,     1,     3,     3,     3,     3,     3,     3,     3,     3,
+       3,     3,     3,     3,     3,     3,     3,     2,     2,     3,
+       4,     3,     1,     3,     1,     1,     1,     1,     1,     1,
+       1,     1,     1,     1,     3,     2,     4,     1,     1,     1,
+       1,     1,     2,     3,     3,     4,     1,     2,     1,     2,
+       1,     2,     4,     1,     4,     4,     2,     2,     2,     2,
+       3,     1,     2,     1,     1,     5,     5,     2,     6,     6
   };
 
 #if YYDEBUG || YYERROR_VERBOSE || YYTOKEN_TABLE
@@ -1578,14 +1963,14 @@ namespace vype10 {
   "'+'", "'-'", "'*'", "'/'", "'%'", "UNARY_OP", "HIGH_PRIORITY", "'='",
   "','", "'('", "')'", "'['", "']'", "'!'", "'~'", "';'", "'{'", "'}'",
   "$accept", "assignment_expression", "argument_expression_list",
-  "constant", "expression", "declaration", "declarator_list",
-  "function_type", "type_specifier", "parameter_types_list",
-  "parameter_definition_list", "statement", "compound_statement",
-  "statement_list", "declaration_list", "expression_statement",
-  "if_statement", "else_statement", "selection_statement",
-  "while_statement", "iteration_statement", "jump_statement",
-  "translation_unit", "external_declaration", "function_head",
-  "function_definition", "function_declaration", 0
+  "print_expression_list", "constant", "expression", "declaration",
+  "declarator_list", "function_type", "type_specifier",
+  "parameter_types_list", "parameter_definition_list", "statement",
+  "compound_statement", "statement_list", "declaration_list",
+  "expression_statement", "if_statement", "else_statement",
+  "selection_statement", "while_statement", "iteration_statement",
+  "jump_statement", "translation_unit", "external_declaration",
+  "function_head", "function_definition", "function_declaration", 0
   };
 #endif
 
@@ -1594,36 +1979,37 @@ namespace vype10 {
   const Parser::rhs_number_type
   Parser::yyrhs_[] =
   {
-        76,     0,    -1,     6,    43,    58,    -1,    58,    -1,    58,
-      -1,    56,    44,    58,    -1,     7,    -1,     4,    -1,     5,
-      -1,     6,    -1,     6,    45,    46,    -1,     6,    45,    56,
-      46,    -1,     8,    45,    56,    46,    -1,    13,    45,    58,
-      44,    58,    46,    -1,     9,    45,    46,    -1,    10,    45,
-      46,    -1,    11,    45,    46,    -1,    12,    45,    46,    -1,
-       6,    47,    58,    48,    -1,    57,    -1,    58,    36,    58,
-      -1,    58,    37,    58,    -1,    58,    38,    58,    -1,    58,
-      39,    58,    -1,    58,    28,    58,    -1,    58,    29,    58,
-      -1,    58,    32,    58,    -1,    58,    33,    58,    -1,    58,
-      40,    58,    -1,    58,    27,    58,    -1,    58,    26,    58,
-      -1,    58,    31,    58,    -1,    58,    30,    58,    -1,    58,
-      35,    58,    -1,    58,    34,    58,    -1,    49,    58,    -1,
-      50,    58,    -1,    45,    58,    46,    -1,    45,    62,    46,
-      58,    -1,    62,    60,    51,    -1,     6,    -1,    60,    44,
-       6,    -1,    17,    -1,    14,    -1,    15,    -1,    16,    -1,
-      18,    -1,    14,    -1,    15,    -1,    16,    -1,    18,    -1,
-      62,    -1,    63,    44,    62,    -1,    62,     6,    -1,    64,
-      44,    62,     6,    -1,    66,    -1,    69,    -1,    72,    -1,
-      74,    -1,    75,    -1,    52,    53,    -1,    52,    67,    53,
-      -1,    52,    68,    53,    -1,    52,    68,    67,    53,    -1,
-      65,    -1,    67,    65,    -1,    59,    -1,    68,    59,    -1,
-      51,    -1,    55,    51,    -1,    19,    45,    58,    46,    -1,
-      20,    -1,    70,    65,    71,    65,    -1,    21,    45,    58,
-      46,    -1,    73,    65,    -1,    22,    51,    -1,    23,    51,
-      -1,    24,    51,    -1,    24,    58,    51,    -1,    77,    -1,
-      76,    77,    -1,    80,    -1,    79,    -1,    61,     6,    45,
-      17,    46,    -1,    61,     6,    45,    64,    46,    -1,    78,
-      66,    -1,    61,     6,    45,    17,    46,    51,    -1,    61,
-       6,    45,    63,    46,    51,    -1
+        77,     0,    -1,     6,    43,    59,    -1,    59,    -1,    59,
+      -1,    56,    44,    59,    -1,    59,    -1,    57,    44,    59,
+      -1,     7,    -1,     4,    -1,     5,    -1,     6,    -1,     6,
+      45,    46,    -1,     6,    45,    56,    46,    -1,     8,    45,
+      57,    46,    -1,    13,    45,    59,    44,    59,    46,    -1,
+       9,    45,    46,    -1,    10,    45,    46,    -1,    11,    45,
+      46,    -1,    12,    45,    46,    -1,     6,    47,    59,    48,
+      -1,    58,    -1,    59,    36,    59,    -1,    59,    37,    59,
+      -1,    59,    38,    59,    -1,    59,    39,    59,    -1,    59,
+      28,    59,    -1,    59,    29,    59,    -1,    59,    32,    59,
+      -1,    59,    33,    59,    -1,    59,    40,    59,    -1,    59,
+      27,    59,    -1,    59,    26,    59,    -1,    59,    31,    59,
+      -1,    59,    30,    59,    -1,    59,    35,    59,    -1,    59,
+      34,    59,    -1,    49,    59,    -1,    50,    59,    -1,    45,
+      59,    46,    -1,    45,    63,    46,    59,    -1,    63,    61,
+      51,    -1,     6,    -1,    61,    44,     6,    -1,    17,    -1,
+      14,    -1,    15,    -1,    16,    -1,    18,    -1,    14,    -1,
+      15,    -1,    16,    -1,    18,    -1,    63,    -1,    64,    44,
+      63,    -1,    63,     6,    -1,    65,    44,    63,     6,    -1,
+      67,    -1,    70,    -1,    73,    -1,    75,    -1,    76,    -1,
+      52,    53,    -1,    52,    68,    53,    -1,    52,    69,    53,
+      -1,    52,    69,    68,    53,    -1,    66,    -1,    68,    66,
+      -1,    60,    -1,    69,    60,    -1,    51,    -1,    55,    51,
+      -1,    19,    45,    59,    46,    -1,    20,    -1,    71,    66,
+      72,    66,    -1,    21,    45,    59,    46,    -1,    74,    66,
+      -1,    22,    51,    -1,    23,    51,    -1,    24,    51,    -1,
+      24,    59,    51,    -1,    78,    -1,    77,    78,    -1,    81,
+      -1,    80,    -1,    62,     6,    45,    17,    46,    -1,    62,
+       6,    45,    65,    46,    -1,    79,    67,    -1,    62,     6,
+      45,    17,    46,    51,    -1,    62,     6,    45,    64,    46,
+      51,    -1
   };
 
   /* YYPRHS[YYN] -- Index of the first RHS symbol of rule number YYN in
@@ -1631,30 +2017,30 @@ namespace vype10 {
   const unsigned short int
   Parser::yyprhs_[] =
   {
-         0,     0,     3,     7,     9,    11,    15,    17,    19,    21,
-      23,    27,    32,    37,    44,    48,    52,    56,    60,    65,
-      67,    71,    75,    79,    83,    87,    91,    95,    99,   103,
-     107,   111,   115,   119,   123,   127,   130,   133,   137,   142,
-     146,   148,   152,   154,   156,   158,   160,   162,   164,   166,
-     168,   170,   172,   176,   179,   184,   186,   188,   190,   192,
-     194,   197,   201,   205,   210,   212,   215,   217,   220,   222,
-     225,   230,   232,   237,   242,   245,   248,   251,   254,   258,
-     260,   263,   265,   267,   273,   279,   282,   289
+         0,     0,     3,     7,     9,    11,    15,    17,    21,    23,
+      25,    27,    29,    33,    38,    43,    50,    54,    58,    62,
+      66,    71,    73,    77,    81,    85,    89,    93,    97,   101,
+     105,   109,   113,   117,   121,   125,   129,   133,   136,   139,
+     143,   148,   152,   154,   158,   160,   162,   164,   166,   168,
+     170,   172,   174,   176,   178,   182,   185,   190,   192,   194,
+     196,   198,   200,   203,   207,   211,   216,   218,   221,   223,
+     226,   228,   231,   236,   238,   243,   248,   251,   254,   257,
+     260,   264,   266,   269,   271,   273,   279,   285,   288,   295
   };
 
   /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
   const unsigned short int
   Parser::yyrline_[] =
   {
-         0,   120,   120,   134,   138,   151,   166,   175,   180,   188,
-     195,   213,   231,   232,   246,   250,   254,   258,   262,   280,
-     281,   295,   309,   323,   337,   338,   339,   340,   341,   342,
-     343,   344,   345,   346,   347,   348,   349,   350,   351,   376,
-     380,   392,   406,   407,   408,   409,   410,   414,   415,   416,
-     417,   421,   426,   433,   443,   455,   456,   457,   458,   459,
-     463,   464,   465,   466,   470,   471,   475,   476,   480,   481,
-     487,   499,   505,   512,   524,   530,   533,   536,   537,   541,
-     542,   546,   547,   553,   563,   576,   582,   590
+         0,   120,   120,   134,   138,   151,   166,   176,   189,   198,
+     203,   211,   218,   236,   254,   255,   269,   273,   277,   281,
+     285,   303,   304,   318,   332,   346,   360,   381,   402,   423,
+     444,   458,   479,   500,   521,   542,   563,   584,   594,   607,
+     608,   636,   640,   652,   666,   667,   668,   669,   670,   674,
+     675,   676,   677,   681,   686,   693,   703,   715,   716,   717,
+     718,   719,   723,   724,   725,   726,   730,   731,   735,   736,
+     740,   741,   747,   759,   765,   772,   784,   790,   793,   796,
+     799,   805,   806,   810,   811,   817,   827,   840,   846,   854
   };
 
   // Print the state stack on the debug stream.
@@ -1731,8 +2117,8 @@ namespace vype10 {
   }
 
   const int Parser::yyeof_ = 0;
-  const int Parser::yylast_ = 543;
-  const int Parser::yynnts_ = 27;
+  const int Parser::yylast_ = 545;
+  const int Parser::yynnts_ = 28;
   const int Parser::yyempty_ = -2;
   const int Parser::yyfinal_ = 13;
   const int Parser::yyterror_ = 1;
@@ -1749,11 +2135,11 @@ namespace vype10 {
 } // vype10
 
 /* Line 1054 of lalr1.cc  */
-#line 1753 "parser.tab.cc"
+#line 2139 "parser.tab.cc"
 
 
 /* Line 1056 of lalr1.cc  */
-#line 600 "parser.yy"
+#line 864 "parser.yy"
  /*** Additional Code ***/
 
 void vype10::Parser::error(const Parser::location_type& l, const std::string& m)

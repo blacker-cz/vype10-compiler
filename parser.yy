@@ -162,6 +162,29 @@ argument_expression_list
 								}
 	;
 
+print_expression_list
+	: expression			{
+									SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol($1, true);
+									if(sym == (SymbolTable::SymbolRecord*) NULL) {	// this shouldn't happen
+										compiler.error(yylloc, "Lost expression result.", RET_ERR_INTERNAL);
+										YYERROR;
+									}
+									
+									compiler.intermediateCode->add(vype10::IntermediateCode::PRINT, $1, (std::string*) NULL, (std::string*) NULL);
+									
+								}
+	| print_expression_list ',' expression			{
+
+									SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol($3, true);
+									if(sym == (SymbolTable::SymbolRecord*) NULL) {	// this shouldn't happen
+										compiler.error(yylloc, "Lost expression result.", RET_ERR_INTERNAL);
+										YYERROR;
+									}
+									
+									compiler.intermediateCode->add(vype10::IntermediateCode::PRINT, $3, (std::string*) NULL, (std::string*) NULL);
+								}
+	;
+
 constant
 	: CONSTANT										{
 														vype10::SymbolTable::Value *val = new vype10::SymbolTable::Value();
@@ -228,7 +251,7 @@ expression
 															compiler.intermediateCode->add(vype10::IntermediateCode::FUNC_CALL, $1, (std::string*) NULL, (std::string*) NULL);
 														}
 													}
-	| PRINT '(' argument_expression_list ')'
+	| PRINT '(' print_expression_list ')'			{ $$ = (std::string*) NULL; }
 	| STRCAT '(' expression ',' expression ')'		{
 														SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($3, true);
 														if(first->type != vype10::SYM_STRING) {
@@ -283,7 +306,7 @@ expression
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
 								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
 									$$ = compiler.symbolTable->installSymbol(first->type);
-								} else if(first->type != second->type && (first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT)) {
+								} else if(first->type != second->type && ((first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) || (first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT))) {
 									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 								} else {
 									compiler.error(yylloc, "Invalid types in '+' expression.", RET_ERR_SEMANTICAL);
@@ -297,7 +320,7 @@ expression
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
 								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
 									$$ = compiler.symbolTable->installSymbol(first->type);
-								} else if(first->type != second->type && (first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT)) {
+								} else if(first->type != second->type && ((first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) || (first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT))) {
 									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 								} else {
 									compiler.error(yylloc, "Invalid types in '-' expression.", RET_ERR_SEMANTICAL);
@@ -311,7 +334,7 @@ expression
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
 								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
 									$$ = compiler.symbolTable->installSymbol(first->type);
-								} else if(first->type != second->type && (first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT)) {
+								} else if(first->type != second->type && ((first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) || (first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT))) {
 									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 								} else {
 									compiler.error(yylloc, "Invalid types in '*' expression.", RET_ERR_SEMANTICAL);
@@ -325,7 +348,7 @@ expression
 								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
 								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
 									$$ = compiler.symbolTable->installSymbol(first->type);
-								} else if(first->type != second->type && (first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT)) {
+								} else if(first->type != second->type && ((first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) || (first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT))) {
 									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 								} else {
 									compiler.error(yylloc, "Invalid types in '/' expression.", RET_ERR_SEMANTICAL);
@@ -334,19 +357,253 @@ expression
 								
 								compiler.intermediateCode->add(vype10::IntermediateCode::DIV, $1, $3, $$);
 							}
-	| expression '|' expression
-	| expression '&' expression
-	| expression '<' expression
-	| expression '>' expression
-	| expression '%' expression
-	| expression AND_OP expression
-	| expression OR_OP expression
-	| expression EQ_OP expression
-	| expression NE_OP expression
-	| expression LE_OP expression
-	| expression GE_OP expression
-	| '!' expression %prec UNARY_OP
-	| '~' expression %prec UNARY_OP
+	| expression '|' expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(first->type);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_OR, $1, $3, $$);
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $3, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_OR, $1, pom, $$);
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $1, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_OR, pom, $3, $$);
+								} else {
+									compiler.error(yylloc, "Invalid types in '&' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+	| expression '&' expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(first->type);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_AND, $1, $3, $$);
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $3, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_AND, $1, pom, $$);
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $1, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_AND, pom, $3, $$);
+								} else {
+									compiler.error(yylloc, "Invalid types in '&' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+	| expression '<' expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type) {	// ok
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::LT, $1, $3, $$);
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $3, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::LT, $1, pom, $$);
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $1, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::LT, pom, $3, $$);
+								} else {
+									compiler.error(yylloc, "Invalid types in '<' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+	| expression '>' expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type) {	// ok
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::GT, $1, $3, $$);
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $3, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::GT, $1, pom, $$);
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $1, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::GT, pom, $3, $$);
+								} else {
+									compiler.error(yylloc, "Invalid types in '>' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+	| expression '%' expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(first->type);
+								} else if(first->type != second->type && ((first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) || (first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT))) {
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_SHORT);
+								} else {
+									compiler.error(yylloc, "Invalid types in '%' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+								
+								compiler.intermediateCode->add(vype10::IntermediateCode::MOD, $1, $3, $$);
+							}
+	| expression AND_OP expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::AND, $1, $3, $$);
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $3, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::AND, $1, pom, $$);
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $1, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::AND, pom, $3, $$);
+								} else {
+									compiler.error(yylloc, "Invalid types in '&&' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+	| expression OR_OP expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type && (first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT)) {
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::OR, $1, $3, $$);
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $3, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::OR, $1, pom, $$);
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $1, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::OR, pom, $3, $$);
+								} else {
+									compiler.error(yylloc, "Invalid types in '||' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+	| expression EQ_OP expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type) {	// ok
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::EQ, $1, $3, $$);
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $3, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::EQ, $1, pom, $$);
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $1, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::EQ, pom, $3, $$);
+								} else {
+									compiler.error(yylloc, "Invalid types in '==' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+	| expression NE_OP expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type) {	// ok
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::NE, $1, $3, $$);
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $3, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::NE, $1, pom, $$);
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $1, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::NE, pom, $3, $$);
+								} else {
+									compiler.error(yylloc, "Invalid types in '!=' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+	| expression LE_OP expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type) {	// ok
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::LE, $1, $3, $$);
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $3, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::LE, $1, pom, $$);
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $1, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::LE, pom, $3, $$);
+								} else {
+									compiler.error(yylloc, "Invalid types in '<=' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+	| expression GE_OP expression		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($1, true);
+								SymbolTable::SymbolRecord *second = compiler.symbolTable->getSymbol($3, true);
+								if(first->type == second->type) {	// ok
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::GE, $1, $3, $$);
+								} else if(first->type == vype10::SYM_INT && second->type == vype10::SYM_SHORT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $3, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::GE, $1, pom, $$);
+								} else if(first->type == vype10::SYM_SHORT && second->type == vype10::SYM_INT) {
+									std::string* pom = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $1, (std::string*) NULL, pom);
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::GE, pom, $3, $$);
+								} else {
+									compiler.error(yylloc, "Invalid types in '>=' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+	| '!' expression %prec UNARY_OP		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($2, true);
+								if(first->type == vype10::SYM_INT || first->type == vype10::SYM_SHORT) {
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::NOT, $2, (std::string*) NULL, $$);
+								} else {
+									compiler.error(yylloc, "Invalid type in '!' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
+	| '~' expression %prec UNARY_OP		{
+								SymbolTable::SymbolRecord *first = compiler.symbolTable->getSymbol($2, true);
+								if(first->type == vype10::SYM_INT) {
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_NOT, $2, (std::string*) NULL, $$);
+								} else if(first->type == vype10::SYM_SHORT) {
+									$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
+									compiler.intermediateCode->add(vype10::IntermediateCode::BIN_NOT, $2, (std::string*) NULL, $$);
+								} else {
+									compiler.error(yylloc, "Invalid type in '~' expression.", RET_ERR_SEMANTICAL);
+									YYERROR;
+								}
+							}
 	| '(' expression ')'							{ $$ = $2; }
 	| '(' type_specifier ')' expression %prec HIGH_PRIORITY		{
 										SymbolTable::SymbolRecord *sym = compiler.symbolTable->getSymbol($4, true);
@@ -368,6 +625,9 @@ expression
 										} else if(sym->type == vype10::SYM_SHORT && $2 == vype10::SYM_INT) {	// short -> int
 											$$ = compiler.symbolTable->installSymbol(vype10::SYM_INT);
 											compiler.intermediateCode->add(vype10::IntermediateCode::CAST, $4, (std::string*) NULL, $$);
+										} else {
+											compiler.error(yylloc, "Invalid cast.", RET_ERR_INTERNAL);
+											YYERROR;
 										}
  									}
 	;
@@ -533,8 +793,12 @@ jump_statement
 	| BREAK ';'					{
 									compiler.intermediateCode->add(vype10::IntermediateCode::BREAK, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
 								}
-	| RETURN ';'
-	| RETURN expression ';'
+	| RETURN ';'				{
+									compiler.intermediateCode->add(vype10::IntermediateCode::RETURN, (std::string*) NULL, (std::string*) NULL,  (std::string*) NULL);
+								}
+	| RETURN expression ';'		{
+									compiler.intermediateCode->add(vype10::IntermediateCode::RETURN, $2, (std::string*) NULL,  (std::string*) NULL);
+								}
 	;
 
 translation_unit
