@@ -1,0 +1,13 @@
+aktuálně by měla snad být hotová tabulka symbolů (jenom případně přidáme metody pro jednodušší výběry apod.), je tam u něčeho už hotová sémantická analýza a nacpání do tabulky symbolů (mám takovej pocit, že až na pomocný proměnný už snad do tabulky přidávat nic nebudem), je tam kostra třídy pro vytváření intermediate kódu (metoda add), ale zatím v podstatě vůbec nic nedělá
+
+já bych kdyžtak máknul na generování toho intermediálního kódu a ty to překopání do assembleru?
+
+akorát dneska už s tím nejspíš nepohnu, takže bych zítra dopoledne dal do kupy alespoň tu základní linku a pár nejnutnějších příkazů aby jsi si mohl pomalu generovat
+
+každopádně podle toho co jsem zaslechl dneska na přednášce, tak celej ten simulátor je nehorázně zabugovanej
+
+jinak FlexLexer.h, a všechny *.cc a *.hh jsou automaticky generovaný soubory bisonem a flexem, takže netřeba v nich nic provádět, jinak ostatní by měly být co soubor to třída (cpp + h) a název by měl cca odpovídat tomu co to dělá
+
+u tabulky symbolů se předávají ukazatele na stringy, a ty jsou klíčem do tabulky, při získání dat dostaneš buď ukazatel na strukturu SymbolRecord nebo FunctionRecord, podle toho co to je. Pokud nenajde, tak vrací NULL přetypovaný na typ danýho ukazatele (zlatý PHP kde se nemusí NULL přetypovávat)
+
+jinak jsem se snažil tam psát alespoň nějaký komentáře, takže snad z toho půjde poznat co a jak
