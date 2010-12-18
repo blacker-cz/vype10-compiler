@@ -80,7 +80,7 @@ std::string* SymbolTable::installSymbol(SymbolType type) {
 	std::stringstream stream;
 	std::string name, *pname, *key;
 
-	stream << ":" << unnamedCounter++ << "_" << currentScope;
+	stream << ":temp:" << unnamedCounter++ << "_" << currentScope;
 	name = stream.str();
 	pname = new std::string(name);
 	key = new std::string(name);
@@ -108,7 +108,7 @@ std::string* SymbolTable::installSymbol(std::string *name, SymbolType type, bool
 	std::stringstream stream;
 	std::string key, *pkey;
 
-	stream << ":" << *name << "_" << (thisScope ? currentScope : nextScope);
+	stream << ":id:" << *name << "_" << (thisScope ? currentScope : nextScope);
 	key = stream.str();
 	pkey = new std::string(key);
 
@@ -137,7 +137,7 @@ void SymbolTable::installSymbol(std::vector<std::string*> *names, SymbolType typ
 		std::stringstream stream;
 		std::string key, *pkey, *name;
 
-		stream << ":" << **it << "_" << currentScope;
+		stream << ":id:" << **it << "_" << currentScope;
 		key = stream.str();
 		name = new std::string(**it);
 		pkey = new std::string(key);
@@ -167,7 +167,7 @@ std::string *SymbolTable::installConstant(SymbolType type, Value *value) {
 	std::stringstream stream;
 	std::string name, *pname, *key;
 
-	stream << ":" << unnamedCounter++ << "_" << currentScope;
+	stream << ":const:" << unnamedCounter++ << "_" << currentScope;
 	name = stream.str();
 	pname = new std::string(name);
 	key = new std::string(name);
@@ -203,7 +203,7 @@ SymbolTable::SymbolRecord *SymbolTable::getSymbol(std::string *key, bool recursi
 		std::stringstream stream;
 
 		if(!recursive) {
-			stream << ":" << *key << "_" << currentScope;
+			stream << ":id:" << *key << "_" << currentScope;
 			symTableIter = symTable.find(stream.str());
 
 			if(symTableIter == symTable.end())
@@ -213,7 +213,7 @@ SymbolTable::SymbolRecord *SymbolTable::getSymbol(std::string *key, bool recursi
 
 			for(scopeStackRIter = scopeStack.rbegin(); scopeStackRIter < scopeStack.rend(); ++scopeStackRIter) {
 				stream.str("");	// empty stringstream
-				stream << ":" << *key << "_" << *scopeStackRIter;
+				stream << ":id:" << *key << "_" << *scopeStackRIter;
 
 				symTableIter = symTable.find(stream.str());
 
@@ -260,7 +260,7 @@ std::string *SymbolTable::getSymbolKey(std::string *key, bool recursive) {
 		std::stringstream stream;
 
 		if(!recursive) {
-			stream << ":" << *key << "_" << currentScope;
+			stream << ":id:" << *key << "_" << currentScope;
 			symTableIter = symTable.find(stream.str());
 
 			if(symTableIter == symTable.end())
@@ -270,7 +270,7 @@ std::string *SymbolTable::getSymbolKey(std::string *key, bool recursive) {
 
 			for(scopeStackRIter = scopeStack.rbegin(); scopeStackRIter < scopeStack.rend(); ++scopeStackRIter) {
 				stream.str("");	// empty stringstream
-				stream << ":" << *key << "_" << *scopeStackRIter;
+				stream << ":id:" << *key << "_" << *scopeStackRIter;
 
 				symTableIter = symTable.find(stream.str());
 
