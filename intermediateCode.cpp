@@ -13,8 +13,7 @@ namespace vype10 {
  * Constructor
  */
 IntermediateCode::IntermediateCode() {
-	// initialization of instruction line iterator
-	instructionLineIter = instructionLine.begin();
+	this->lockFlag = false;
 }
 
 IntermediateCode::~IntermediateCode() {
@@ -30,6 +29,26 @@ IntermediateCode::~IntermediateCode() {
  * @param std::string*		pointer with key to the symbol table where to store result
  */
 void IntermediateCode::add(Instruction instruction, std::string* firstParam, std::string* secondParam, std::string* result) {
+	if(this->lockFlag)
+		return;
+
+	// increment usage counter for symbols
+	if(instruction != FUNC_CALL && instruction != FUNC_DEF && instruction != FUNC_END) {
+		SymbolTable::SymbolRecord *symRec;
+		if(firstParam != (std::string*) NULL) {
+			symRec = symbolTable->getSymbol(firstParam);
+			++symRec->timesUsed;
+		}
+		if(secondParam != (std::string*) NULL) {
+			symRec = symbolTable->getSymbol(secondParam);
+			++symRec->timesUsed;
+		}
+		if(result != (std::string*) NULL) {
+			symRec = symbolTable->getSymbol(result);
+			++symRec->timesUsed;
+		}
+	}
+
 	// build instruction record
 	InstructionRecord* ins = new InstructionRecord();
 	ins->instruction = instruction;
@@ -40,10 +59,22 @@ void IntermediateCode::add(Instruction instruction, std::string* firstParam, std
 	// push instruction record to the end of instruction line
 	instructionLine.push_back(ins);
 
+#ifdef DEBUG
 	// debug output
 	std::cerr << "Instruction: " << instruction << ", " << (firstParam==(std::string*)NULL ? "NULL" : *firstParam)
 			<< ", " << (secondParam==(std::string*)NULL ? "NULL" : *secondParam)
 			<< ", "	<< (result==(std::string*)NULL ? "NULL" : *result) << std::endl;
+#endif
+}
+
+/**
+ * Lock instruction line
+ */
+void IntermediateCode::lock(void) {
+	this->lockFlag = true;
+
+	// initialization of instruction line iterator
+	instructionLineIter = instructionLine.begin();
 }
 
 /**

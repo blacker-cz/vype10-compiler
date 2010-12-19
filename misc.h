@@ -7,6 +7,9 @@
 #ifndef CONSTANTS_H_
 #define CONSTANTS_H_
 
+#include <exception>
+#include <string>
+
 /** No error return code */
 #define RET_ERR_OK 0
 
@@ -24,5 +27,19 @@
 
 /** Internal error return code */
 #define RET_ERR_INTERNAL 5
+
+/**
+ * Processing exception class.
+ */
+class ProcessingException {
+public:
+	int code;
+	std::string msg;
+
+	ProcessingException(int code, const std::string &msg) {
+		this->code = code;
+		this->msg = msg;
+	};
+};
 
 #endif /* CONSTANTS_H_ */

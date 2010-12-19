@@ -17,6 +17,24 @@ namespace vype10 {
 CodeGenerator::CodeGenerator(IntermediateCode *intermediateCode, std::string output) {
 	this->intermediateCode = intermediateCode;
 	this->output.open(output.c_str(), std::ios_base::out | std::ios_base::trunc);
+
+	// push free registers in to queue
+	this->free.push("$8");
+	this->free.push("$9");
+	this->free.push("$10");
+	this->free.push("$11");
+	this->free.push("$12");
+	this->free.push("$13");
+	this->free.push("$14");
+	this->free.push("$15");
+	this->free.push("$16");
+	this->free.push("$17");
+	this->free.push("$18");
+	this->free.push("$19");
+	this->free.push("$20");
+	this->free.push("$21");
+	this->free.push("$22");
+	this->free.push("$23");
 }
 
 CodeGenerator::~CodeGenerator() {
@@ -33,12 +51,9 @@ void CodeGenerator::run(void) {
 		return;
 	}
 
-	/**
-	 * @todo: implement this
-	 */
-
 	// generate header of assembly file
 	head();
+	intermediateCode->lock();
 
 	IntermediateCode::InstructionRecord *instruction = intermediateCode->get();
 	if(instruction == (IntermediateCode::InstructionRecord*) NULL) {
@@ -46,17 +61,25 @@ void CodeGenerator::run(void) {
 		return;
 	}
 
-	// processing instruction line
-	do {
-		if(!process(instruction))
-			return;
+	try {
 
-		instruction = intermediateCode->get();
-	} while (instruction != (IntermediateCode::InstructionRecord*) NULL);
+		// processing instruction line
+		do {
+			if(!process(instruction))
+				return;
+
+			instruction = intermediateCode->get();
+		} while (instruction != (IntermediateCode::InstructionRecord*) NULL);
+
+	} catch(ProcessingException &ex) {
+		compiler->error(ex.msg, ex.code);
+		return;
+	}
 
 	// generate data section of assembly file
 	data();
 
+	// flush and close output file
 	output.close();
 }
 
@@ -66,8 +89,9 @@ void CodeGenerator::run(void) {
 void CodeGenerator::head(void) {
 	comment("Auto-generated asm file");
 	comment("Used registers:");
-	comment("\t$sp - stack pointer");
-	comment("\t$25 - data area pointer");
+	comment("\t$sp - stack pointer - data stack top");
+	comment("\t$30 - call stack top");
+	comment("\t$25 - end of data area pointer");
 	comment("Program code section:");
 	comment("---------------------------------------------------");
 	command(".text");
@@ -79,7 +103,8 @@ void CodeGenerator::head(void) {
 	command("li $25, dataset");
 	command("sw $0, 0($25)");
 	command("addi $25, $25, 4");
-	command("li $sp, stack");
+	command("li $sp, datastack");
+	command("li $30, callstack");
 	command("jaL fun_main");
 	command("break");
 }
@@ -91,7 +116,8 @@ void CodeGenerator::data(void) {
 	comment("Data section:");
 	comment("---------------------------------------------------");
 	command(".data");
-	label("stack:\t.space\t" << 1024*4);
+	label("callstack:\t.space\t" << 1024*4);
+	label("datastack:\t.space\t" << 1024*4);
 	label("dataset:\t.space\t" << 1024*32);
 
 	SymbolTable::SymbolRecord *symRec;
@@ -137,31 +163,6 @@ void CodeGenerator::data(void) {
 	// cleanup
 	constants->clear();
 	delete constants;
-
-	// constants processing
-	std::vector<std::string*> *id = compiler->symbolTable->getIdentifiers();
-	for(size_t i=0; i < constants->size(); i++) {
-		symRec = compiler->symbolTable->getSymbol((*id)[i], true);
-
-		switch(symRec->type) {
-			case SYM_CHAR:
-					label(generateName(symRec->key) << ":\t" << ".byte\t" << 0);
-				break;
-			case SYM_INT:
-					label(generateName(symRec->key) << ":\t" << ".int\t" << 0);
-				break;
-			case SYM_SHORT:
-					label(generateName(symRec->key) << ":\t" << ".short\t" << 0);
-				break;
-			case SYM_STRING:
-					label(generateName(symRec->key) << ":\t" << ".word\t" << 0);
-				break;
-			default:
-				break;
-		}
-	}
-	id->clear();
-	delete id;
 }
 
 /**
@@ -180,6 +181,10 @@ std::string CodeGenerator::generateName(std::string key) {
  * This is generally only one big switch statement :)
  */
 bool CodeGenerator::process(IntermediateCode::InstructionRecord* instruction) {
+	/**
+	 * @todo: implement this
+	 */
+
 	switch(instruction->instruction) {
 	case IntermediateCode::FUNC_CALL:
 		break;
@@ -223,6 +228,126 @@ bool CodeGenerator::process(IntermediateCode::InstructionRecord* instruction) {
 	case IntermediateCode::FUNC_END:
 	default:
 		return true;
+	}
+
+	return true;
+}
+
+/**
+ * Get register depending on symbol table key.
+ *
+ * @param std::string		symbol table key
+ * @return std::string		free register
+ */
+std::string CodeGenerator::getRegister(std::string key) {
+
+	// if key is for constant -> load to register and return
+	if(key.compare(0, 7, ":const:") == 0) {
+		// TODO
+	}
+
+	cleanUsed();
+
+	// look if isn't already used
+	usedIter = used.find(key);
+	if(usedIter != used.end()) {
+		--usedIter->second->remaining;
+		return usedIter->second->reg;
+	}
+
+	// look if isn't saved on stack
+	if(searchSaved(key)) {
+		SavedInfo *popped;
+		do {
+			popped = saved.back();
+			saved.pop_back();
+
+			if(free.size() == 0)
+				throw new ProcessingException(RET_ERR_GENERATION, "No free registers available.");
+
+			UsedInfo* info = new UsedInfo;
+			info->reg = free.front();
+			free.pop();
+			info->remaining = popped->key.compare(key) == 0 ? popped->remaining - 1 : popped->remaining;
+
+			command("addi $sp, $sp, -4");
+			command("lw " << info->reg << ", 0($sp)");
+
+			used.insert(std::pair<std::string, UsedInfo*>(popped->key, info));
+			if(popped->key.compare(key) == 0)
+				return info->reg;
+		} while(true);
+	}
+
+	// check if we have enough available registers
+	while(free.size() < 5) {	// no -> free some (save to stack)
+		std::string lu = leastUsed();
+		usedIter = used.find(key);
+		SavedInfo *sinfo = new SavedInfo;
+		sinfo->key = lu;
+		sinfo->remaining = usedIter->second->remaining;
+		saved.push_back(sinfo);
+
+		command("sw " << usedIter->second->reg << ", 0($sp)");
+		command("addi $sp, $sp, 4");
+
+		used.erase(usedIter);
+	}
+
+	// allocate new register
+	UsedInfo* info = new UsedInfo;
+	SymbolTable::SymbolRecord *symRec = compiler->symbolTable->getSymbol(&key);
+	info->reg = free.front();
+	free.pop();
+	info->remaining = symRec->timesUsed - 1;
+	used.insert(std::pair<std::string, UsedInfo*>(key, info));
+
+	return info->reg;
+}
+
+/**
+ * Search if variable is saved on the stack.
+ *
+ * @return bool		if variable is saved somewhere on stack
+ */
+bool CodeGenerator::searchSaved(std::string key) {
+	for(savedIter = saved.begin(); savedIter != saved.end(); savedIter++) {
+		if((*savedIter)->key.compare(key) == 0)
+			return true;
+	}
+	return false;
+}
+
+/**
+ * Return variable key for variable which should be saved to stack.
+ *
+ * @return std::string		key of variable witch should be saved to stack
+ */
+std::string CodeGenerator::leastUsed(void) {
+	int min = 65536;	// magic constant
+	std::string key;
+
+	for(usedIter = used.begin(); usedIter != used.end(); usedIter++) {
+		if(usedIter->second->remaining < min) {
+			key = usedIter->first;
+			min = usedIter->second->remaining;
+		}
+	}
+
+	return key;
+}
+
+/**
+ * Removes variables which will no longer be used.
+ */
+void CodeGenerator::cleanUsed(void) {
+	for(usedIter = used.begin(); usedIter != used.end();) {
+		if(usedIter->second->remaining < 1) {
+			free.push(usedIter->second->reg);
+			used.erase(usedIter++);
+		} else {
+			++usedIter;
+		}
 	}
 }
 

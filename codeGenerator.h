@@ -9,11 +9,12 @@
 
 #include <string>
 #include <fstream>
+#include <queue>
+#include <map>
+#include <vector>
 #include <algorithm>
-#include "symbolTable.h"
 #include "intermediateCode.h"
 #include "compiler.h"
-#include "misc.h"
 
 #define comment(x)		output << "// " << x << std::endl
 #define command(x)		output << "\t" << x << std::endl
@@ -38,6 +39,31 @@ private:
 	/** Stream for output file */
 	std::ofstream output;
 
+	/** Struct for keeping information about registers saved to stack */
+	typedef struct savedInfo_T {
+		std::string key;
+		int remaining;
+	} SavedInfo;
+
+	/** Struct for keeping information about in use registers */
+	typedef struct usedInfo_T {
+		std::string reg;
+		int remaining;
+	} UsedInfo;
+
+	/** Queue of free (temporary) variable registers */
+	std::queue<std::string> free;
+
+	/** Vector of saved (temporary) variable registers */
+	std::vector<SavedInfo*> saved;
+	/** Vector of saved (temporary) variable registers - iterator */
+	std::vector<SavedInfo*>::iterator savedIter;
+
+	/** Map of in use (temporary) variable registers */
+	std::map<std::string, UsedInfo*> used;
+	/** Map of in use (temporary) variable registers - iterator */
+	std::map<std::string, UsedInfo*>::iterator usedIter;
+
 	void head(void);
 
 	void data(void);
@@ -45,6 +71,14 @@ private:
 	std::string generateName(std::string);
 
 	bool process(IntermediateCode::InstructionRecord* instruction);
+
+	std::string getRegister(std::string);
+
+	bool searchSaved(std::string key);
+
+	std::string leastUsed(void);
+
+	void cleanUsed(void);
 
 };
 

@@ -70,6 +70,7 @@ int Compiler::run(void) {
     this->lexer = &scanner;
 
     intermediateCode = new IntermediateCode();
+    intermediateCode->symbolTable = this->symbolTable;
 
     Parser parser(*this);
     parser.set_debug_level(this->trace_parsing);

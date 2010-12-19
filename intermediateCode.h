@@ -9,6 +9,7 @@
 
 #include <vector>
 #include <string>
+#include "symbolTable.h"
 
 namespace vype10 {
 
@@ -38,6 +39,9 @@ public:
 		}
 	} InstructionRecord;
 
+	/** SymbolTable class */
+	class SymbolTable *symbolTable;
+
 	void add(Instruction instruction, std::string* firstParam, std::string* secondParam, std::string* result);
 
 	InstructionRecord *get(void);
@@ -46,12 +50,17 @@ public:
 
 	void rollback(void);
 
+	void lock(void);
+
 private:
 	/** Vector for keeping instruction line */
 	std::vector<InstructionRecord*> instructionLine;
 
 	/** Iterator for instruction line vector */
 	std::vector<InstructionRecord*>::iterator instructionLineIter;
+
+	/** Flag for locking instruction line */
+	bool lockFlag;
 };
 
 }

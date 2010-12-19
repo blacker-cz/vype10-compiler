@@ -39,6 +39,7 @@ public:
 		int scopeID;
 		Value *value;
 		std::string key;
+		int timesUsed;
 
 		/** Structure destructor */
 		~symRecord() {
@@ -55,15 +56,22 @@ public:
 		FunctionType type;
 		bool defined;
 		std::vector<SymbolType> paramsType;
+		std::vector<std::string*> *identifiers;
 		std::string key;
 
 		/** Structure destructor */
 		~funRecord() {
+			if(identifiers != (std::vector<std::string*>*) NULL) {
+				identifiers->clear();
+				delete identifiers;
+			}
 			delete name;
 		}
 	} FunctionRecord;
 
 	std::string *installFunction(std::string *name, FunctionType type, std::vector<SymbolType> *types, bool defined, std::string & error);
+
+	std::string *installFunction(std::string *name, FunctionType type, std::vector<std::string*> *identifiers, bool defined, std::string & error);
 
 	std::string* installSymbol(std::string *name, SymbolType type, bool thisScope);
 

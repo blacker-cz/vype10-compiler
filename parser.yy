@@ -95,8 +95,8 @@
 %type <keyString>		constant expression
 %type <symbolType>		type_specifier
 %type <functionType>	function_type
-%type <namesVector>		declarator_list
-%type <typesVector>		parameter_definition_list parameter_types_list argument_expression_list
+%type <namesVector>		declarator_list parameter_definition_list
+%type <typesVector>		parameter_types_list argument_expression_list
 
 %{
 
@@ -271,7 +271,7 @@ expression
 														$$ = compiler.symbolTable->installSymbol(vype10::SYM_CHAR);
 														compiler.intermediateCode->add(vype10::IntermediateCode::READ_CHAR, (std::string*)NULL, (std::string*)NULL, $$);
 													}
-	| READ_SHORT '(' ')'								{
+	| READ_SHORT '(' ')'							{
 														$$ = compiler.symbolTable->installSymbol(vype10::SYM_SHORT);
 														compiler.intermediateCode->add(vype10::IntermediateCode::READ_SHORT, (std::string*)NULL, (std::string*)NULL, $$);
 													}
@@ -693,14 +693,14 @@ parameter_types_list
 	
 parameter_definition_list
 	: type_specifier ID			{
-									$$ = new std::vector<SymbolType>();
+									$$ = new std::vector<std::string*>();
 									if(compiler.symbolTable->getFunction($2) != (SymbolTable::FunctionRecord*) NULL) {
 										compiler.error(yylloc, "Identifier '" + *$2 + "' can't have same name as defined function.", RET_ERR_SEMANTICAL);
 										YYERROR;
 									}
 									// install symbol to the next scope
-									compiler.symbolTable->installSymbol($2, $1, false);
-									$$->push_back($1);
+									std::string* sym = compiler.symbolTable->installSymbol($2, $1, false);
+									$$->push_back(sym);
 								}
 	| parameter_definition_list ',' type_specifier ID	{
 									if(compiler.symbolTable->getFunction($4) != (SymbolTable::FunctionRecord*) NULL) {
@@ -708,8 +708,8 @@ parameter_definition_list
 										YYERROR;
 									}
 									// install symbol to the next scope
-									compiler.symbolTable->installSymbol($4, $3, false);
-									$$->push_back($3); 
+									std::string* sym = compiler.symbolTable->installSymbol($4, $3, false);
+									$$->push_back(sym); 
 								}
 	;
 

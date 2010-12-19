@@ -1299,14 +1299,14 @@ namespace vype10 {
 /* Line 678 of lalr1.cc  */
 #line 695 "parser.yy"
     {
-									(yyval.typesVector) = new std::vector<SymbolType>();
+									(yyval.namesVector) = new std::vector<std::string*>();
 									if(compiler.symbolTable->getFunction((yysemantic_stack_[(2) - (2)].idName)) != (SymbolTable::FunctionRecord*) NULL) {
 										compiler.error(yylloc, "Identifier '" + *(yysemantic_stack_[(2) - (2)].idName) + "' can't have same name as defined function.", RET_ERR_SEMANTICAL);
 										YYERROR;
 									}
 									// install symbol to the next scope
-									compiler.symbolTable->installSymbol((yysemantic_stack_[(2) - (2)].idName), (yysemantic_stack_[(2) - (1)].symbolType), false);
-									(yyval.typesVector)->push_back((yysemantic_stack_[(2) - (1)].symbolType));
+									std::string* sym = compiler.symbolTable->installSymbol((yysemantic_stack_[(2) - (2)].idName), (yysemantic_stack_[(2) - (1)].symbolType), false);
+									(yyval.namesVector)->push_back(sym);
 								}
     break;
 
@@ -1320,8 +1320,8 @@ namespace vype10 {
 										YYERROR;
 									}
 									// install symbol to the next scope
-									compiler.symbolTable->installSymbol((yysemantic_stack_[(4) - (4)].idName), (yysemantic_stack_[(4) - (3)].symbolType), false);
-									(yyval.typesVector)->push_back((yysemantic_stack_[(4) - (3)].symbolType)); 
+									std::string* sym = compiler.symbolTable->installSymbol((yysemantic_stack_[(4) - (4)].idName), (yysemantic_stack_[(4) - (3)].symbolType), false);
+									(yyval.namesVector)->push_back(sym); 
 								}
     break;
 
@@ -1440,7 +1440,7 @@ namespace vype10 {
     {
 										std::string *key;
 										std::string error;
-										key = compiler.symbolTable->installFunction((yysemantic_stack_[(5) - (2)].idName), (yysemantic_stack_[(5) - (1)].functionType), (yysemantic_stack_[(5) - (4)].typesVector), true, error);
+										key = compiler.symbolTable->installFunction((yysemantic_stack_[(5) - (2)].idName), (yysemantic_stack_[(5) - (1)].functionType), (yysemantic_stack_[(5) - (4)].namesVector), true, error);
 										if(key == (std::string*) NULL) {
 											compiler.error(yylloc, error, RET_ERR_SEMANTICAL);
 											YYERROR;
