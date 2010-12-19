@@ -1,4 +1,9 @@
-/** \file scanner.ll Define the example Flex lexical scanner */
+/*
+ * VYPe 2010 Compiler project
+ *
+ * Flex lexical scanner definition.
+ * @author: Lukáš Černý <xcerny37@stud.fit.vutbr.cz>
+ */
 
 %{ /*** C/C++ Declarations ***/
 
@@ -30,15 +35,12 @@ std::string *stringBuilder;
 /* enable c++ scanner class generation */
 %option c++
 
-/* change the name of the scanner class. results in "ExampleFlexLexer" 
-%option prefix="VYPe10"*/
-
 /* the manual says "somewhat more optimized" */
 %option batch
 
 /* enable scanner to generate debug output. disable this for release
  * versions. */
-%option debug
+/*%option debug*/
 
 /* no support for include files is planned */
 %option yywrap nounput 

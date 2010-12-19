@@ -2,6 +2,7 @@
  * VYPe 2010 Compiler project
  *//**
  * Header file containing definition of Compiler class.
+ * @author: Lukáš Černý <xcerny37@stud.fit.vutbr.cz>
  */
 
 #ifndef VYPE10_COMPILER_H_

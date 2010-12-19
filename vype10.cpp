@@ -1,12 +1,12 @@
 /*
  * VYPe 2010 Compiler project
- *//***************************************************************************
+ *//**
  * Main application file.
+ * @author: Lukáš Černý <xcerny37@stud.fit.vutbr.cz>
  */
 
 #include <iostream>
 #include <string>
-#include "misc.h"
 #include "compiler.h"
 
 using namespace std;

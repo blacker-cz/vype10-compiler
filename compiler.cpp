@@ -2,13 +2,14 @@
  * VYPe 2010 Compiler project
  *//**
  * Compiler a.k.a. main application class.
+ * @author: Lukáš Černý <xcerny37@stud.fit.vutbr.cz>
  */
+
 #include <iostream>
 #include <fstream>
 #include "scanner.h"
 #include "parser.tab.hh"
 #include "compiler.h"
-#include "misc.h"
 
 using namespace std;
 
@@ -66,14 +67,18 @@ int Compiler::run(void) {
 
     Scanner scanner(&in);
     scanner.parent = this;
+#ifdef DEBUG
     scanner.set_debug(this->trace_scanning);
+#endif
     this->lexer = &scanner;
 
     intermediateCode = new IntermediateCode();
     intermediateCode->symbolTable = this->symbolTable;
 
     Parser parser(*this);
+#ifdef DEBUG
     parser.set_debug_level(this->trace_parsing);
+#endif
     parser.parse();
 
     if(this->errorLevel != RET_ERR_OK)

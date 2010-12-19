@@ -1,5 +1,9 @@
-/* $Id: parser.yy 48 2009-09-05 08:07:10Z tb $ -*- mode: c++ -*- */
-/** \file parser.yy Contains the example Bison parser source */
+/*
+ * VYPe 2010 Compiler project
+ *//**
+ * Bison parser definition file.
+ * @author: Lukáš Černý <xcerny37@stud.fit.vutbr.cz>
+ */
 
 %{ /*** C/C++ Declarations ***/
 
@@ -17,7 +21,7 @@
 %require "2.3"
 
 /* add debug output code to generated parser. */
-%debug
+/*%debug*/
 
 /* start symbol is named "translation_unit" */
 %start translation_unit

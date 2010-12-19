@@ -28,19 +28,19 @@ VYPE_HEADERS = \
 
 ### Targets: ###
 
-all: vype10
+all: vype
 
 clean: 
 	rm -f ./*.o
 	rm -f ./*~
 	rm -f ./*.log
-	rm -f ./vype10
+	rm -f ./vype
 	rm -f -r ./doc/*
 
 $(VYPE_OBJECTS): $(VYPE_SRCS)
 	$(CXX) -c $(VYPE_CXXFLAGS) $(VYPE_SRCS)
 
-vype10: $(VYPE_OBJECTS)
+vype: $(VYPE_OBJECTS)
 	$(CXX) -o $@ $(VYPE_OBJECTS) $(LDFLAGS)
 
 doc: $(VYPE_SRCS) Doxyfile
@@ -49,6 +49,6 @@ doc: $(VYPE_SRCS) Doxyfile
 # Packing
 pack:
 	make clean
-	zip -r xcerny37.zip $(VYPE_SRCS) $(VYPE_HEADERS) Makefile -x *.svn* *.git*
+	zip -r xcerny37.zip $(VYPE_SRCS) $(VYPE_HEADERS) Makefile rozdeleni -x *.svn* *.git*
 
 .PHONY: all clean

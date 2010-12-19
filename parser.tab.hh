@@ -40,7 +40,7 @@
 /* "%code requires" blocks.  */
 
 /* Line 35 of lalr1.cc  */
-#line 52 "parser.yy"
+#line 56 "parser.yy"
 
 	#include "symbolTable.h"
 
@@ -77,7 +77,7 @@ namespace vype10 {
 
 /* Enabling traces.  */
 #ifndef YYDEBUG
-# define YYDEBUG 1
+# define YYDEBUG 0
 #endif
 
 /* Enabling verbose error messages.  */
@@ -131,7 +131,7 @@ namespace vype10 {
     {
 
 /* Line 35 of lalr1.cc  */
-#line 56 "parser.yy"
+#line 60 "parser.yy"
 
     long  			integerVal;
     char			charVal;

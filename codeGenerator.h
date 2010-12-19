@@ -2,6 +2,7 @@
  * VYPe 2010 Compiler project
  *//**
  * Assembler code generation class.
+ * @author: Lukáš Černý <xcerny37@stud.fit.vutbr.cz>
  */
 
 #ifndef CODEGENERATOR_H_

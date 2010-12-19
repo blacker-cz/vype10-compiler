@@ -2,6 +2,7 @@
  * VYPe 2010 Compiler project
  *//**
  * Header file containing important constants.
+ * @author: Lukáš Černý <xcerny37@stud.fit.vutbr.cz>
  */
 
 #ifndef CONSTANTS_H_

@@ -2,6 +2,7 @@
  * VYPe 2010 Compiler project
  *//**
  * Symbol table class.
+ * @author: Lukáš Černý <xcerny37@stud.fit.vutbr.cz>
  */
 
 #include <sstream>

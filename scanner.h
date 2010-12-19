@@ -1,7 +1,16 @@
-// $Id: scanner.h 17 2007-08-19 18:51:39Z tb $
+/*
+ * VYPe 2010 Compiler project
+ *//**
+ * Header file for generated scanner class.
+ * @author: Lukáš Černý <xcerny37@stud.fit.vutbr.cz>
+ */
 
 #ifndef VYPE10_SCANNER_H
 #define VYPE10_SCANNER_H
+
+////
+// Using flex and bison with c++ is based on example from:
+// http://idlebox.net/2007/flex-bison-cpp-example/
 
 // Flex expects the signature of yylex to be defined in the macro YY_DECL, and
 // the C++ parser expects it to be declared. We can factor both as follows.
