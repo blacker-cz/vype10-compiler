@@ -1,13 +1,15 @@
-aktuálně by měla snad být hotová tabulka symbolů (jenom případně přidáme metody pro jednodušší výběry apod.), je tam u něčeho už hotová sémantická analýza a nacpání do tabulky symbolů (mám takovej pocit, že až na pomocný proměnný už snad do tabulky přidávat nic nebudem), je tam kostra třídy pro vytváření intermediate kódu (metoda add), ale zatím v podstatě vůbec nic nedělá
+VYPe10 Compiler
 
-já bych kdyžtak máknul na generování toho intermediálního kódu a ty to překopání do assembleru?
+Compiler for simple C-based programming language VYPe10. Compiler translates VYPe10 into MIPS32-Lissom assembler using tools Flex and Bison.
 
-akorát dneska už s tím nejspíš nepohnu, takže bych zítra dopoledne dal do kupy alespoň tu základní linku a pár nejnutnějších příkazů aby jsi si mohl pomalu generovat
+Whole compiler is implemented in C++.
 
-každopádně podle toho co jsem zaslechl dneska na přednášce, tak celej ten simulátor je nehorázně zabugovanej
+It looks like we're going to miss deadline. So further development ends here.
 
-jinak FlexLexer.h, a všechny *.cc a *.hh jsou automaticky generovaný soubory bisonem a flexem, takže netřeba v nich nic provádět, jinak ostatní by měly být co soubor to třída (cpp + h) a název by měl cca odpovídat tomu co to dělá
+Implemented features:
+	* lexical analysis using Flex
+	* syntactical analysis using Bison
+	* semantical analysis
+	* intermediate code generation
+	* part of output code generation
 
-u tabulky symbolů se předávají ukazatele na stringy, a ty jsou klíčem do tabulky, při získání dat dostaneš buď ukazatel na strukturu SymbolRecord nebo FunctionRecord, podle toho co to je. Pokud nenajde, tak vrací NULL přetypovaný na typ danýho ukazatele (zlatý PHP kde se nemusí NULL přetypovávat)
-
-jinak jsem se snažil tam psát alespoň nějaký komentáře, takže snad z toho půjde poznat co a jak
